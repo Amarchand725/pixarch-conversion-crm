@@ -2,17 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\Attachment;
-use App\Models\Country;
-use App\Models\EntityRelationship;
-use App\Models\LogEntityStatus;
-use App\Models\Meeting;
-use App\Models\OtpToken;
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\State;
-use App\Models\Status;
-use App\Models\User;
+use App\Models\{
+    Attachment, Country, EntityRelationship, LogEntityStatus, Meeting,
+    OtpToken, Permission, Role, State, Status, User,
+};
+
 use App\Modules\Lead\Models\Lead;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
