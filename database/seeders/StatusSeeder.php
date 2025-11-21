@@ -24,6 +24,18 @@ class StatusSeeder extends Seeder
             //LeadCapture
             ['model' => 'LeadCapture', 'name' => 'active'],
             ['model' => 'LeadCapture', 'name' => 'de-active'],
+
+            //Lead
+            ['model' => 'Lead', 'name' => 'created'],
+            ['model' => 'Lead', 'name' => 'assigned'],
+            ['model' => 'Lead', 'name' => 'no contacted'],
+            ['model' => 'Lead', 'name' => 'contact established'],
+            ['model' => 'Lead', 'name' => 'junk'],
+            ['model' => 'Lead', 'name' => 'potential'],
+            ['model' => 'Lead', 'name' => 'follow up'],
+            ['model' => 'Lead', 'name' => 'hot client'],
+            ['model' => 'Lead', 'name' => 'sales closed'],
+            ['model' => 'Lead', 'name' => 'pool'],
         ];
         
         foreach ($data as $item) {

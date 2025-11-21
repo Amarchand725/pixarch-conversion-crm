@@ -16,7 +16,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Dashboard - CRM | {{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title')</title>
 
     <meta name="description" content="" />
 
@@ -48,6 +48,7 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <!-- Page CSS -->
+    @stack('css')
 
     <!-- Helpers -->
     <script src="{{ asset('backend') }}/assets/vendor/js/helpers.js"></script>
@@ -117,5 +118,7 @@
 
     <!-- Page JS -->
     <script src="{{ asset('backend') }}/assets/js/dashboards-crm.js"></script>
+
+    @stack('js')
   </body>
 </html>
