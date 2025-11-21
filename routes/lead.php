@@ -19,5 +19,6 @@ Route::middleware(['web', 'auth'])
             Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
             Route::post('{id}/restore', 'restore')->name('restore');
             Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+            Route::post('update-status', 'updateStatus')->name('update-status');
         });
     });

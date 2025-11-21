@@ -1,6 +1,8 @@
 <x-app-layout>
     @section('title', ($title ?? '').' - '. config('app.name', 'Laravel'))
     @push('css')
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
         <style>
             .status-row-wrapper {
                 width: 100%;
@@ -37,319 +39,74 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">{{ ($title ?? ''). ' /' }} </span> Drag &amp; Drop</h4>
 
-        <!-- Cards Draggable -->
-        <div class="row mb-4" id="sortable-cards">
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card drag-item cursor-move mb-lg-0 mb-4">
-                <div class="card-body text-center">
-                    <h2>
-                    <i class="ti ti-shopping-cart text-success display-6"></i>
-                    </h2>
-                    <h4>Monthly Sales</h4>
-                    <h5>2362</h5>
-                </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card drag-item cursor-move mb-lg-0 mb-4">
-                <div class="card-body text-center">
-                    <h2>
-                    <i class="ti ti-world text-info display-6"></i>
-                    </h2>
-                    <h4>Monthly Visits</h4>
-                    <h5>687,123</h5>
-                </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card drag-item cursor-move mb-lg-0 mb-4">
-                <div class="card-body text-center">
-                    <h2>
-                    <i class="ti ti-gift text-danger display-6"></i>
-                    </h2>
-                    <h4>Products</h4>
-                    <h5>985</h5>
-                </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-sm-12">
-                <div class="card drag-item cursor-move mb-lg-0 mb-4">
-                <div class="card-body text-center">
-                    <h2>
-                    <i class="ti ti-user text-primary display-6"></i>
-                    </h2>
-                    <h4>Users</h4>
-                    <h5>105,652</h5>
-                </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Cards Draggable ends -->
-
         <div class="status-row-wrapper">
             <div class="status-row d-flex overflow-auto pb-2">
+                @foreach($statusLeads as $status)
+                    <div class="status-card card"
+                        data-status-id="{{ $status['status_id'] }}"
+                        data-total="{{ $status['leads']->sum('value') }}"
+                    >
+                        <div class="card-header text-center bg-light border-bottom-0 p-3">
+                            <h5 class="mb-1 text-primary">{{ ucwords($status['status_name']) }}</h5>
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <!-- Total Leads -->
+                                <span class="badge bg-info text-dark fs-6">
+                                    <span class="lead-count">Total: {{ $status['leads']->count() }}</span> Leads
+                                </span>
 
-                <!-- Card 1 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 1</h5>
-                        <small class="text-muted">Total: 5</small>
+                                <!-- Total Value -->
+                                <span class="badge bg-success fs-6">
+                                    <span class="total-value">Value: ${{ number_format($status['leads']->sum('value')) }}</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <ul class="list-group list-group-flush task-column">
+                            @foreach($status['leads'] as $lead)
+                                <li class="list-group-item drag-item d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded bg-white"
+                                    data-lead-id="{{ $lead->uuid }}"
+                                    data-value="{{ $lead->value }}"
+                                    style="cursor: grab;">
+
+                                    <div class="d-flex flex-column w-100">
+                                        <!-- Top: Avatar + Name -->
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <img class="rounded-circle"
+                                                src="{{ optional($lead->currentAssignee?->avatar)->path
+                                                        ? asset('backend/assets/' . $lead->currentAssignee->avatar->path)
+                                                        : asset('backend/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                width="36" height="36" alt="Avatar">
+
+                                            <span class="fw-semibold">{{ $lead->name }}</span>
+                                        </div>
+
+                                        <!-- Action Icons centered under name, smaller size -->
+                                        <div class="d-flex gap-1 mt-1 ml-5">
+                                            <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
+                                                <i class="bi bi-person-fill fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
+                                                <i class="bi bi-list-task fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
+                                                <i class="bi bi-sticky fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
+                                                <i class="bi bi-calendar-event fs-6"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Value Badge -->
+                                    <span class="badge bg-success text-white ms-2">
+                                        ${{ number_format($lead->value) }}
+                                    </span>
+                                </li>
+
+                            @endforeach
+                        </ul>
                     </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 1</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 2</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 3</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 4</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 5</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 2</h5>
-                        <small class="text-muted">Total: 4</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 6</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 7</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 8</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 9</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 3</h5>
-                        <small class="text-muted">Total: 5</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 10</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 11</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 12</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 13</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 14</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 1 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 1</h5>
-                        <small class="text-muted">Total: 5</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 1</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 2</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 3</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 4</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 5</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 2</h5>
-                        <small class="text-muted">Total: 4</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 6</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 7</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 8</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 9</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 3</h5>
-                        <small class="text-muted">Total: 5</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 10</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 11</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 12</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 13</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 14</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 1 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 1</h5>
-                        <small class="text-muted">Total: 5</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 1</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 2</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 3</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 4</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 5</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 2</h5>
-                        <small class="text-muted">Total: 4</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 6</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 7</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 8</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 9</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="status-card card flex-shrink-0 me-3" style="min-width: 33.333%;">
-                    <div class="card-header text-center">
-                        <h5 class="mb-0">Status 3</h5>
-                        <small class="text-muted">Total: 5</small>
-                    </div>
-                    <ul class="list-group list-group-flush task-column">
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 10</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/1.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 11</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/2.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 12</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/3.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 13</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/4.png') }}" width="32">
-                        </li>
-                        <li class="list-group-item drag-item cursor-move d-flex justify-content-between align-items-center">
-                            <span>Lead 14</span>
-                            <img class="rounded-circle" src="{{ asset('backend/assets/img/avatars/5.png') }}" width="32">
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Repeat similarly for Card 4 → Card 9 -->
-                <!-- Change the header text and lead items as needed -->
-
+                @endforeach
             </div>
         </div>
 
@@ -360,16 +117,93 @@
         <script src="{{ asset('backend') }}/assets/vendor/libs/sortablejs/sortable.js"></script>
         <script src="{{ asset('backend') }}/assets/js/extended-ui-drag-and-drop.js"></script>
         <script>
+            function updateCardTotals(card) {
+                const leadEls = card.querySelectorAll('.task-column li');
+                let total = 0;
+                leadEls.forEach(li => {
+                    const val = Number(li.dataset.value);
+                    if (!isNaN(val)) total += val;
+                });
+
+                // Update the DOM
+                const totalEl = card.querySelector('.total-value');
+                if (totalEl) totalEl.textContent = `Value: $${total.toLocaleString()}`;
+
+                // Update dataset for reference
+                card.dataset.total = total;
+
+                // Update total leads count
+                const countEl = card.querySelector('.lead-count');
+                if (countEl) countEl.textContent = `Total : ${leadEls.length}`;
+            }
+
             document.addEventListener("DOMContentLoaded", function () {
                 document.querySelectorAll(".task-column").forEach(column => {
                     new Sortable(column, {
-                        group: "leadGroup",
+                        group: { name: "leadGroup", pull: true, put: true },
                         animation: 150,
                         ghostClass: "sortable-ghost",
-                        pull: true,
-                        put: true
+                        fallbackOnBody: true,
+
+                        onEnd: function (evt) {
+
+                            const leadEl = evt.item;
+                            const oldCard = evt.from.closest(".status-card");
+                            const newCard = evt.to.closest(".status-card");
+
+                            const leadId = leadEl.dataset.leadId;
+                            const statusId = newCard.dataset.statusId;
+
+                            // Send AJAX to update status first
+                            fetch("{{ route('leads.update-status') }}", {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: JSON.stringify({ lead_id: leadId, status_id: statusId })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    if (oldCard) updateCardTotals(oldCard);
+                                    if (newCard) updateCardTotals(newCard);
+
+                                    // Show Vuexy Toastr success
+                                    toastr.success('You moved lead successfully!', 'Success', {
+                                        closeButton: true,
+                                        progressBar: true,
+                                        positionClass: 'toast-top-right',
+                                        timeOut: 2500
+                                    });
+                                } else {
+                                    // Optional: revert drag if AJAX fails
+                                    evt.from.insertBefore(leadEl, evt.from.children[evt.oldIndex]);
+                                    if (oldCard) updateCardTotals(oldCard);
+                                    if (newCard) updateCardTotals(newCard);
+
+                                    toastr.error('Failed to update lead status', 'Error', {timeOut: 2500});
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                // Move lead back if needed
+                                evt.from.insertBefore(leadEl, evt.from.children[evt.oldIndex]);
+                                if (oldCard) updateCardTotals(oldCard);
+                                if (newCard) updateCardTotals(newCard);
+
+                                toastr.error('An error occurred', 'Error', {timeOut: 2500});
+                            });
+                        }
                     });
                 });
+            
+                // Initialize Bootstrap tooltips
+                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
+                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                    new bootstrap.Tooltip(tooltipTriggerEl)
+                })
             });
         </script>
     @endpush

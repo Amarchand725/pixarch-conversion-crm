@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Modules\Lead\Models\Lead;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             LeadCaptureSeeder::class,
             CampaignSeeder::class,
+            LeadSeeder::class,
         ]);
     }
 }
