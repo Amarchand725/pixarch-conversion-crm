@@ -198,6 +198,6 @@
     @push('js')
         <!-- Page JS -->
         <script src="{{ asset('backend') }}/assets/vendor/libs/sortablejs/sortable.js"></script>
-        <script src="{{ asset('backend') }}/assets/js/extended-ui-drag-and-drop.js"></script>
+        <script src="{{ asset(path: 'backend') }}/assets/js/extended-ui-drag-and-drop.js"></script>
     @endpush
 </x-app-layout>
