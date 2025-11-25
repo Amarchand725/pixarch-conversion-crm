@@ -73,8 +73,8 @@
                                         <div class="d-flex align-items-center gap-2 mb-1">
                                             <img class="rounded-circle"
                                                 src="{{ optional($lead->currentAssignee?->avatar)->path
-                                                        ? asset('backend/assets/' . $lead->currentAssignee->avatar->path)
-                                                        : asset('backend/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                        ? asset('backOffice/assets/' . $lead->currentAssignee->avatar->path)
+                                                        : asset('backOffice/assets/img/avatars/' . rand(1, 10) . '.png') }}"
                                                 width="36" height="36" alt="Avatar">
 
                                             <span class="fw-semibold">{{ $lead->name }}</span>
@@ -114,8 +114,8 @@
     </div>
     @push('js')
         <!-- Page JS -->
-        <script src="{{ asset('backend') }}/assets/vendor/libs/sortablejs/sortable.js"></script>
-        <script src="{{ asset('backend') }}/assets/js/extended-ui-drag-and-drop.js"></script>
+        <script src="{{ asset('backOffice') }}/assets/vendor/libs/sortablejs/sortable.js"></script>
+        <script src="{{ asset('backOffice') }}/assets/js/extended-ui-drag-and-drop.js"></script>
         <script>
             function updateCardTotals(card) {
                 const leadEls = card.querySelectorAll('.task-column li');

@@ -23,14 +23,14 @@
                 <div data-i18n="Dashboards">Dashboard</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item {{ request()->is('dashboard')?'active':'' }}">
                     <a href="{{ route('dashboard') }}" class="menu-link">
                         <div data-i18n="Analytics">Analytics</div>
                     </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item {{ request()->is('leads')?'active':'' }}">
                     <a href="{{ route('leads.index') }}" class="menu-link">
-                        <div data-i18n="Opportunities">Opportunities</div>
+                        <div data-i18n="All Leads">All Leads</div>
                     </a>
                 </li>
             </ul>

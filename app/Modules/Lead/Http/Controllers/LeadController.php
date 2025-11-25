@@ -22,12 +22,12 @@ class LeadController extends Controller
     {
         $title = 'Leads';
         $statusLeads = $this->leadRepo->getAll();
-        return view(strtolower('leads.index'), get_defined_vars());
+        return view(strtolower('backOffice.leads.index'), get_defined_vars());
     }
 
     public function create()
     {
-        return view('leads.create');
+        return view('backOffice.leads.create');
     }
 
     public function store(LeadRequest $request)
@@ -44,7 +44,7 @@ class LeadController extends Controller
     public function edit($id)
     {
         $lead = $this->leadRepo->showModel($id);
-        return view('leads.edit', compact('lead'));
+        return view('backOffice.leads.edit', compact('lead'));
     }
 
     public function update(LeadRequest $request, Lead $lead)
@@ -61,7 +61,7 @@ class LeadController extends Controller
     public function show($id)
     {
         $lead = $this->leadRepo->showModel($id);
-        return view('leads.show', compact('lead'));
+        return view('backOffice.leads.show', compact('lead'));
     }
 
     public function destroy($id)

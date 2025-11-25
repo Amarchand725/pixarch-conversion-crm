@@ -202,12 +202,12 @@ class MakeModuleCommand extends Command
             public function index()
             {
                 \${$pluralVariable} = \$this->{$variable}Repo->getAll();
-                return view(strtolower('{$pluralRoute}.index'), compact('{$pluralVariable}'));
+                return view(strtolower('backOffice.{$pluralRoute}.index'), compact('{$pluralVariable}'));
             }
 
             public function create()
             {
-                return view('{$pluralRoute}.create');
+                return view('backOffice.{$pluralRoute}.create');
             }
 
             public function store({$module}Request \$request)
@@ -224,7 +224,7 @@ class MakeModuleCommand extends Command
             public function edit(\$id)
             {
                 \${$variable} = \$this->{$variable}Repo->showModel(\$id);
-                return view('{$pluralRoute}.edit', compact('{$variable}'));
+                return view('backOffice.{$pluralRoute}.edit', compact('{$variable}'));
             }
 
             public function update({$module}Request \$request, {$module} \${$variable})
@@ -441,8 +441,8 @@ class MakeModuleCommand extends Command
     protected function createViews(string $module, array $fields = [])
     {
         // folder name: lowercase module (Country -> country)
-        $pluralFolder = Str::plural(strtolower($module));
-        $viewPath = resource_path("views/{$pluralFolder}");
+        $pluralFolder = Str::plural(Str::snake($module));
+        $viewPath = resource_path("views/backOffice/{$pluralFolder}");
 
         if (!file_exists($viewPath)) {
             mkdir($viewPath, 0755, true);
@@ -588,7 +588,7 @@ class MakeModuleCommand extends Command
         $singular = Str::lower($module);                 // e.g., country
         $plural   = Str::plural($singular); 
         $controller = "{$module}Controller";
-        $routeFile = base_path("routes/{$singular}.php");
+        $routeFile = base_path("routes/backOffice/{$singular}.php");
 
         $content = <<<PHP
         <?php
