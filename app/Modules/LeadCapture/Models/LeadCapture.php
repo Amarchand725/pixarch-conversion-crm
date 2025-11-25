@@ -2,6 +2,7 @@
 
 namespace App\Modules\LeadCapture\Models;
 
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -15,6 +16,17 @@ class LeadCapture extends Model
 
     protected $fillable = ['status_id', 'name', 'fields'];
 
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            if (empty($model->status_id)) {
+                $model->status_id = Status::where('model', 'Campaign')
+                    ->where('name', 'active')
+                    ->value('id');
+            }
+        });
+    }
+    
     /**
      * Configure Spatie Activity Log options.
      */

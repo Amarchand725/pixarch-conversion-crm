@@ -2,16 +2,21 @@
 
 namespace App\Modules\Lead\Models;
 
+use App\Models\EntityRelationship;
+use App\Models\LogEntityStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Traits\ModelTrait;
+use App\Models\User;
 
 class Lead extends Model
 {
-    use SoftDeletes, LogsActivity;
+    use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
 
-    protected $fillable = ['id:increments', 'uuid:uuid', 'name:string', 'status:boolean'];
+    protected $fillable = ['lead_capture_id', 'name', 'email', 'phone', 'fields'];
 
     /**
      * Configure Spatie Activity Log options.
@@ -22,5 +27,35 @@ class Lead extends Model
             ->useLogName(strtolower('Lead'))
             ->logFillable()
             ->logOnlyDirty();
+    }
+
+    protected $casts = [
+        'fields' => 'array',
+    ];
+
+    // Tell Laravel where to find the factory
+    protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+    {
+        return \Database\Factories\LeadFactory::new();
+    }
+
+    public function assignees()
+    {
+        return $this->morphToMany(User::class, 'model', 'entity_relationships');
+    }
+
+    public function statusLogs()
+    {
+        return $this->morphMany(LogEntityStatus::class, 'model');
+    }
+
+    public function lastStatusLog()
+    {
+        return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
+    }
+
+    public function currentAssignee()
+    {
+        return $this->hasOne(EntityRelationship::class, 'model_id');
     }
 }

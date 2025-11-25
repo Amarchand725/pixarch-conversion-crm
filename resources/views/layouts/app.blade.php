@@ -48,6 +48,8 @@
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
     <link rel="stylesheet" href="{{ asset('backend') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
 
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendor/libs/toastr/toastr.css') }}">
     <!-- Page CSS -->
     @stack('css')
 
@@ -119,6 +121,9 @@
 
     <!-- Page JS -->
     <script src="{{ asset('backend') }}/assets/js/dashboards-crm.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="{{ asset('backend/assets/vendor/libs/toastr/toastr.js') }}"></script>
 
     @stack('js')
   </body>

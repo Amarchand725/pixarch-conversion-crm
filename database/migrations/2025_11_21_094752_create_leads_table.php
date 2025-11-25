@@ -10,9 +10,12 @@ return new class extends Migration {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name')->nullable();
-            $table->boolean('status')->default(true);
-            $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('lead_capture_id')->nullable()->constrained('lead_captures')->nullOnDelete();
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->string('value')->nullable();
+            $table->json('fields')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

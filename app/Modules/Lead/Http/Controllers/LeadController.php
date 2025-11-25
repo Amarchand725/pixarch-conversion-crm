@@ -5,6 +5,7 @@ namespace App\Modules\Lead\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use App\Modules\Lead\Http\Requests\LeadRequest;
+use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
 use Exception;
 
@@ -19,9 +20,8 @@ class LeadController extends Controller
 
     public function index()
     {
-        // $leads = $this->leadRepo->getAll();
         $title = 'Leads';
-        $leads = [];
+        $statusLeads = $this->leadRepo->getAll();
         return view(strtolower('leads.index'), get_defined_vars());
     }
 
@@ -111,6 +111,21 @@ class LeadController extends Controller
             return redirect()->route(strtolower('leads.index'))->with('success', 'Bulk restore successful.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function updateStatus(LeadStatusRequest $request)
+    {
+        $payload = $request->validated();
+        
+        try {
+            $this->leadRepo->statusModel($payload);
+            return response()->json(['success' => true]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500); // optional HTTP 500
         }
     }
 }

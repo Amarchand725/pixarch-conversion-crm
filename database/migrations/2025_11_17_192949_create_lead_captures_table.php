@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->uuid('uuid')->unique();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
-            $table->string('name')->nullable();
+            $table->string('name')->comment('e.g Contact form, facebook lead form');
             $table->json('fields')->nullable();
             $table->softDeletes();
             $table->timestamps();
