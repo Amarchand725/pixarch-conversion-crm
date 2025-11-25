@@ -1,0 +1,23 @@
+<div class="grid gap-3">
+
+    <div>
+        <label class="block text-sm">Name</label>
+        <input type="text"
+               name="name"
+               value="{{ old('name', $model->name ?? '') }}"
+               class="border rounded px-2 py-1 w-full">
+    </div>
+
+    <div>
+        <label class="block text-sm">Status</label>
+        <select name="status" class="border rounded px-2 py-1 w-full">
+            <option value="1" {{ (old('status', $model->status ?? null) == 1) ? 'selected' : '' }}>
+                Active
+            </option>
+            <option value="0" {{ (old('status', $model->status ?? null) == 0) ? 'selected' : '' }}>
+                Inactive
+            </option>
+        </select>
+    </div>
+
+</div>

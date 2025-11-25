@@ -1,0 +1,49 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2>{{ __('{{ moduleTitle }} List') }}</h2>
+    </x-slot>
+
+    <div class="px-6 py-4">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-semibold">{{ moduleTitle }}</h3>
+
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="openCreateModal()"
+            >
+                + New {{ moduleSingular }}
+            </button>
+        </div>
+
+        <table id="dataTable" class="min-w-full"></table>
+    </div>
+
+    @include('{{ modulePlural }}.modal.create')
+    @include('{{ modulePlural }}.modal.edit')
+    @include('{{ modulePlural }}.modal.show')
+
+    @push('scripts')
+    <script>
+        let datatable
+
+        $(function () {
+            datatable = $('#dataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('{{ modulePlural }}.datatable') }}",
+                columns: [
+                    {data: 'id', title: '#'},
+                    {data: 'name', title: 'Name'},
+                    {data: 'status', title: 'Status'},
+                    {data: 'action', title: 'Actions', orderable: false, searchable: false}
+                ]
+            })
+        })
+
+        function reloadTable() {
+            datatable.ajax.reload()
+        }
+    </script>
+    @endpush
+</x-app-layout>
