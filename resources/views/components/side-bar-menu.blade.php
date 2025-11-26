@@ -18,18 +18,16 @@
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
         <li class="menu-item active open">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                <div data-i18n="Dashboards">Dashboard</div>
-            </a>
+            
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('dashboard')?'active':'' }}">
                     <a href="{{ route('dashboard') }}" class="menu-link">
-                        <div data-i18n="Analytics">Analytics</div>
+                        <i class="menu-icon tf-icons ti ti-home-2"></i>
+                        <div data-i18n="Dashboards">Dashboard</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('leads')?'active':'' }}">
-                    <a href="{{ route('leads.index') }}" class="menu-link">
+                <li class="menu-item {{ request()->is('back-office/leads')?'active':'' }}">
+                    <a href="{{ route('back-office.leads.index') }}" class="menu-link">
                         <div data-i18n="All Leads">All Leads</div>
                     </a>
                 </li>
@@ -43,33 +41,28 @@
     
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons ti ti-users"></i>
-            <div data-i18n="Users">Users</div>
+                <i class="menu-icon tf-icons ti ti-users"></i>
+                <div data-i18n="Users">Users</div>
             </a>
             <ul class="menu-sub">
-            <li class="menu-item">
-                <a href="app-user-list.html" class="menu-link">
-                <div data-i18n="List">List</div>
-                </a>
-            </li>
+                <li class="menu-item {{ request()->is('back-office/users')?'active':'' }}">
+                    <a href="{{ route('back-office.users.index') }}" class="menu-link">
+                        <div data-i18n="List">List</div>
+                    </a>
+                </li>
             </ul>
         </li>
         <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons ti ti-settings"></i>
-            <div data-i18n="Roles & Permissions">Roles & Permissions</div>
+                <i class="menu-icon tf-icons ti ti-settings"></i>
+                <div data-i18n="Roles & Permissions">Roles & Permissions</div>
             </a>
             <ul class="menu-sub">
-            <li class="menu-item">
-                <a href="app-access-roles.html" class="menu-link">
-                <div data-i18n="Roles">Roles</div>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="app-access-permission.html" class="menu-link">
-                <div data-i18n="Permission">Permission</div>
-                </a>
-            </li>
+                <li class="menu-item {{ request()->is('back-office/roles')?'active':'' }}">
+                    <a href="{{ route('back-office.roles.index') }}" class="menu-link">
+                        <div data-i18n="Roles">Roles</div>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

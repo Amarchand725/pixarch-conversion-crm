@@ -448,188 +448,188 @@ class MakeModuleCommand extends Command
         $this->info("📚 Repository created: {$path}");
     }
 
-    protected function createViews(string $module, array $fields = [])
-    {
-        $singular = lcfirst($module);                   // Country -> country
-        $plural   = Str::plural($singular);             // country -> countries
-        $title    = ucfirst(Str::plural($module));      // Countries
-
-        $viewPath = resource_path("views/backOffice/{$plural}");
-        $modalPath = "{$viewPath}/modal";
-
-        // Make directories
-        if (!file_exists($viewPath)) mkdir($viewPath, 0755, true);
-        if (!file_exists($modalPath)) mkdir($modalPath, 0755, true);
-
-        // List of stubs
-        $stubs = [
-            'index.stub'       => "{$viewPath}/index.blade.php",
-            '_form.stub'       => "{$viewPath}/_form.blade.php",
-            'create.stub'      => "{$modalPath}/create.blade.php",
-            'edit.stub'        => "{$modalPath}/edit.blade.php",
-            'show.stub'        => "{$modalPath}/show.blade.php",
-        ];
-
-        foreach ($stubs as $stub => $destination) {
-            $content = file_get_contents(base_path("stubs/views/{$stub}"));
-
-            // Replace placeholders
-            $content = str_replace(
-                ['{{moduleSingular}}', '{{modulePlural}}', '{{moduleTitle}}'],
-                [$singular, $plural, $title],
-                $content
-            );
-
-            file_put_contents($destination, $content);
-        }
-
-        $this->info("Views created for module: {$module}");
-    }
-
     // protected function createViews(string $module, array $fields = [])
     // {
-    //     // folder name: lowercase module (Country -> country)
-    //     $pluralFolder = Str::plural(Str::snake($module));
-    //     $viewPath = resource_path("views/backOffice/{$pluralFolder}");
+    //     $singular = lcfirst($module);                   // Country -> country
+    //     $plural   = Str::plural($singular);             // country -> countries
+    //     $title    = ucfirst(Str::plural($module));      // Countries
 
-    //     if (!file_exists($viewPath)) {
-    //         mkdir($viewPath, 0755, true);
+    //     $viewPath = resource_path("views/backOffice/{$plural}");
+    //     $modalPath = "{$viewPath}/modal";
+
+    //     // Make directories
+    //     if (!file_exists($viewPath)) mkdir($viewPath, 0755, true);
+    //     if (!file_exists($modalPath)) mkdir($modalPath, 0755, true);
+
+    //     // List of stubs
+    //     $stubs = [
+    //         'index.stub'       => "{$viewPath}/index.blade.php",
+    //         '_form.stub'       => "{$viewPath}/_form.blade.php",
+    //         'create.stub'      => "{$modalPath}/create.blade.php",
+    //         'edit.stub'        => "{$modalPath}/edit.blade.php",
+    //         'show.stub'        => "{$modalPath}/show.blade.php",
+    //     ];
+
+    //     foreach ($stubs as $stub => $destination) {
+    //         $content = file_get_contents(base_path("stubs/views/{$stub}"));
+
+    //         // Replace placeholders
+    //         $content = str_replace(
+    //             ['{{moduleSingular}}', '{{modulePlural}}', '{{moduleTitle}}'],
+    //             [$singular, $plural, $title],
+    //             $content
+    //         );
+
+    //         file_put_contents($destination, $content);
     //     }
 
-    //     // variable names
-    //     $singular = lcfirst($module);              // Country -> country
-    //     $plural = Str::plural($singular);          // country -> countries
-
-    //     // common header/footer using x-app-layout
-    //     $header = "<x-app-layout>\n    <x-slot name=\"header\">\n        <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">{{ __('" . ucfirst($module) . "') }}</h2>\n    </x-slot>\n\n    <div class=\"py-12\">\n        <div class=\"max-w-7xl mx-auto sm:px-6 lg:px-8\">\n            <div class=\"bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900\">\n";
-    //     $footer = "            </div>\n        </div>\n    </div>\n</x-app-layout>";
-
-    //     // INDEX
-    //     $index = <<<BLADE
-    // {$header}
-    //                 <div class="flex justify-between items-center mb-4">
-    //                     <h1 class="text-2xl font-bold">All {$module}</h1>
-    //                     <a href="{{ route('{$plural}.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded">+ Add New</a>
-    //                 </div>
-
-    //                 <div class="overflow-x-auto">
-    //                     <table class="min-w-full divide-y divide-gray-200">
-    //                         <thead class="bg-gray-50">
-    //                             <tr>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Name</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
-    //                             </tr>
-    //                         </thead>
-    //                         <tbody class="bg-white divide-y divide-gray-200">
-    //                             @foreach(\${$plural} ?? [] as \${$singular})
-    //                                 <tr>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->id }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->name ?? '-' }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->status ?? '-' }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">
-    //                                         <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="text-blue-600">Edit</a>
-    //                                         <a href="{{ route('{$plural}.show', \${$singular}->id) }}" class="ml-2 text-green-600">View</a>
-    //                                         <form action="{{ route('{$plural}.destroy', \${$singular}->id) }}" method="POST" class="inline">
-    //                                             @csrf
-    //                                             @method('DELETE')
-    //                                             <button type="submit" class="ml-2 text-red-600">Delete</button>
-    //                                         </form>
-    //                                     </td>
-    //                                 </tr>
-    //                             @endforeach
-    //                         </tbody>
-    //                     </table>
-    //                 </div>
-    // {$footer}
-    // BLADE;
-
-    //     // CREATE
-    //     // (You can expand fields dynamically — here we show a simple name + status)
-    //     $create = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">Create {$module}</h1>
-
-    //                 <form action="{{ route('{$plural}.store') }}" method="POST">
-    //                     @csrf
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Name</label>
-    //                         <input type="text" name="name" value="{{ old('name') }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                         @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Status</label>
-    //                         <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                             <option value="1">Active</option>
-    //                             <option value="0">Inactive</option>
-    //                         </select>
-    //                         @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <button class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
-    //                 </form>
-    // {$footer}
-    // BLADE;
-
-    //     // EDIT
-    //     $edit = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">Edit {$module}</h1>
-
-    //                 <form action="{{ route('{$plural}.update', \${$singular}->id) }}" method="POST">
-    //                     @csrf
-    //                     @method('PUT')
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Name</label>
-    //                         <input type="text" name="name" value="{{ old('name', \${$singular}->name) }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                         @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Status</label>
-    //                         <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                             <option value="active" {{ (old('status', \${$singular}->status) === 'active') ? 'selected' : '' }}>Active</option>
-    //                             <option value="inactive" {{ (old('status', \${$singular}->status) === 'inactive') ? 'selected' : '' }}>Inactive</option>
-    //                         </select>
-    //                         @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-    //                 </form>
-    // {$footer}
-    // BLADE;
-
-    //     // SHOW
-    //     $show = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">View {$module}</h1>
-
-    //                 <div class="mb-4">
-    //                     <strong>ID:</strong> {{ \${$singular}->id }}
-    //                 </div>
-
-    //                 <div class="mb-4">
-    //                     <strong>Name:</strong> {{ \${$singular}->name ?? '-' }}
-    //                 </div>
-
-    //                 <div class="mb-4">
-    //                     <strong>Status:</strong> {{ \${$singular}->status ?? '-' }}
-    //                 </div>
-
-    //                 <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded">Edit</a>
-    // {$footer}
-    // BLADE;
-
-    //     // write files
-    //     file_put_contents("{$viewPath}/index.blade.php", $index);
-    //     file_put_contents("{$viewPath}/create.blade.php", $create);
-    //     file_put_contents("{$viewPath}/edit.blade.php", $edit);
-    //     file_put_contents("{$viewPath}/show.blade.php", $show);
+    //     $this->info("Views created for module: {$module}");
     // }
+
+    protected function createViews(string $module, array $fields = [])
+    {
+        // folder name: lowercase module (Country -> country)
+        $pluralFolder = Str::plural(Str::snake($module));
+        $viewPath = resource_path("views/backOffice/{$pluralFolder}");
+
+        if (!file_exists($viewPath)) {
+            mkdir($viewPath, 0755, true);
+        }
+
+        // variable names
+        $singular = lcfirst($module);              // Country -> country
+        $plural = Str::plural($singular);          // country -> countries
+
+        // common header/footer using x-app-layout
+        $header = "<x-app-layout>\n    <x-slot name=\"header\">\n        <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">{{ __('" . ucfirst($module) . "') }}</h2>\n    </x-slot>\n\n    <div class=\"py-12\">\n        <div class=\"max-w-7xl mx-auto sm:px-6 lg:px-8\">\n            <div class=\"bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900\">\n";
+        $footer = "            </div>\n        </div>\n    </div>\n</x-app-layout>";
+
+        // INDEX
+        $index = <<<BLADE
+    {$header}
+                    <div class="flex justify-between items-center mb-4">
+                        <h1 class="text-2xl font-bold">All {$module}</h1>
+                        <a href="{{ route('{$plural}.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded">+ Add New</a>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Name</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
+                                    <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach(\${$plural} ?? [] as \${$singular})
+                                    <tr>
+                                        <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->id }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->name ?? '-' }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->status ?? '-' }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-700">
+                                            <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="text-blue-600">Edit</a>
+                                            <a href="{{ route('{$plural}.show', \${$singular}->id) }}" class="ml-2 text-green-600">View</a>
+                                            <form action="{{ route('{$plural}.destroy', \${$singular}->id) }}" method="POST" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="ml-2 text-red-600">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+    {$footer}
+    BLADE;
+
+        // CREATE
+        // (You can expand fields dynamically — here we show a simple name + status)
+        $create = <<<BLADE
+    {$header}
+                    <h1 class="text-2xl font-bold mb-4">Create {$module}</h1>
+
+                    <form action="{{ route('{$plural}.store') }}" method="POST">
+                        @csrf
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700">Name</label>
+                            <input type="text" name="name" value="{{ old('name') }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
+                            @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700">Status</label>
+                            <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                            @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
+                        </div>
+
+                        <button class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
+                    </form>
+    {$footer}
+    BLADE;
+
+        // EDIT
+        $edit = <<<BLADE
+    {$header}
+                    <h1 class="text-2xl font-bold mb-4">Edit {$module}</h1>
+
+                    <form action="{{ route('{$plural}.update', \${$singular}->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700">Name</label>
+                            <input type="text" name="name" value="{{ old('name', \${$singular}->name) }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
+                            @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700">Status</label>
+                            <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
+                                <option value="active" {{ (old('status', \${$singular}->status) === 'active') ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ (old('status', \${$singular}->status) === 'inactive') ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                            @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
+                        </div>
+
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                    </form>
+    {$footer}
+    BLADE;
+
+        // SHOW
+        $show = <<<BLADE
+    {$header}
+                    <h1 class="text-2xl font-bold mb-4">View {$module}</h1>
+
+                    <div class="mb-4">
+                        <strong>ID:</strong> {{ \${$singular}->id }}
+                    </div>
+
+                    <div class="mb-4">
+                        <strong>Name:</strong> {{ \${$singular}->name ?? '-' }}
+                    </div>
+
+                    <div class="mb-4">
+                        <strong>Status:</strong> {{ \${$singular}->status ?? '-' }}
+                    </div>
+
+                    <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded">Edit</a>
+    {$footer}
+    BLADE;
+
+        // write files
+        file_put_contents("{$viewPath}/index.blade.php", $index);
+        file_put_contents("{$viewPath}/create.blade.php", $create);
+        file_put_contents("{$viewPath}/edit.blade.php", $edit);
+        file_put_contents("{$viewPath}/show.blade.php", $show);
+    }
 
     protected function createRoute($module)
     {

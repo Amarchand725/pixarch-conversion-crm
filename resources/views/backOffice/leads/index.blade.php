@@ -155,7 +155,7 @@
                             const statusId = newCard.dataset.statusId;
 
                             // Send AJAX to update status first
-                            fetch("{{ route('leads.update-status') }}", {
+                            fetch("{{ route('back-office.leads.update-status') }}", {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',

@@ -48,6 +48,11 @@
     <link rel="stylesheet" href="{{ asset('backOffice') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
     <link rel="stylesheet" href="{{ asset('backOffice') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
 
+    <link rel="stylesheet" href="{{ asset('backOffice/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('backOffice/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}" />
+    <link rel="stylesheet" href="{{ asset('backOffice/assets/vendor/libs/select2/select2.css') }}" />
+    {{-- <link rel="stylesheet" href="{{asset('backOffice/assets/css/toastr.min.css')}}"> --}}
+
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="{{ asset('backOffice/assets/vendor/libs/toastr/toastr.css') }}">
     <!-- Page CSS -->
@@ -124,6 +129,8 @@
 
     <!-- Toastr JS -->
     <script src="{{ asset('backOffice/assets/vendor/libs/toastr/toastr.js') }}"></script>
+
+    <script src="{{ asset('backOffice/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
 
     @stack('js')
   </body>
