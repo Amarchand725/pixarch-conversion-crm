@@ -8,7 +8,7 @@ use App\Modules\User\Http\Requests\UserRequest;
 use App\Modules\User\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -24,36 +24,64 @@ class UserController extends Controller
         $title = 'Users List';
         $models = $this->userRepo->getAll();
 
-        if($request->ajax() && $request->loaddata == "yes") {
-            return DataTables::of($models)
-                ->addIndexColumn()
-                ->addColumn('avatar', function($model){
-                    $src = $model->avatar && $model->avatar->path
-                        ? asset('back-office/assets/' . $model->avatar->path)
-                        : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png');
+        // if($request->ajax() && $request->loaddata == "yes") {
+        //     return DataTables::of($models)
+        //         ->addIndexColumn()
+        //         ->addColumn('avatar', function($model){
+        //             $src = $model->avatar && $model->avatar->path
+        //                 ? asset('back-office/assets/' . $model->avatar->path)
+        //                 : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png');
 
-                    return '<img class="rounded-circle" src="' . $src . '" width="36" height="36" alt="Avatar">';
-                })
-                ->addColumn('name', function($model){
-                    return $model->name;
-                })
-                ->addColumn('email', function($model){
-                    return $model->email;
-                })
-                ->addColumn('phone', function($model){
-                    return $model->phone;
-                })
-                ->addColumn('status', function($model){
-                    return $model->status;
-                })
-                ->addColumn('created_at', function($model){
-                    return getDateTimeFormat($model->created_at);
-                })
-                ->addColumn('action', function($model){
-                    return 'action';
-                })
-                ->rawColumns(['action', 'avatar'])
-                ->make(true);
+        //             return '<img class="rounded-circle" src="' . $src . '" width="36" height="36" alt="Avatar">';
+        //         })
+        //         ->addColumn('name', function($model){
+        //             return $model->name;
+        //         })
+        //         ->addColumn('email', function($model){
+        //             return $model->email;
+        //         })
+        //         ->addColumn('phone', function($model){
+        //             return $model->phone;
+        //         })
+        //         ->addColumn('status', function($model){
+        //             return $model->status;
+        //         })
+        //         ->addColumn('created_at', function($model){
+        //             return getDateTimeFormat($model->created_at);
+        //         })
+        //         ->addColumn('action', function($model){
+        //             return 'action';
+        //         })
+        //         ->rawColumns(['action', 'avatar'])
+        //         ->make(true);
+        // }
+
+        $columns = [
+            'avatar' => ['label'=>'Avatar', 'orderable'=>false, 'searchable'=>false],
+            'name' => ['label'=>'Name'],
+            'email' => ['label'=>'Email'],
+            'phone' => ['label'=>'Phone'],
+            'status' => ['label'=>'Status'],
+            'created_at' => ['label'=>'Created'],
+            'action' => ['label'=>'Action', 'orderable'=>false, 'searchable'=>false],
+        ];
+
+        $dataTableService = (new \App\Services\DataTableService($models))
+            ->setColumns($columns)
+            ->setRawColumns(['avatar','action']);
+
+        if($request->ajax() && $request->loaddata == "yes") {
+            return $dataTableService->handle($request, function($user){
+                // Use optional() to safely access relationship
+                $src = optional($user->avatar)->path
+                    ? asset('back-office/assets/' . $user->avatar->path)
+                    : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+
+                $user->avatar = '<img class="rounded-circle" width="36" height="36" src="'.$src.'">';
+                $user->created_at = $user->created_at;
+                $user->action = '<button class="btn btn-sm btn-primary">Edit</button>';
+                return $user;
+            });
         }
         return view(strtolower('back-office.users.index'), get_defined_vars());
     }

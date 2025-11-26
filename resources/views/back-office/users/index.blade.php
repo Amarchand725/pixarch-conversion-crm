@@ -45,13 +45,9 @@
                             <table class="dt-row-grouping table dataTable dtr-column data_table">
                                 <thead>
                                     <tr>
-                                        <th>Avatar</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Status</th>
-                                        <th>Created_at</th>
-                                        <th>Actions</th>
+                                        @foreach($dataTableService->getHeaders() as $header)
+                                            <th>{{ $header }}</th>
+                                        @endforeach
                                     </tr>
                                 </thead>
                                 <tbody id="body">
@@ -128,24 +124,34 @@
 
     @push('js')
         <script type="text/javascript">
-            var columns = [
-                {data: 'avatar', name:'avatar'},
-                {data: 'name', name:'name'},
-                {data: 'email', name:'email'},
-                {data: 'phone', name:'phone'},
-                {data: 'status', name:'status'},
-                {data: 'created_at', name:'created_at'},
-                {data: 'action', name:'action', orderable:false, searchable:false}
-            ];
+            // var columns = [
+            //     {data: 'avatar', name:'avatar'},
+            //     {data: 'name', name:'name'},
+            //     {data: 'email', name:'email'},
+            //     {data: 'phone', name:'phone'},
+            //     {data: 'status', name:'status'},
+            //     {data: 'created_at', name:'created_at'},
+            //     {data: 'action', name:'action', orderable:false, searchable:false}
+            // ];
 
-            $(document).ready(function () {
-                const pageUrl = $('#page_url').val();
-                initializeDataTable(pageUrl, columns);
-            });
+            // $(document).ready(function () {
+            //     const pageUrl = $('#page_url').val();
+            //     initializeDataTable(pageUrl, columns);
+            // });
 
-            $('#refresh-record').on('click', function () {
-                const pageUrl = $('#page_url').val();
-                initializeDataTable(pageUrl, columns);
+            // $('#refresh-record').on('click', function () {
+            //     const pageUrl = $('#page_url').val();
+            //     initializeDataTable(pageUrl, columns);
+            // });
+
+            const pageUrl = $('#page_url').val();
+            const tableColumns = @json($dataTableService->getJsColumns());
+            // Initialize the table
+            initializeDataTable(pageUrl, tableColumns);
+
+            // Refresh button
+            $('#refresh-record').on('click', function(){
+                initializeDataTable(pageUrl, tableColumns);
             });
         </script>
     @endpush

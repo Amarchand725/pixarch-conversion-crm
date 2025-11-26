@@ -76,7 +76,15 @@ function generateOtp($otpLength = 6)
 }
 
 function getDateTimeFormat($dateTime){
-    return Carbon::parse($dateTime)->format('d, M Y | H:i A');
+    if (!$dateTime) {
+        return '-';
+    }
+
+    try {
+        return Carbon::parse($dateTime)->format('d, M Y | h:i A');
+    } catch (\Exception $e) {
+        return $dateTime; // fallback to raw value if parse fails
+    }
 }
 
 function getDateFormat($date){
