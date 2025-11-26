@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -72,4 +73,12 @@ function exceptionErrors($exception)
 function generateOtp($otpLength = 6)
 {
     return str_pad(mt_rand(0, pow(10, $otpLength) - 1), $otpLength, '0', STR_PAD_LEFT);
+}
+
+function getDateTimeFormat($dateTime){
+    return Carbon::parse($dateTime)->format('d, M Y | H:i A');
+}
+
+function getDateFormat($date){
+    return Carbon::parse($date)->format('d, M Y');
 }

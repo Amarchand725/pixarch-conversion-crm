@@ -7,6 +7,8 @@ use App\Modules\User\Repositories\Eloquent\UserRepository;
 use App\Modules\User\Http\Requests\UserRequest;
 use App\Modules\User\Models\User;
 use Exception;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -17,16 +19,48 @@ class UserController extends Controller
         $this->userRepo = $userRepo;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Users List';
-        $users = $this->userRepo->getAll();
-        return view(strtolower('backOffice.users.index'), get_defined_vars());
+        $models = $this->userRepo->getAll();
+
+        if($request->ajax() && $request->loaddata == "yes") {
+            return DataTables::of($models)
+                ->addIndexColumn()
+                ->addColumn('avatar', function($model){
+                    $src = $model->avatar && $model->avatar->path
+                        ? asset('back-office/assets/' . $model->avatar->path)
+                        : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png');
+
+                    return '<img class="rounded-circle" src="' . $src . '" width="36" height="36" alt="Avatar">';
+                })
+                ->addColumn('name', function($model){
+                    return $model->name;
+                })
+                ->addColumn('email', function($model){
+                    return $model->email;
+                })
+                ->addColumn('phone', function($model){
+                    return $model->phone;
+                })
+                ->addColumn('status', function($model){
+                    return $model->status;
+                })
+                ->addColumn('created_at', function($model){
+                    return getDateTimeFormat($model->created_at);
+                })
+                ->addColumn('action', function($model){
+                    return 'action';
+                })
+                ->rawColumns(['action', 'avatar'])
+                ->make(true);
+        }
+        return view(strtolower('back-office.users.index'), get_defined_vars());
     }
 
     public function create()
     {
-        return view('backOffice.users.create');
+        return view('back-office.users.create');
     }
 
     public function store(UserRequest $request)
@@ -43,7 +77,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = $this->userRepo->showModel($id);
-        return view('backOffice.users.edit', compact('user'));
+        return view('back-office.users.edit', compact('user'));
     }
 
     public function update(UserRequest $request, User $user)

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <input type="hidden" id="page_url" value="{{ route('back-office.roles.index') }}">
+    <input type="hidden" id="page_url" value="{{ url()->current() }}">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card mb-4">
@@ -45,18 +45,32 @@
                             <table class="dt-row-grouping table dataTable dtr-column data_table">
                                 <thead>
                                     <tr>
+                                        <th>Avatar</th>
                                         <th>Name</th>
-                                        <th>Guard</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Status</th>
                                         <th>Created_at</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="body">
-                                    @foreach ($roles as $role)
+                                    @foreach ($models as $model)
                                         <tr>
-                                            <td>{{ $role->name }}</td>
-                                            <td>{{ $role->guard }}</td>
-                                            <td>{{ $role->created_at }}</td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                <img class="rounded-circle"
+                                                    src="{{ optional($model?->avatar)->path
+                                                            ? asset('back-office/assets/' . $model?->avatar->path)
+                                                            : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                    width="36" height="36" alt="Avatar">
+                                                </div>
+                                            </td>
+                                            <td>{{ $model->name }}</td>
+                                            <td>{{ $model->email }}</td>
+                                            <td>{{ $model->phone }}</td>
+                                            <td>{{ $model->status }}</td>
+                                            <td>{{ $model->created_at }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -109,29 +123,29 @@
         </div>
     </div>
     <!-- Modals -->
-    {{-- <x-modals /> --}}
+    <x-modals />
     <!--/ Modals -->
 
     @push('js')
         <script type="text/javascript">
-            var table = $('.data_table').DataTable();
-            if ($.fn.DataTable.isDataTable('.data_table')) {
-                table.destroy();
-            }
-            $(document).ready(function(){
-                var page_url = $('#page_url').val();
-                var table = $('.data_table').DataTable({
-                    processing:true,
-                    serverSide:true,
-                    ajax: page_url+"?loaddata=yes",
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                        {data: 'name', name:'name'},
-                        {data: 'guard', name:'guard'},
-                        {data: 'created_at', name:'created_at'},
-                        {data: 'action', name:'action', orderable:false, searchable:false}
-                    ]
-                });
+            var columns = [
+                {data: 'avatar', name:'avatar'},
+                {data: 'name', name:'name'},
+                {data: 'email', name:'email'},
+                {data: 'phone', name:'phone'},
+                {data: 'status', name:'status'},
+                {data: 'created_at', name:'created_at'},
+                {data: 'action', name:'action', orderable:false, searchable:false}
+            ];
+
+            $(document).ready(function () {
+                const pageUrl = $('#page_url').val();
+                initializeDataTable(pageUrl, columns);
+            });
+
+            $('#refresh-record').on('click', function () {
+                const pageUrl = $('#page_url').val();
+                initializeDataTable(pageUrl, columns);
             });
         </script>
     @endpush

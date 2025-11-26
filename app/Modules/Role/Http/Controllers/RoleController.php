@@ -7,7 +7,7 @@ use App\Modules\Role\Repositories\Eloquent\RoleRepository;
 use App\Modules\Role\Http\Requests\RoleRequest;
 use App\Modules\Role\Models\Role;
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
@@ -30,14 +30,20 @@ class RoleController extends Controller
                 ->addColumn('role', function($model){
                     return $model->name;
                 })
+                ->addColumn('guard_name', function($model){
+                    return $model->guard_name;
+                })
+                ->addColumn('created_at', function($model){
+                    return getDateTimeFormat($model->created_at);
+                })
                 ->addColumn('action', function($model){
                     return 'action';
                 })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
 
-        return view(strtolower('backOffice.roles.index'), get_defined_vars());
+        return view(strtolower('back-office.roles.index'), get_defined_vars());
     }
 
     public function create()

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <input type="hidden" id="page_url" value="{{ url()->current() }}">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card mb-4">
@@ -44,32 +45,20 @@
                             <table class="dt-row-grouping table dataTable dtr-column data_table">
                                 <thead>
                                     <tr>
-                                        <th>Avatar</th>
+                                        <th>#</th>
                                         <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Status</th>
+                                        <th>Guard Name</th>
                                         <th>Created_at</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="body">
-                                    @foreach ($users as $user)
+                                    @foreach ($roles as $role)
                                         <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2 mb-1">
-                                                <img class="rounded-circle"
-                                                    src="{{ optional($user?->avatar)->path
-                                                            ? asset('backOffice/assets/' . $user?->avatar->path)
-                                                            : asset('backOffice/assets/img/avatars/' . rand(1, 10) . '.png') }}"
-                                                    width="36" height="36" alt="Avatar">
-                                                </div>
-                                            </td>
-                                            <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->phone }}</td>
-                                            <td>{{ $user->status }}</td>
-                                            <td>{{ $user->created_at }}</td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $role->name }}</td>
+                                            <td>{{ $role->guard_name }}</td>
+                                            <td>{{ $role->created_at }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -122,32 +111,27 @@
         </div>
     </div>
     <!-- Modals -->
-    {{-- <x-modals /> --}}
+    <x-modals />
     <!--/ Modals -->
 
     @push('js')
         <script type="text/javascript">
-            var table = $('.data_table').DataTable();
-            if ($.fn.DataTable.isDataTable('.data_table')) {
-                table.destroy();
-            }
-            $(document).ready(function(){
-                var page_url = $('#page_url').val();
-                var table = $('.data_table').DataTable({
-                    processing:true,
-                    serverSide:true,
-                    ajax: page_url+"?loaddata=yes",
-                    columns: [
-                        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                        {data: 'avatar', name:'avatar'},
-                        {data: 'name', name:'name'},
-                        {data: 'email', name:'email'},
-                        {data: 'phone', name:'phone'},
-                        {data: 'status', name:'status'},
-                        {data: 'created_at', name:'created_at'},
-                        {data: 'action', name:'action', orderable:false, searchable:false}
-                    ]
-                });
+            var columns = [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                {data: 'name', name:'name'},
+                {data: 'guard_name', name:'guard_name'},
+                {data: 'created_at', name:'created_at'},
+                {data: 'action', name:'action', orderable:false, searchable:false}
+            ];
+
+            $(document).ready(function () {
+                const pageUrl = $('#page_url').val();
+                initializeDataTable(pageUrl, columns);
+            });
+
+            $('#refresh-record').on('click', function () {
+                const pageUrl = $('#page_url').val();
+                initializeDataTable(pageUrl, columns);
             });
         </script>
     @endpush

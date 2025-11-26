@@ -42,7 +42,7 @@
                             <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar">
-                                <img src="{{ asset('backOffice') }}/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                <img src="{{ asset('back-office') }}/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
                                 </div>
                             </div>
                             <div class="flex-grow-1">
@@ -102,8 +102,8 @@
                     <div class="avatar avatar-online">
                         <img class="rounded-circle"
                             src="{{ optional(Auth::user()?->avatar)->path
-                                    ? asset('backOffice/assets/' . Auth::user()?->avatar->path)
-                                    : asset('backOffice/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                    ? asset('back-office/assets/' . Auth::user()?->avatar->path)
+                                    : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
                             width="36" height="36" alt="Avatar">
                     </div>
                 </a>
@@ -115,8 +115,8 @@
                                     <div class="avatar avatar-online">
                                         <img class="rounded-circle"
                                             src="{{ optional(Auth::user()?->avatar)->path
-                                                    ? asset('backOffice/assets/' . Auth::user()?->avatar->path)
-                                                    : asset('backOffice/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                    ? asset('back-office/assets/' . Auth::user()?->avatar->path)
+                                                    : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
                                             width="36" height="36" alt="Avatar">
                                     </div>
                                 </div>

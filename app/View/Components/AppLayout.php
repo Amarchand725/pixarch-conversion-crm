@@ -12,6 +12,6 @@ class AppLayout extends Component
      */
     public function render(): View
     {
-        return view('backOffice.layouts.app');
+        return view('back-office.layouts.app');
     }
 }
