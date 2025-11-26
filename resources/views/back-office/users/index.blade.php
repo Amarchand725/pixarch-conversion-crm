@@ -1,5 +1,4 @@
 <x-app-layout>
-    <input type="hidden" id="page_url" value="{{ url()->current() }}">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card mb-4">
@@ -12,12 +11,6 @@
                     <div class="col-md-6">
                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
                             <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
-                            <a data-toggle="tooltip" data-placement="top" title="All Trashed Records" href="" class="btn btn-label-danger mx-2">
-                                <span>
-                                    <i class="ti ti-trash me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block">All Trashed Records </span>
-                                </span>
-                            </a>
                         
                             <button
                                 id="add-btn"
@@ -45,72 +38,12 @@
                             <table class="dt-row-grouping table dataTable dtr-column data_table">
                                 <thead>
                                     <tr>
-                                        @foreach($dataTableService->getHeaders() as $header)
+                                        @foreach($dataTable->headers() as $header)
                                             <th>{{ $header }}</th>
                                         @endforeach
                                     </tr>
                                 </thead>
-                                <tbody id="body">
-                                    @foreach ($models as $model)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2 mb-1">
-                                                <img class="rounded-circle"
-                                                    src="{{ optional($model?->avatar)->path
-                                                            ? asset('back-office/assets/' . $model?->avatar->path)
-                                                            : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
-                                                    width="36" height="36" alt="Avatar">
-                                                </div>
-                                            </td>
-                                            <td>{{ $model->name }}</td>
-                                            <td>{{ $model->email }}</td>
-                                            <td>{{ $model->phone }}</td>
-                                            <td>{{ $model->status }}</td>
-                                            <td>{{ $model->created_at }}</td>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                        <i class="ti ti-dots-vertical ti-sm mx-1"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-end m-0">
-                                                        <a href="#"
-                                                            class="dropdown-item show"
-                                                            tabindex="0" aria-controls="DataTables_Table_0"
-                                                            type="button"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#details-modal"
-                                                            data-toggle="tooltip"
-                                                            data-placement="top"
-                                                            title="Announcement Details"
-                                                            data-show-url=""
-                                                            >
-                                                            View Details
-                                                        </a>
-                                                        
-                                                        <a href="#"
-                                                            data-toggle="tooltip"
-                                                            data-placement="top"
-                                                            title="Edit Announcement"
-                                                            data-edit-url=""
-                                                            data-url=""
-                                                            class="dropdown-item edit-btn"
-                                                            type="button"
-                                                            tabindex="0"
-                                                            aria-controls="DataTables_Table_0"
-                                                            type="button"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#offcanvasAddAnnouncement"
-                                                            >
-                                                            Edit
-                                                        </a>
-
-                                                        <a href="javascript:;" class="dropdown-item delete" >Delete</a>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                <tbody id="body"></tbody>
                             </table>
                         </div>
                     </div>
@@ -124,34 +57,13 @@
 
     @push('js')
         <script type="text/javascript">
-            // var columns = [
-            //     {data: 'avatar', name:'avatar'},
-            //     {data: 'name', name:'name'},
-            //     {data: 'email', name:'email'},
-            //     {data: 'phone', name:'phone'},
-            //     {data: 'status', name:'status'},
-            //     {data: 'created_at', name:'created_at'},
-            //     {data: 'action', name:'action', orderable:false, searchable:false}
-            // ];
+            const pageUrl = "{{ url()->current() }}";
+            const columns = @json($dataTable->jsColumns());
 
-            // $(document).ready(function () {
-            //     const pageUrl = $('#page_url').val();
-            //     initializeDataTable(pageUrl, columns);
-            // });
+            initializeDataTable(pageUrl, columns);
 
-            // $('#refresh-record').on('click', function () {
-            //     const pageUrl = $('#page_url').val();
-            //     initializeDataTable(pageUrl, columns);
-            // });
-
-            const pageUrl = $('#page_url').val();
-            const tableColumns = @json($dataTableService->getJsColumns());
-            // Initialize the table
-            initializeDataTable(pageUrl, tableColumns);
-
-            // Refresh button
             $('#refresh-record').on('click', function(){
-                initializeDataTable(pageUrl, tableColumns);
+                $('.table').DataTable().ajax.reload();
             });
         </script>
     @endpush

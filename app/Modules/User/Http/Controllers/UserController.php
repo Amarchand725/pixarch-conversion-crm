@@ -22,68 +22,39 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $title = 'Users List';
-        $models = $this->userRepo->getAll();
-
-        // if($request->ajax() && $request->loaddata == "yes") {
-        //     return DataTables::of($models)
-        //         ->addIndexColumn()
-        //         ->addColumn('avatar', function($model){
-        //             $src = $model->avatar && $model->avatar->path
-        //                 ? asset('back-office/assets/' . $model->avatar->path)
-        //                 : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png');
-
-        //             return '<img class="rounded-circle" src="' . $src . '" width="36" height="36" alt="Avatar">';
-        //         })
-        //         ->addColumn('name', function($model){
-        //             return $model->name;
-        //         })
-        //         ->addColumn('email', function($model){
-        //             return $model->email;
-        //         })
-        //         ->addColumn('phone', function($model){
-        //             return $model->phone;
-        //         })
-        //         ->addColumn('status', function($model){
-        //             return $model->status;
-        //         })
-        //         ->addColumn('created_at', function($model){
-        //             return getDateTimeFormat($model->created_at);
-        //         })
-        //         ->addColumn('action', function($model){
-        //             return 'action';
-        //         })
-        //         ->rawColumns(['action', 'avatar'])
-        //         ->make(true);
-        // }
-
         $columns = [
-            'avatar' => ['label'=>'Avatar', 'orderable'=>false, 'searchable'=>false],
-            'name' => ['label'=>'Name'],
-            'email' => ['label'=>'Email'],
-            'phone' => ['label'=>'Phone'],
-            'status' => ['label'=>'Status'],
-            'created_at' => ['label'=>'Created'],
-            'action' => ['label'=>'Action', 'orderable'=>false, 'searchable'=>false],
+            'agent'     => ['label' => 'Agent', 'html' => true],
+            'role'       => ['label' => 'Role'],
+            'phone'      => ['label' => 'Phone'],
+            'status'     => ['label' => 'Status', 'html' => true],
+            'created_at' => ['label' => 'Created'],
+            'action'     => ['label' => 'Action', 'html' => true],
         ];
 
-        $dataTableService = (new \App\Services\DataTableService($models))
-            ->setColumns($columns)
-            ->setRawColumns(['avatar','action']);
+        // Get query builder from repository (perfect for DataTables)
+        $query = $this->userRepo->getAll()->with(['avatar', 'roles', 'statusInfo']); // eager-load status
 
-        if($request->ajax() && $request->loaddata == "yes") {
-            return $dataTableService->handle($request, function($user){
-                // Use optional() to safely access relationship
-                $src = optional($user->avatar)->path
-                    ? asset('back-office/assets/' . $user->avatar->path)
-                    : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: function($row){
+                // pass $row as 'user' for the partial
+                $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', ['user' => $row])->render();
+                $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
 
-                $user->avatar = '<img class="rounded-circle" width="36" height="36" src="'.$src.'">';
-                $user->created_at = $user->created_at;
-                $user->action = '<button class="btn btn-sm btn-primary">Edit</button>';
-                return $user;
-            });
+                // Role - first role name from Spatie roles
+                $row->role = $row->getRoleNames()[0] ?? 'N/A';
+
+                return $row;
+            }
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
         }
-        return view(strtolower('back-office.users.index'), get_defined_vars());
+
+        return view('back-office.users.index', get_defined_vars());
     }
 
     public function create()

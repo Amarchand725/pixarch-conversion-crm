@@ -17,8 +17,11 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item active open">
-            
+        <li class="menu-item {{ request()->is('dashboard')?'active open':'' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-settings"></i>
+                <div data-i18n="Dashboard">Dashboard</div>
+            </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('dashboard')?'active':'' }}">
                     <a href="{{ route('dashboard') }}" class="menu-link">
@@ -39,10 +42,10 @@
             <span class="menu-header-text">Apps &amp; Pages</span>
         </li>
     
-        <li class="menu-item">
+        <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-users"></i>
-                <div data-i18n="Users">Users</div>
+                <div data-i18n="Users List">Users List</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('back-office/users')?'active':'' }}">
@@ -52,7 +55,7 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item">
+        <li class="menu-item {{ request()->is('back-office/roles') || request()->is('back-office/roles/*')?'active open':'' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
                 <div data-i18n="Roles & Permissions">Roles & Permissions</div>
@@ -60,7 +63,7 @@
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('back-office/roles')?'active':'' }}">
                     <a href="{{ route('back-office.roles.index') }}" class="menu-link">
-                        <div data-i18n="Roles">Roles</div>
+                        <div data-i18n="Roles List">Roles List</div>
                     </a>
                 </li>
             </ul>

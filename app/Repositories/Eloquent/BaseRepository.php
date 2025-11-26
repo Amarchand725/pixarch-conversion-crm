@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Contracts\BaseContract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class BaseRepository implements BaseContract
 {
@@ -25,9 +26,18 @@ abstract class BaseRepository implements BaseContract
     }
 
     /**
-     * Retrieve all records.
+     * Retrieve all builder.
      */
-    public function getAll(array $columns = ['*']): Collection
+
+    public function getAll(array $columns = ['*']): Builder
+    {
+        return $this->model->select($columns); // returns query builder
+    }
+
+    /**
+     * Retrieve all records collection.
+     */
+    public function getAllCollection(array $columns = ['*']): Collection
     {
         return $this->model->all($columns);
     }

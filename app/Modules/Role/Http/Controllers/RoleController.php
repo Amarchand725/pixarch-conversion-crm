@@ -21,26 +21,30 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
-        $title = "Role List";
-        $roles = $this->roleRepo->getAll();
+        $title = 'Roles List';
+        $columns = [
+            'name'       => ['label' => 'Role Name'],
+            'guard_name'      => ['label' => 'Guard Name'],
+            'created_at' => ['label' => 'Created'],
+            'action'     => ['label' => 'Action', 'html' => true],
+        ];
 
-        if($request->ajax() && $request->loaddata == "yes") {
-            return DataTables::of($roles)
-                ->addIndexColumn()
-                ->addColumn('role', function($model){
-                    return $model->name;
-                })
-                ->addColumn('guard_name', function($model){
-                    return $model->guard_name;
-                })
-                ->addColumn('created_at', function($model){
-                    return getDateTimeFormat($model->created_at);
-                })
-                ->addColumn('action', function($model){
-                    return 'action';
-                })
-                ->rawColumns(['action'])
-                ->make(true);
+        // Get query builder from repository (perfect for DataTables)
+        $query = $this->roleRepo->getAll();
+
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: function($row){
+                // pass $row as 'model' for the partial
+                $row->action = view('back-office.partials.action-buttons', ['model' => $row])->render();
+
+                return $row;
+            }
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
         }
 
         return view(strtolower('back-office.roles.index'), get_defined_vars());

@@ -1,62 +1,57 @@
 <?php
-
 namespace App\Services;
 
 use Yajra\DataTables\Facades\DataTables;
 
 class DataTableService
 {
-    protected $model;        // Eloquent model or query
-    protected $columns = [];  // Column definitions
-    protected $rawColumns = []; // Columns that contain HTML
+    public function __construct(
+        public $model,
+        public array $columns,
+        public $rowFormatter = null
+    ) {}
 
-    public function __construct($model)
+    public function headers()
     {
-        $this->model = $model;
+        return collect($this->columns)->map(fn($c) => $c['label'])->toArray();
     }
 
-    public function setColumns(array $columns)
+    public function jsColumns()
     {
-        $this->columns = $columns;
-        return $this;
-    }
-
-    public function setRawColumns(array $raw)
-    {
-        $this->rawColumns = $raw;
-        return $this;
-    }
-
-    // Blade headers <th>
-    public function getHeaders(): array
-    {
-        return array_map(fn($col) => $col['label'] ?? ucfirst($col), $this->columns);
-    }
-
-    // JS DataTable column definition
-    public function getJsColumns(): array
-    {
-        return array_map(function($key, $col){
+        return collect($this->columns)->map(function ($opts, $key) {
             return [
-                'data' => $key,
-                'name' => $key,
-                'orderable' => $col['orderable'] ?? true,
-                'searchable' => $col['searchable'] ?? true,
+                'data'       => $key,
+                'name'       => $key,
+                'orderable'  => $opts['orderable'] ?? true,
+                'searchable' => $opts['searchable'] ?? true,
             ];
-        }, array_keys($this->columns), $this->columns);
+        })->values()->toArray();
     }
 
-    // Server-side processing
-    public function handle($request, $rowCallback = null)
+    public function htmlColumns()
     {
-        $query = $this->model;
+        return collect($this->columns)
+            ->filter(fn($c) => !empty($c['html']))
+            ->keys()
+            ->toArray();
+    }
 
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->editColumn('*', function ($row) use ($rowCallback) {
-                return $rowCallback ? $rowCallback($row) : $row;
-            })
-            ->rawColumns($this->rawColumns)
-            ->make(true);
+    public function ajax()
+    {
+        $dt = DataTables::of($this->model);
+
+        foreach ($this->columns as $key => $meta) {
+            if (!empty($meta['db'])) {
+                $dt->editColumn($key, fn($row) => $row->$key);
+            } elseif (!empty($meta['html'])) {
+                // computed / HTML column: use rowFormatter for this column
+                $dt->addColumn($key, fn($row) => $this->rowFormatter ? ($this->rowFormatter)($row)->$key : '');
+            } else {
+                // computed non-HTML column
+                $dt->addColumn($key, fn($row) => $row->$key ?? null);
+            }
+        }
+
+        return $dt->rawColumns($this->htmlColumns())->make(true);
     }
 }

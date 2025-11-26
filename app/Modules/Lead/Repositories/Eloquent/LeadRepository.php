@@ -7,7 +7,7 @@ use App\Models\Status;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Modules\Lead\Models\Lead;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Collection;
 
 class LeadRepository extends BaseRepository implements LeadContract
 {
@@ -16,20 +16,17 @@ class LeadRepository extends BaseRepository implements LeadContract
         parent::__construct($model);
     }
 
-    public function getAll(array $columns = ['*']): EloquentCollection
+    public function getAllCollection(array $columns = ['*']): Collection
     {
         $statuses = Status::where('model', 'Lead')->get();
-
         $leads = Lead::with(['lastStatusLog.status', 'currentAssignee'])->get(); // EloquentCollection
-
-        $statusLeads = new EloquentCollection();
+        $statusLeads = new Collection();
 
         foreach ($statuses as $status) {
             $filtered = $leads->filter(function ($lead) use ($status) {
                 return $lead->lastStatusLog?->status_id === $status->id;
-            })->values(); // still EloquentCollection
+            })->values();
 
-            // Store both status_id and leads
             $statusLeads[] = [
                 'status_id' => $status->uuid,
                 'status_name' => $status->name,

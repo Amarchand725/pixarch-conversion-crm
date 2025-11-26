@@ -21,13 +21,13 @@ class LeadController extends Controller
     public function index()
     {
         $title = 'Leads';
-        $statusLeads = $this->leadRepo->getAll();
-        return view(strtolower('backOffice.leads.index'), get_defined_vars());
+        $statusLeads = $this->leadRepo->getAllCollection();
+        return view(strtolower('back-office.leads.index'), get_defined_vars());
     }
 
     public function create()
     {
-        return view('backOffice.leads.create');
+        return view('back-office.leads.create');
     }
 
     public function store(LeadRequest $request)

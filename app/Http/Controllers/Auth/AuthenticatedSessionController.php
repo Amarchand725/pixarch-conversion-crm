@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('backOffice.auth.login');
+        return view('back-office.auth.login');
     }
 
     /**

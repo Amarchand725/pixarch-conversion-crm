@@ -4,11 +4,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('backOffice.welcome');
+    return view('back-office.welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('backOffice.dashboard');
+    return view('back-office.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
