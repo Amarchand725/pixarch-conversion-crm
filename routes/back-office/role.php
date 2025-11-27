@@ -4,7 +4,7 @@ use App\Modules\Role\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:role']
 ], function () {
     Route::controller(RoleController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

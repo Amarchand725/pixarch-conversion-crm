@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\User\Http\Controllers\UserController;
 
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:user']
 ], function () {
     Route::controller(UserController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

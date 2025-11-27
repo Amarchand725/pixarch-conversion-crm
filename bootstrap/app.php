@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\PermissionActionsMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,7 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         App\Providers\ModuleServiceProvider::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        //Added alias for permissions
+        $middleware->alias([
+            'permission.actions' => PermissionActionsMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

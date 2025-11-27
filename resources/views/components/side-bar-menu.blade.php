@@ -51,6 +51,8 @@
                 </li>
             </ul>
         </li>
+
+        @can('user-list')
         <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-users"></i>
@@ -64,6 +66,8 @@
                 </li>
             </ul>
         </li>
+        @endcan
+        @can('role-list')
         <li class="menu-item {{ request()->is('back-office/roles') || request()->is('back-office/roles/*')?'active open':'' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
@@ -77,5 +81,6 @@
                 </li>
             </ul>
         </li>
+        @endcan
     </ul>
 </aside>
