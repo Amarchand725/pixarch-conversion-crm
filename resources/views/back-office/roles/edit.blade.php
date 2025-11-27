@@ -1,36 +1,82 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Role') }}</h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
-
-                <h1 class="text-2xl font-bold mb-4">Edit Role</h1>
-
-                <form action="{{ route('roles.update', $role->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Name</label>
-                        <input type="text" name="name" value="{{ old('name', $role->name) }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-                        @error('name') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-header">
+                            <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Home /</span> {{ $title }}</h4>
+                        </div>
                     </div>
+                </div>
+            </div>
+            <!-- Users List Table -->
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-datatable">
+                            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                <div class="container">
+                                    <!-- Add role form -->
+                                    <form action="{{ route('back-office.roles.update', $role->id) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form">
+                                        @csrf
+                                        @method('PUT')
 
-                    <div class="mb-4">
-                        <label class="block text-gray-700">Status</label>
-                        <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-                            <option value="active" {{ (old('status', $role->status) === 'active') ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ (old('status', $role->status) === 'inactive') ? 'selected' : '' }}>Inactive</option>
-                        </select>
-                        @error('status') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                                        <div class="row mt-4">
+                                            <h5>{{ $title }}</h5>
+                                            <div class="mb-3 fv-plugins-icon-container col-12">
+                                                <label class="form-label" for="name">Role <span class="text-danger">*</span></label>
+                                                <input type="text" value="{{ $role->name }}" class="form-control" id="name" placeholder="Enter role" name="name">
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                <span id="name_error" class="text-danger error"></span>
+                                            </div>
+                                            <div class="col-12 mb-3 action-btn d-flex justify-content-end">
+                                                <div class="demo-inline-spacing sub-btn">
+                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>
+                                                    <a href="{{ route('back-office.roles.index') }}" class="btn btn-label-secondary btn-reset"> Cancel</a>
+                                                </div>
+                                                <div class="demo-inline-spacing loading-btn" style="display: none;">
+                                                    <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
+                                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                                    Loading...
+                                                    </button>
+                                                    <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <!-- Permission table -->
+                                            <x-sub-permissions :permissions="$permissions" :role="$role" />
+                                            <!-- Permission table -->
+                                        </div>
+
+                                        <div class="col-12 mt-3 action-btn">
+                                            <div class="demo-inline-spacing sub-btn">
+                                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>
+                                                <a href="{{ route('back-office.roles.index') }}" class="btn btn-label-secondary btn-reset"> Cancel</a>
+                                            </div>
+                                            <div class="demo-inline-spacing loading-btn" style="display: none;">
+                                                <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
+                                                <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                                Loading...
+                                                </button>
+                                                <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+    @push('js')
+        <script src="{{ asset('back-office/assets/custom/check-permission-checkbox.js') }}"></script>
+    @endpush
 </x-app-layout>

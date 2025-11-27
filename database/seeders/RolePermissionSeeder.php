@@ -31,14 +31,24 @@ class RolePermissionSeeder extends Seeder
             $adminRole = Role::where('name','Admin')->first();
 
             // Define permissions by module
-            $userPermissions = $this->getPermissions('user');
+            $permissions = $this->getPermissions('user');
 
             // Create permissions if they don't exist
+            foreach ($permissions as $permission) {
+                $underscoreSeparated = explode('-', $permission);
+                $label = str_replace('_', ' ', $underscoreSeparated[0]);
+                $exists = DB::table('permissions')
+                    ->where('label', $label)
+                    ->where('name', $permission)
+                    ->exists();
 
-            foreach ($userPermissions as $permission) {
-                Permission::firstOrCreate([
+                if ($exists) {
+                    continue;
+                }
+                Permission::create([
+                    'label' => $label,
                     'name' => $permission,
-                    'guard_name' => 'user'
+                    'guard_name' => 'user',
                 ]);
             }
 

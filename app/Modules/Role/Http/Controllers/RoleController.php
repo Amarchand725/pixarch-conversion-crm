@@ -3,20 +3,22 @@
 namespace App\Modules\Role\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use App\Modules\Role\Repositories\Eloquent\RoleRepository;
 use App\Modules\Role\Http\Requests\RoleRequest;
-use App\Modules\Role\Models\Role;
+use Spatie\Permission\Models\Role;
 use Exception;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
     protected $roleRepo;
+    protected $permissionModel;
 
     public function __construct(RoleRepository $roleRepo)
     {
         $this->roleRepo = $roleRepo;
+        $this->permissionModel = new Permission();
     }
 
     public function index(Request $request)
@@ -52,7 +54,10 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view('backOffice.roles.create');
+        $title = 'Add Role';
+        
+        $models = $this->permissionModel->orderby('id','DESC')->groupBy('label')->get();
+        return view('back-office.roles.create', get_defined_vars());
     }
 
     public function store(RoleRequest $request)
@@ -68,8 +73,10 @@ class RoleController extends Controller
 
     public function edit($id)
     {
+        $title = 'Edit Role';
         $role = $this->roleRepo->showModel($id);
-        return view('backOffice.roles.edit', compact('role'));
+        $permissions = $this->permissionModel->orderby('id','DESC')->groupBy('label')->get();
+        return view('back-office.roles.edit', get_defined_vars());
     }
 
     public function update(RoleRequest $request, Role $role)
@@ -86,6 +93,11 @@ class RoleController extends Controller
     public function show($id)
     {
         $role = $this->roleRepo->showModel($id);
+        // $model = $this->model->findOrFail($id);
+        // $permissions = $model->permissions()->pluck('name')->toArray();
+        // $groupedPermissions = groupPermissions($permissions);
+        // return (string) view($bladePath.'.show_content', get_defined_vars());
+
         return view('roles.show', compact('role'));
     }
 

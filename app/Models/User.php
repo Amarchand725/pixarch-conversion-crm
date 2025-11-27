@@ -15,7 +15,7 @@ use App\Models\Traits\LogsModelActivity;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Notifiable, ModelTrait, HasFactory, HasRoles,SoftDeletes, LogsModelActivity;
+    use Notifiable, ModelTrait, HasFactory, HasRoles, SoftDeletes, LogsModelActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -85,6 +85,11 @@ class User extends Authenticatable
     }
 
     public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function statusInfo()
     {
         return $this->belongsTo(Status::class, 'status_id');
     }

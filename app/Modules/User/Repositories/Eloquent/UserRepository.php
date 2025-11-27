@@ -4,7 +4,7 @@ namespace App\Modules\User\Repositories\Eloquent;
 
 use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\User\Repositories\Contracts\UserContract;
-use App\Modules\User\Models\User;
+use App\Models\User;
 
 class UserRepository extends BaseRepository implements UserContract
 {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Permission;
 use Carbon\Carbon;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
@@ -89,4 +90,38 @@ function getDateTimeFormat($dateTime){
 
 function getDateFormat($date){
     return Carbon::parse($date)->format('d, M Y');
+}
+
+
+function SubPermissions($label)
+{
+    return Permission::where('label', $label)->get();
+}
+
+// Function to group permissions by their common prefix
+function groupPermissions($permissions) {
+    $groups = [];
+
+    foreach ($permissions as $permission) {
+        // Extract group name before the hyphen
+        $groupName = strtok($permission, '-');
+
+        // Add permission to the group
+        $groups[$groupName][] = $permission;
+    }
+
+    return $groups;
+}
+
+function subPermissionFields(){
+    return $sub_permission_fields = [
+        'list' => 'list',
+        'create' => 'create',
+        'show' => 'show',
+        'edit' => 'edit',
+        'delete' => 'delete',
+        'status' => 'status',
+        'trashed' => 'trashed',
+        'restore' => 'restore',
+    ];
 }

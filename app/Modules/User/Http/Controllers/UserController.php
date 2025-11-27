@@ -5,10 +5,9 @@ namespace App\Modules\User\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Repositories\Eloquent\UserRepository;
 use App\Modules\User\Http\Requests\UserRequest;
-use App\Modules\User\Models\User;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -40,7 +39,7 @@ class UserController extends Controller
             rowFormatter: function($row){
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->action = view('back-office.partials.action-buttons', ['user' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', ['model' => $row])->render();
                 $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
 
                 // Role - first role name from Spatie roles
