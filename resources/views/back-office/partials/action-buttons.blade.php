@@ -12,11 +12,11 @@
             data-toggle="tooltip"
             data-placement="top"
             title="Role Details"
-            data-show-url="{{ route('back-office.roles.show', $model->id) }}"
+            data-show-url="{{ route('back-office.' . $module . '.show', $model->id) }}"
             >
             View Details
         </a>
-        <a href="{{ route('back-office.roles.edit', $model->id) }}"
+        <a href="{{ route('back-office.' . $module . '.edit', $model->id) }}"
             class="dropdown-item"
             data-toggle="tooltip"
             data-placement="top"

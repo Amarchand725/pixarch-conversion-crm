@@ -39,7 +39,7 @@ class RoleController extends Controller
             columns: $columns,
             rowFormatter: function($row){
                 // pass $row as 'model' for the partial
-                $row->action = view('back-office.partials.action-buttons', ['model' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', ['module' => 'roles', 'model' => $row])->render();
 
                 return $row;
             }

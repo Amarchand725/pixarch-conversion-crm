@@ -29,11 +29,7 @@
                         <div data-i18n="Dashboards">Dashboard</div>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->is('back-office/leads')?'active':'' }}">
-                    <a href="{{ route('back-office.leads.index') }}" class="menu-link">
-                        <div data-i18n="All Leads">All Leads</div>
-                    </a>
-                </li>
+                
             </ul>
         </li>
 
@@ -42,15 +38,28 @@
             <span class="menu-header-text">Apps &amp; Pages</span>
         </li>
     
+        <li class="menu-item {{ request()->is('back-office/leads') || request()->is('back-office/leads/*')?'active open':'' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-tags"></i>
+                <div data-i18n="Leads">Leads</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ request()->is('back-office/leads')?'active':'' }}">
+                    <a href="{{ route('back-office.leads.index') }}" class="menu-link">
+                        <div data-i18n="Leads List">Leads List</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-users"></i>
-                <div data-i18n="Users List">Users List</div>
+                <div data-i18n="Agents">Agents</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('back-office/users')?'active':'' }}">
                     <a href="{{ route('back-office.users.index') }}" class="menu-link">
-                        <div data-i18n="List">List</div>
+                        <div data-i18n="Agents List">Agents List</div>
                     </a>
                 </li>
             </ul>

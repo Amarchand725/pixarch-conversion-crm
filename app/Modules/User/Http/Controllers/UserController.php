@@ -20,7 +20,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $title = 'Users List';
+        $title = 'Agents List';
         $columns = [
             'agent'     => ['label' => 'Agent', 'html' => true],
             'role'       => ['label' => 'Role'],
@@ -39,7 +39,7 @@ class UserController extends Controller
             rowFormatter: function($row){
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->action = view('back-office.partials.action-buttons', ['model' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
                 $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
 
                 // Role - first role name from Spatie roles

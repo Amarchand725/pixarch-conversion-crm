@@ -19,7 +19,6 @@ class RolePermissionSeeder extends Seeder
 
             $roles = [
                 //GeneralRoles
-                [ 'name' => 'Super Admin', 'guard_name' => 'user'],
                 [ 'name' => 'Admin', 'guard_name' => 'user'],
                 [ 'name' => 'Agent', 'guard_name' => 'user'],
             ];
