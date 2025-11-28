@@ -133,7 +133,6 @@ $("form.submitBtnWithFileUpload").on('submit', function (e) {
             thi.find('.loading-btn').hide();
             
             if (response.success == true) {
-                
                 toastr.success(response.message, 'Success', { timeOut: 1000 });
 
                 if (response.route !== undefined) {
@@ -142,25 +141,11 @@ $("form.submitBtnWithFileUpload").on('submit', function (e) {
                     var oTable = $('.data_table').dataTable();
                     oTable.fnDraw(false);
 
-                    // Check if it's an import response
-                    if (response.files_count !== undefined && response.import_results !== undefined) {
-                        let summary = `<strong>Total Files:</strong> ${response.files_count}<br>`;
-                        summary += `<strong>Total Records Imported:</strong> ${response.total_records_inserted}<br><br>`;
-                        summary += `<strong>Details:</strong><br>`;
-                        response.import_results.forEach(function (result) {
-                            summary += `- ${result.file}: ${result.records} records<br>`;
-                        });
-
-                        // Show summary under the file input inside the same modal
-                        $('#' + modal_id).find('#import-summary-content').html(summary);
-                    }else{
-                        $('#' + modal_id).modal('hide');
-                        $('#' + modal_id).removeClass('show');
-                        $('#' + modal_id).parents('.card').find('.offcanvas-backdrop').removeClass('show');
-                    }    
+                    $('#' + modal_id).modal('hide');
+                    $('#' + modal_id).removeClass('show');
+                    $('#' + modal_id).parents('.card').find('.offcanvas-backdrop').removeClass('show');
                 }
             }else if (response.error) {
-                // $('#' + modal_id).modal('hide');
                 toastr.error(response.error);
             } else if (response.error == false) {
                 toastr.error(response.message);

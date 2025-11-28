@@ -82,8 +82,10 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = $this->userRepo->showModel($id);
-        return view('back-office.users.edit', compact('user'));
+        $title = 'Edit Agent';
+        $model = $this->userRepo->showModel($id);
+        $roles = $this->roleRepo->get();
+        return (string) view('back-office.users.edit_content', get_defined_vars());
     }
 
     public function update(UserRequest $request, User $user)
@@ -106,8 +108,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         try {
-            $this->userRepo->softDeleteModel($id);
-            return redirect()->route(strtolower('users.index'))->with('success', 'User deleted successfully.');
+            if($this->userRepo->softDeleteModel($id)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'User Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => 'User not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }

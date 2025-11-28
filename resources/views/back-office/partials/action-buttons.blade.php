@@ -19,14 +19,19 @@
             </a>
         @endcan
         @can(Str::singular($module).'-edit')
-            <a href="{{ route('back-office.' . $module . '.edit', $model->id) }}"
-                class="dropdown-item"
-                data-toggle="tooltip"
-                data-placement="top"
-                title="Edit {{ ucfirst(Str::singular($module)) }}">
+            <button
+                data-toggle="tooltip" data-placement="top" title="Edit {{ ucfirst(Str::singular($module)) }}"
+                data-edit-url="{{ route('back-office.' . $module . '.edit', $model->id) }}"
+                data-url="{{ route('back-office.' . $module . '.update', $model->id) }}"
+                class="dropdown-item edit-btn"
+                tabindex="0" aria-controls="DataTables_Table_0"
+                type="button" data-bs-toggle="modal"
+                data-bs-target="#create-pop-up-modal-for-file">
                 Edit {{ Str::singular(ucfirst($module)) }}
-            </a>
+            </button>
         @endcan
-        {{-- <a href="javascript:;" class="dropdown-item delete">Delete</a> --}}
+         @can(Str::singular($module).'-delete')
+            <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route('back-office.' . $module . '.destroy', $model->id) }}">Delete</a>
+        @endcan
     </div>
 </div>

@@ -133,6 +133,7 @@
 
     <!-- Custom Ajax Gateway JS -->
     <script src="{{ asset('back-office') }}/assets/custom/ajax-gateway.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         var btn = $('#scrollTop');
