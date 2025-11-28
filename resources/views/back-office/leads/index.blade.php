@@ -41,7 +41,7 @@
 
         <div class="status-row-wrapper">
             <div class="status-row d-flex overflow-auto pb-2">
-                @foreach($statusLeads as $status)
+                @forelse($statusLeads as $status)
                     <div class="status-card card"
                         data-status-id="{{ $status['status_id'] }}"
                         data-total="{{ $status['leads']->sum('value') }}"
@@ -62,7 +62,7 @@
                         </div>
 
                         <ul class="list-group list-group-flush task-column">
-                            @foreach($status['leads'] as $lead)
+                            @forelse($status['leads'] as $lead)
                                 <li class="list-group-item drag-item d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded bg-white"
                                     data-lead-id="{{ $lead->uuid }}"
                                     data-value="{{ $lead->value }}"
@@ -102,11 +102,20 @@
                                         ${{ number_format($lead->value) }}
                                     </span>
                                 </li>
-
-                            @endforeach
+                            @empty
+                                <li class="empty-slot text-center py-4 text-muted"
+                                    style="opacity:.6;border:2px dashed #ccc;cursor:default;">
+                                    Drop lead here
+                                </li>
+                            @endforelse
                         </ul>
                     </div>
-                @endforeach
+                @empty
+                    <li class="empty-slot text-center py-4 text-muted"
+                        style="opacity:.6;border:2px dashed #ccc;cursor:default;">
+                        Drop lead here
+                    </li>
+                @endforelse
             </div>
         </div>
 
@@ -117,22 +126,35 @@
         <script src="{{ asset('back-office') }}/assets/vendor/libs/sortablejs/sortable.js"></script>
         <script src="{{ asset('back-office') }}/assets/js/extended-ui-drag-and-drop.js"></script>
         <script>
+            function ensurePlaceholder(column) {
+                const realItems = column.querySelectorAll('li[data-lead-id]');
+                const emptySlot = column.querySelector('.empty-slot');
+
+                if (realItems.length === 0 && !emptySlot) {
+                    column.insertAdjacentHTML('beforeend',
+                        '<li class="empty-slot text-center py-4 text-muted" style="opacity:.6;border:2px dashed #ccc;cursor:default;">Drop lead here</li>'
+                    );
+                }
+
+                if (realItems.length > 0 && emptySlot) {
+                    emptySlot.remove();
+                }
+            }
+
             function updateCardTotals(card) {
-                const leadEls = card.querySelectorAll('.task-column li');
+                const leadEls = card.querySelectorAll('.task-column li[data-lead-id]');
                 let total = 0;
+
                 leadEls.forEach(li => {
                     const val = Number(li.dataset.value);
                     if (!isNaN(val)) total += val;
                 });
 
-                // Update the DOM
                 const totalEl = card.querySelector('.total-value');
                 if (totalEl) totalEl.textContent = `Value: $${total.toLocaleString()}`;
 
-                // Update dataset for reference
                 card.dataset.total = total;
 
-                // Update total leads count
                 const countEl = card.querySelector('.lead-count');
                 if (countEl) countEl.textContent = `Total : ${leadEls.length}`;
             }
@@ -144,8 +166,13 @@
                         animation: 150,
                         ghostClass: "sortable-ghost",
                         fallbackOnBody: true,
+                        forceFallback: true,
 
                         onEnd: function (evt) {
+                            const oldColumn = evt.from;
+                            const newColumn = evt.to;
+                            ensurePlaceholder(oldColumn);
+                            ensurePlaceholder(newColumn);
 
                             const leadEl = evt.item;
                             const oldCard = evt.from.closest(".status-card");
