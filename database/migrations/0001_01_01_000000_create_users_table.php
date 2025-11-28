@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->unsignedBigInteger('avatar_id')->nullable()->constrained('attachments')->cascadeOnUpdate()->nullOnDelete();
             $table->enum('gender', array_column(GenderEnum::cases(), 'value'))->nullable();
-            $table->date('dob')->nullable();
+            $table->date('doj')->nullable()->comment('date of joining');
             $table->string('phone', 20)->nullable();
             $table->enum('two_factor', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();
             $table->enum('notification', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();

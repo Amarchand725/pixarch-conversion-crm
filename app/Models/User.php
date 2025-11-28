@@ -32,7 +32,7 @@ class User extends Authenticatable
         'password',
         'avatar_id',
         'gender',
-        'dob',
+        'doj',
         'phone',
         'two_factor',
         'notification',

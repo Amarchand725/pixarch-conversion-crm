@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'email' =>  $username . "@mailinator.com",
             'avatar_id'    => null,
             'gender'    => fake()->randomElement(array_column(GenderEnum::cases(), 'value')),
-            'dob'   => fake()->date(),
+            'doj'   => fake()->date(),
             'phone' => fake()->phoneNumber(),
             'two_factor'    => null,
             'notification'  => null,
