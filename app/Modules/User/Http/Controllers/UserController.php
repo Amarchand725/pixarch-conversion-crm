@@ -143,27 +143,48 @@ class UserController extends Controller
                 ]);
             }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
     public function restore($id)
     {
         try {
-            $this->userRepo->restoreModel($id);
-            return redirect()->route(strtolower('users.index'))->with('success', 'User restored successfully.');
+            if($this->userRepo->restoreModel($id)) {
+                return redirect()->back()->with('message', 'Record Restored Successfully.');
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
     public function forceDelete($id)
     {
         try {
-            $this->userRepo->permanentlyDeleteModel($id);
-            return redirect()->route(strtolower('users.index'))->with('success', 'User permanently deleted.');
+            if ($this->userRepo->permanentlyDeleteModel($id)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => true,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
