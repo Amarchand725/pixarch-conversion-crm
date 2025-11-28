@@ -4,7 +4,7 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-end">
-        @can(Str::singular($module).'-view')
+        @can($permissionPrefix.'-view')
             <a href="#"
                 class="dropdown-item show"
                 tabindex="0" aria-controls="DataTables_Table_0"
@@ -12,26 +12,26 @@
                 data-bs-target="#details-modal"
                 data-toggle="tooltip"
                 data-placement="top"
-                title="{{ ucfirst(Str::singular($module)) }} Details"
-                data-show-url="{{ route('back-office.' . $module . '.show', $model->id) }}"
+                title="{{ $singularLabel }} Details"
+                data-show-url="{{ route($routeInitialize. '.show', $model->id) }}"
                 >
-                View Details
+                {{ $singularLabel }} Details
             </a>
         @endcan
-        @can(Str::singular($module).'-edit')
+        @can($permissionPrefix.'-edit')
             <button
-                data-toggle="tooltip" data-placement="top" title="Edit {{ ucfirst(Str::singular($module)) }}"
-                data-edit-url="{{ route('back-office.' . $module . '.edit', $model->id) }}"
-                data-url="{{ route('back-office.' . $module . '.update', $model->id) }}"
+                data-toggle="tooltip" data-placement="top" title="Edit {{ $singularLabel }}"
+                data-edit-url="{{ route($routeInitialize. '.edit', $model->id) }}"
+                data-url="{{ route($routeInitialize. '.update', $model->id) }}"
                 class="dropdown-item edit-btn"
                 tabindex="0" aria-controls="DataTables_Table_0"
                 type="button" data-bs-toggle="modal"
                 data-bs-target="#create-pop-up-modal-for-file">
-                Edit {{ Str::singular(ucfirst($module)) }}
+                Edit {{ $singularLabel }}
             </button>
         @endcan
-         @can(Str::singular($module).'-delete')
-            <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route('back-office.' . $module . '.destroy', $model->id) }}">Delete</a>
+         @can($permissionPrefix.'-delete')
+            <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route($routeInitialize . '.destroy', $model->id) }}">Delete</a>
         @endcan
     </div>
 </div>

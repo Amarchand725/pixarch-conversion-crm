@@ -44,17 +44,17 @@
     </div>
     <!-- Name Input -->
     <div class="col-12 col-md-6">
-        <label for="dob" class="form-label fw-semibold">
-            Date of birth
+        <label for="doj" class="form-label fw-semibold">
+            Date of Joining
         </label>
         <input 
             type="date" 
-            id="dob" 
-            name="dob" 
+            id="doj" 
+            name="doj" 
             class="form-control form-control-lg" 
-            value="{{ old('dob') }}"
+            value="{{ old('doj') }}"
         />
-        <span id="dob_error" class="text-danger error">{{ $errors->first('dob') }}</span>
+        <span id="doj_error" class="text-danger error">{{ $errors->first('doj') }}</span>
     </div>
     <div class="col-12 col-md-6">
         <label for="email" class="form-label fw-semibold">

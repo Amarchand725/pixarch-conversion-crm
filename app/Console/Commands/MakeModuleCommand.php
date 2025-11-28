@@ -490,7 +490,7 @@ class MakeModuleCommand extends Command
     {
         // folder name: lowercase module (Country -> country)
         $pluralFolder = Str::plural(Str::snake($module));
-        $viewPath = resource_path("views/backOffice/{$pluralFolder}");
+        $viewPath = resource_path("views/back-office/{$pluralFolder}");
 
         if (!file_exists($viewPath)) {
             mkdir($viewPath, 0755, true);

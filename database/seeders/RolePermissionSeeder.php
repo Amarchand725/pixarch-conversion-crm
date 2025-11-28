@@ -151,14 +151,14 @@ class RolePermissionSeeder extends Seeder
             'source-export',
 
             // Log Activity management
-            'logActivity-list',
-            'logActivity-create',
-            'logActivity-view',
-            'logActivity-edit',
-            'logActivity-delete',
-            'logActivity-bulk-delete',
-            'logActivity-permanent-delete',
-            'logActivity-restore',
+            'log_activity-list',
+            'log_activity-create',
+            'log_activity-view',
+            'log_activity-edit',
+            'log_activity-delete',
+            'log_activity-bulk-delete',
+            'log_activity-permanent-delete',
+            'log_activity-restore',
 
             // Attachment management
             'attachment-list',

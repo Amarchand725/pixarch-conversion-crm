@@ -9,21 +9,39 @@ use App\Modules\User\Http\Requests\UserRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
     protected $userRepo;
     protected $roleRepo;
 
+    protected $routePrefix;
+    protected $pathInitialize;
+    protected $singularLabel;
+    protected $pluralLabel;
+    protected $permissionPrefix;
+
     public function __construct(UserRepository $userRepo)
     {
         $this->userRepo = $userRepo;
         $this->roleRepo = new Role();
+
+        $this->routePrefix = '/back-office/' . Str::kebab(Route::currentRouteName());
+        $this->pathInitialize = 'back-office.'.Str::plural(Str::snake($this->routePrefix));
+        $this->permissionPrefix = Str::snake($this->routePrefix);
+        $this->singularLabel = Str::ucfirst(Str::singular($this->routePrefix));
+        $this->pluralLabel = $this->singularLabel.' List';
     }
 
     public function index(Request $request)
     {
-        $title = 'Agents List';
+        $title = $this->pluralLabel;
+        $permissionPrefix = $this->permissionPrefix;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
+
         $columns = [
             'agent'     => ['label' => 'Agent', 'html' => true],
             'role'       => ['label' => 'Role'],
@@ -39,11 +57,16 @@ class UserController extends Controller
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
-            rowFormatter: function($row){
+            rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
                 $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
+                $row->action = view('back-office.partials.action-buttons', [
+                    'model' => $row,
+                    'permissionPrefix' => $permissionPrefix,
+                    'routeInitialize' => $routeInitialize,
+                    'singularLabel' => $singularLabel,
+                ])->render();
 
                 // Role - first role name from Spatie roles
                 $row->role = $row->getRoleNames()[0] ?? 'N/A';
@@ -56,14 +79,14 @@ class UserController extends Controller
             return $dataTable->ajax();
         }
 
-        return view('back-office.users.index', get_defined_vars());
+        return view($this->pathInitialize.'.index', get_defined_vars());
     }
 
     public function create()
     {
-        $title = 'Add Agent';
+        $title = $this->pluralLabel;
         $roles = $this->roleRepo->get();
-        return (string) view('back-office.users.create_content', get_defined_vars());
+        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
     public function store(UserRequest $request)
@@ -82,10 +105,10 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit Agent';
+        $title = $this->pluralLabel;
         $model = $this->userRepo->showModel($id);
         $roles = $this->roleRepo->get();
-        return (string) view('back-office.users.edit_content', get_defined_vars());
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
     public function update(UserRequest $request, User $user)
@@ -102,7 +125,7 @@ class UserController extends Controller
     public function show($id)
     {
         $model = $this->userRepo->showModel($id);
-        return (string) view('back-office.users.show_content', get_defined_vars());
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
     public function destroy($id)
@@ -111,12 +134,12 @@ class UserController extends Controller
             if($this->userRepo->softDeleteModel($id)) {
                 return response()->json([
                     'status' => true,
-                    'message' => 'User Deleted Successfully'
+                    'message' => $this->singularLabel.' Deleted Successfully'
                 ]);
             } else{
                 return response()->json([
                     'status' => false,
-                    'error' => 'User not deleted try again.'
+                    'error' => $this->singularLabel.' not deleted try again.'
                 ]);
             }
         } catch (Exception $e) {
