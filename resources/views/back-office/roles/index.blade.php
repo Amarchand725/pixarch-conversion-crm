@@ -8,20 +8,6 @@
                             <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Home /</span> {{ $title }}</h4>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="dt-buttons btn-group flex-wrap float-end mt-4">
-                            <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
-                        
-                            <div class="dt-buttons btn-group flex-wrap">
-                                <a href="{{ route('back-office.roles.create') }}" class="btn btn-primary btn-primary mx-3">
-                                    <span>
-                                        <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                        <span class="d-none d-sm-inline-block">Add Role</span>
-                                    </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- Users List Table -->

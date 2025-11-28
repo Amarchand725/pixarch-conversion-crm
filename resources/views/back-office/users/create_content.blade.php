@@ -1,0 +1,153 @@
+
+<div class="row g-3 mb-4">
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="name" class="form-label fw-semibold">
+            Name <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            class="form-control form-control-lg" 
+            placeholder="Enter name" 
+            value="{{ old('name') }}"
+        />
+        <span id="name_error" class="text-danger error">{{ $errors->first('name') }}</span>
+    </div>
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="phone" class="form-label fw-semibold">
+            Phone
+        </label>
+        <input 
+            type="text" 
+            id="phone" 
+            name="phone" 
+            class="form-control form-control-lg" 
+            placeholder="Enter phone" 
+            value="{{ old('phone') }}"
+        />
+        <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
+    </div>
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="gender" class="form-label fw-semibold">
+            Gender <span class="text-danger">*</span>
+        </label>
+        <select id="gender" name="gender" class="form-select form-select-lg">
+            <option value="" selected>Select gender</option>
+            <option value="M" selected>Male</option>
+            <option value="F">Female</option>
+        </select>
+        <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
+    </div>
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="dob" class="form-label fw-semibold">
+            Date of birth
+        </label>
+        <input 
+            type="date" 
+            id="dob" 
+            name="dob" 
+            class="form-control form-control-lg" 
+            value="{{ old('dob') }}"
+        />
+        <span id="dob_error" class="text-danger error">{{ $errors->first('dob') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="email" class="form-label fw-semibold">
+            Email <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control form-control-lg" 
+            placeholder="Enter email" 
+            value="{{ old('email') }}"
+        />
+        <span id="email_error" class="text-danger error">{{ $errors->first('email') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="password" class="form-label fw-semibold">
+            Password <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-control form-control-lg" 
+            placeholder="Enter password" 
+            value="{{ old('password') }}"
+        />
+        <span id="password_error" class="text-danger error">{{ $errors->first('password') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="password_confirmation" class="form-label fw-semibold">
+            Password Confirmation <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="password" 
+            id="password_confirmation" 
+            name="password_confirmation" 
+            class="form-control form-control-lg" 
+            placeholder="Enter password confirmation" 
+            value="{{ old('password_confirmation') }}"
+        />
+        <span id="password_confirmation_error" class="text-danger error">{{ $errors->first('password_confirmation') }}</span>
+    </div>
+
+    <!-- Avatar Upload -->
+    <div class="col-12 col-md-6">
+        <label for="avatar" class="form-label fw-semibold">
+            Avatar
+        </label>
+
+        <!-- File input -->
+        <input 
+            type="file" 
+            id="avatar" 
+            name="avatar" 
+            accept=".png, .jpg, .jpeg" 
+            class="form-control form-control-lg"
+            onchange="previewAvatar(event)"
+        />
+        <small class="text-muted">Allowed file types: png, jpg, jpeg.</small>
+
+        <!-- Preview wrapper -->
+        <div class="mb-3">
+            <img id="avatar_preview" 
+                alt="Avatar Preview" 
+                class="img-thumbnail rounded-circle" 
+                style="width: 80px; height: 80px; object-fit: cover; display: none;">
+        </div>
+    </div>
+</div>
+
+<script>
+    $('select').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent(),
+        });
+    });
+
+    function previewAvatar(event) {
+        const input = event.target;
+        const preview = document.getElementById('avatar_preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // show preview
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            // Reset preview if no file selected
+            preview.src = '';
+            preview.style.display = 'none';
+        }
+    }
+</script>

@@ -26,7 +26,7 @@
                                             <h5>{{ $title }}</h5>
                                             <div class="mb-3 fv-plugins-icon-container col-12">
                                                 <label class="form-label" for="name">Role <span class="text-danger">*</span></label>
-                                                <input type="text" value="{{ $role->name }}" class="form-control" id="name" placeholder="Enter role" name="name">
+                                                <input type="text" readonly value="{{ $role->name }}" class="form-control" id="name" placeholder="Enter role" name="name">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 <span id="name_error" class="text-danger error"></span>
                                             </div>

@@ -82,9 +82,10 @@ class RoleController extends Controller
     public function update(RoleRequest $request, Role $role)
     {
         $payload = $request->validated();
+        
         try {
             $this->roleRepo->updateModel($role, $payload);
-            return redirect()->route(strtolower('Role.index'))->with('success', 'Role updated successfully.');
+            return redirect()->route(strtolower('role.index'))->with('success', 'Role updated successfully.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -92,11 +93,10 @@ class RoleController extends Controller
 
     public function show($id)
     {
-        $role = $this->roleRepo->showModel($id);
-        // $model = $this->model->findOrFail($id);
-        // $permissions = $model->permissions()->pluck('name')->toArray();
-        // $groupedPermissions = groupPermissions($permissions);
-        // return (string) view($bladePath.'.show_content', get_defined_vars());
+        $model = $this->roleRepo->showModel($id);
+        $permissions = $model->permissions()->pluck('name')->toArray();
+        $groupedPermissions = groupPermissions($permissions);
+        return (string) view('back-office.roles.show_content', get_defined_vars());
 
         return view('roles.show', compact('role'));
     }

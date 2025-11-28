@@ -23,6 +23,7 @@
             title="Edit Role">
             Edit
         </a>
-        <a href="javascript:;" class="dropdown-item delete">Delete</a>
+
+        {{-- <a href="javascript:;" class="dropdown-item delete">Delete</a> --}}
     </div>
 </div>

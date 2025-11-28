@@ -14,16 +14,16 @@
                         
                             <button
                                 id="add-btn"
-                                data-toggle="tooltip" data-placement="top" title="Add "
-                                data-url=""
-                                data-create-url=""
+                                data-toggle="tooltip" data-placement="top" title="Add Agent"
+                                data-url="{{ route('back-office.users.store') }}"
+                                data-create-url="{{ route('back-office.users.create') }}"
                                 class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
                                 tabindex="0" aria-controls="DataTables_Table_0"
                                 type="button" data-bs-toggle="modal"
                                 data-bs-target="#create-pop-up-modal-for-file">
                                 <span>
                                     <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block"> Add  </span>
+                                    <span class="d-none d-sm-inline-block"> Add Agent </span>
                                 </span>
                             </button>
                         </div>

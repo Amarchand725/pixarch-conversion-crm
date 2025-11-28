@@ -31,7 +31,7 @@ abstract class BaseRepository implements BaseContract
 
     public function getAll(array $columns = ['*']): Builder
     {
-        return $this->model->select($columns); // returns query builder
+        return $this->model->orderby('id','desc')->select($columns); // returns query builder
     }
 
     /**
@@ -70,7 +70,7 @@ abstract class BaseRepository implements BaseContract
     /**
      * Update an existing model.
      */
-    public function updateModel($model, array $data): Model
+    public function updateModel(Model $model, array $data): Model
     {
         $model->update($data);
         return $model;

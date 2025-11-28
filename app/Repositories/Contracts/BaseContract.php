@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Contracts;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface BaseContract
 {
     public function getAll(array $columns = ['*']);
@@ -10,7 +12,7 @@ interface BaseContract
 
     public function storeModel(array $data);
 
-    public function updateModel(int|string $id, array $data);
+    public function updateModel(Model $model, array $data);
 
     public function softDeleteModel(int|string $id);
 

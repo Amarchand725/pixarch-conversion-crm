@@ -3,6 +3,7 @@
 namespace App\Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
 use App\Modules\User\Repositories\Eloquent\UserRepository;
 use App\Modules\User\Http\Requests\UserRequest;
 use App\Models\User;
@@ -12,10 +13,12 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     protected $userRepo;
+    protected $roleRepo;
 
     public function __construct(UserRepository $userRepo)
     {
         $this->userRepo = $userRepo;
+        $this->roleRepo = new Role();
     }
 
     public function index(Request $request)
@@ -27,7 +30,7 @@ class UserController extends Controller
             'phone'      => ['label' => 'Phone'],
             'status'     => ['label' => 'Status', 'html' => true],
             'created_at' => ['label' => 'Created'],
-            'action'     => ['label' => 'Action', 'html' => true],
+            // 'action'     => ['label' => 'Action', 'html' => true],
         ];
 
         // Get query builder from repository (perfect for DataTables)
@@ -39,7 +42,7 @@ class UserController extends Controller
             rowFormatter: function($row){
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
+                // $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
                 $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
 
                 // Role - first role name from Spatie roles
@@ -58,15 +61,20 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('back-office.users.create');
+        $title = 'Add Agent';
+        $roles = $this->roleRepo->get();
+        return (string) view('back-office.users.create_content', get_defined_vars());
     }
 
     public function store(UserRequest $request)
     {
         $payload = $request->validated();
+        
         try {
-            $this->userRepo->storeModel($payload);
-            return redirect()->route(strtolower('User.index'))->with('success', 'User created successfully.');
+            $payload['role'] = 'Agent';
+            $response = $this->userRepo->storeModel($payload);
+
+            return successResponse($response, 'Agent registered successfully.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
