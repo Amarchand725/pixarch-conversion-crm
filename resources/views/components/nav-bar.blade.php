@@ -102,7 +102,7 @@
                     <div class="avatar avatar-online">
                         <img class="rounded-circle"
                             src="{{ optional(Auth::user()?->avatar)->path
-                                    ? asset('back-office/assets/' . Auth::user()?->avatar->path)
+                                    ? asset('storage/' . Auth::user()?->avatar->path)
                                     : asset('back-office/assets/img/avatars/1' . '.png') }}"
                             width="36" height="36" alt="Avatar">
                     </div>
@@ -115,7 +115,7 @@
                                     <div class="avatar avatar-online">
                                         <img class="rounded-circle"
                                             src="{{ optional(Auth::user()?->avatar)->path
-                                                    ? asset('back-office/assets/' . Auth::user()?->avatar->path)
+                                                    ? asset('storage/' . Auth::user()?->avatar->path)
                                                     : asset('back-office/assets/img/avatars/1' . '.png') }}"
                                             width="36" height="36" alt="Avatar">
                                     </div>

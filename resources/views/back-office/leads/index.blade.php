@@ -34,6 +34,10 @@
             .sortable-ghost {
                 opacity: 0.4;
             }
+
+            .drag-item {
+                user-select: none;
+            }
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">

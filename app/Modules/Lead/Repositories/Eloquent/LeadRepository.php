@@ -81,13 +81,20 @@ class LeadRepository extends BaseRepository implements LeadContract
 
     public function statusModel($payload){
         $model = Lead::where('id', $payload['lead_id'])->firstOrFail();
+        
+        $assignee_id = $model->currentAssignee?->user_id;
+        if($model?->lastStatusLog?->status?->name == 'pool'){
+            $model->assignees()->attach(auth()->id());
+
+            $assignee_id = auth()->id();
+        }
 
         LogEntityStatus::create([
             'author_id'   => auth()->id(), // logged-in user
             'model_id'    => $model->id,
             'model_type'  => $model->getMorphClass(),
             'status_id'   => $payload['status_id'],
-            'assignee_id' => $model->currentAssignee?->user_id ?? null,
+            'assignee_id' => $assignee_id,
             'description' => 'Status updated via drag & drop',
             'created_at'  => now(),
             'updated_at'  => now(),
