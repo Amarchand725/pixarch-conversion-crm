@@ -97,8 +97,6 @@ class RoleController extends Controller
         $permissions = $model->permissions()->pluck('name')->toArray();
         $groupedPermissions = groupPermissions($permissions);
         return (string) view('back-office.roles.show_content', get_defined_vars());
-
-        return view('roles.show', compact('role'));
     }
 
     public function destroy($id)

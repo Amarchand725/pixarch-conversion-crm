@@ -30,7 +30,7 @@ class UserController extends Controller
             'phone'      => ['label' => 'Phone'],
             'status'     => ['label' => 'Status', 'html' => true],
             'created_at' => ['label' => 'Created'],
-            // 'action'     => ['label' => 'Action', 'html' => true],
+            'action'     => ['label' => 'Action', 'html' => true],
         ];
 
         // Get query builder from repository (perfect for DataTables)
@@ -42,7 +42,7 @@ class UserController extends Controller
             rowFormatter: function($row){
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                // $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', ['module' => 'users', 'model' => $row])->render();
                 $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
 
                 // Role - first role name from Spatie roles
@@ -99,8 +99,8 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = $this->userRepo->showModel($id);
-        return view('users.show', compact('user'));
+        $model = $this->userRepo->showModel($id);
+        return (string) view('back-office.users.show_content', get_defined_vars());
     }
 
     public function destroy($id)

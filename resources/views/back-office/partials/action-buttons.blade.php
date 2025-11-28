@@ -4,26 +4,29 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-end">
-        <a href="#"
-            class="dropdown-item show"
-            tabindex="0" aria-controls="DataTables_Table_0"
-            type="button" data-bs-toggle="modal"
-            data-bs-target="#details-modal"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Role Details"
-            data-show-url="{{ route('back-office.' . $module . '.show', $model->id) }}"
-            >
-            View Details
-        </a>
-        <a href="{{ route('back-office.' . $module . '.edit', $model->id) }}"
-            class="dropdown-item"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Edit Role">
-            Edit
-        </a>
-
+        @can(Str::singular($module).'-view')
+            <a href="#"
+                class="dropdown-item show"
+                tabindex="0" aria-controls="DataTables_Table_0"
+                type="button" data-bs-toggle="modal"
+                data-bs-target="#details-modal"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="{{ ucfirst(Str::singular($module)) }} Details"
+                data-show-url="{{ route('back-office.' . $module . '.show', $model->id) }}"
+                >
+                View Details
+            </a>
+        @endcan
+        @can(Str::singular($module).'-edit')
+            <a href="{{ route('back-office.' . $module . '.edit', $model->id) }}"
+                class="dropdown-item"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Edit {{ ucfirst(Str::singular($module)) }}">
+                Edit {{ Str::singular(ucfirst($module)) }}
+            </a>
+        @endcan
         {{-- <a href="javascript:;" class="dropdown-item delete">Delete</a> --}}
     </div>
 </div>

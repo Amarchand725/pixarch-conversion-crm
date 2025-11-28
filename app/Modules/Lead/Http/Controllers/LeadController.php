@@ -20,7 +20,7 @@ class LeadController extends Controller
 
     public function index()
     {
-        $title = 'Leads';
+        $title = 'Leads List';
         $statusLeads = $this->leadRepo->getAllCollection();
         return view(strtolower('back-office.leads.index'), get_defined_vars());
     }

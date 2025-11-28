@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -15,6 +16,7 @@ class DashboardController extends Controller
         $this->leadRepo = $leadRepo;
     }
     public function dashboard(){
+        $title = Auth::user()->name . "'s Dashboard";
         // Get all leads grouped by status
         $statusLeads = $this->leadRepo->getAllCollection();
         

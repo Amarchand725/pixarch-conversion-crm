@@ -1,7 +1,10 @@
 <x-guest-layout>
+    @section('title', ('Login').' - '. config('app.name', 'Laravel'))
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <h4 class="mb-1 pt-2">Welcome to  {{ config('app.name', 'Laravel') }}👋</h4>
+    <p class="mb-4">Sign-in to your account</p>
     <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
         @csrf
         <div class="mb-3">

@@ -11,7 +11,7 @@
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             <!-- Notification -->
-            <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
+            {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
                 <a
                 class="nav-link dropdown-toggle hide-arrow"
                 href="javascript:void(0);"
@@ -93,7 +93,7 @@
                         </a>
                     </li>
                 </ul>
-            </li>
+            </li> --}}
             <!--/ Notification -->
 
             <!-- User -->
@@ -103,20 +103,20 @@
                         <img class="rounded-circle"
                             src="{{ optional(Auth::user()?->avatar)->path
                                     ? asset('back-office/assets/' . Auth::user()?->avatar->path)
-                                    : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                    : asset('back-office/assets/img/avatars/1' . '.png') }}"
                             width="36" height="36" alt="Avatar">
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
-                        <a class="dropdown-item" href="pages-account-settings-account.html">
+                        <a class="dropdown-item" href="{{ route('dashboard') }}">
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
                                         <img class="rounded-circle"
                                             src="{{ optional(Auth::user()?->avatar)->path
                                                     ? asset('back-office/assets/' . Auth::user()?->avatar->path)
-                                                    : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                    : asset('back-office/assets/img/avatars/1' . '.png') }}"
                                             width="36" height="36" alt="Avatar">
                                     </div>
                                 </div>
@@ -127,15 +127,15 @@
                             </div>
                         </a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
+                    </li> --}}
+                    {{-- <li>
                         <a class="dropdown-item" href="#">
                             <i class="ti ti-user-check me-2 ti-sm"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>

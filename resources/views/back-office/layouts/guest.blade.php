@@ -15,7 +15,8 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login | {{ config('app.name', 'Laravel') }}</title>
+    {{-- <title>Login | {{ config('app.name', 'Laravel') }}</title> --}}
+    <title>@yield('title')</title>
 
     <meta name="description" content="" />
 
@@ -24,8 +25,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gauth-session-status
-    />
+    <link rel="preconnect" href="https://fonts.gauth-session-status"/>
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/fonts/fontawesome.css" />
@@ -73,8 +73,7 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-1 pt-2">Welcome to  {{ config('app.name', 'Laravel') }}👋</h4>
-              <p class="mb-4">Sign-in to your account</p>
+              
               {{ $slot }}
             </div>
           </div>

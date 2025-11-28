@@ -1,4 +1,6 @@
 <x-app-layout>
+    @section('title', ($title ?? '').' - '. config('app.name', 'Laravel'))
+
     <div class="container-xxl flex-grow-1 container-p-y">
 
     <!-- Leads Section -->
