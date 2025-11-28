@@ -9,21 +9,39 @@ use App\Modules\Role\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Role;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 
 class RoleController extends Controller
 {
     protected $roleRepo;
     protected $permissionModel;
 
+    protected $routePrefix;
+    protected $pathInitialize;
+    protected $singularLabel;
+    protected $pluralLabel;
+    protected $permissionPrefix;
+
     public function __construct(RoleRepository $roleRepo)
     {
         $this->roleRepo = $roleRepo;
         $this->permissionModel = new Permission();
+
+        $this->routePrefix = '/back-office/' . Str::kebab(Route::currentRouteName());
+        $this->pathInitialize = 'back-office.'.Str::plural(Str::snake($this->routePrefix));
+        $this->permissionPrefix = Str::snake($this->routePrefix);
+        $this->singularLabel = Str::ucfirst(Str::singular($this->routePrefix));
+        $this->pluralLabel = $this->singularLabel.' List';
     }
 
     public function index(Request $request)
     {
-        $title = 'Roles List';
+        $title = $this->pluralLabel;
+        $permissionPrefix = $this->permissionPrefix;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
+
         $columns = [
             'name'       => ['label' => 'Role Name'],
             'guard_name'      => ['label' => 'Guard Name'],
@@ -37,9 +55,15 @@ class RoleController extends Controller
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
-            rowFormatter: function($row){
+            rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
                 // pass $row as 'model' for the partial
-                $row->action = view('back-office.partials.action-buttons', ['module' => 'roles', 'model' => $row])->render();
+                $row->action = view('back-office.partials.action-buttons', data: 
+                [
+                    'model' => $row,
+                    'permissionPrefix' => $permissionPrefix,
+                    'routeInitialize' => $routeInitialize,
+                    'singularLabel' => $singularLabel,
+                ])->render();
 
                 return $row;
             }
@@ -49,15 +73,14 @@ class RoleController extends Controller
             return $dataTable->ajax();
         }
 
-        return view(strtolower('back-office.roles.index'), get_defined_vars());
+        return view(strtolower($this->pathInitialize.'.index'), get_defined_vars());
     }
 
     public function create()
     {
-        $title = 'Add Role';
-        
+        $title = $this->pluralLabel;
         $models = $this->permissionModel->orderby('id','DESC')->groupBy('label')->get();
-        return view('back-office.roles.create', get_defined_vars());
+        return view($this->pathInitialize.'.create', get_defined_vars());
     }
 
     public function store(RoleRequest $request)
@@ -73,10 +96,10 @@ class RoleController extends Controller
 
     public function edit($id)
     {
-        $title = 'Edit Role';
+        $title = $this->pluralLabel;
         $role = $this->roleRepo->showModel($id);
         $permissions = $this->permissionModel->orderby('id','DESC')->groupBy('label')->get();
-        return view('back-office.roles.edit', get_defined_vars());
+        return view($this->pathInitialize.'.edit', get_defined_vars());
     }
 
     public function update(RoleRequest $request, Role $role)
@@ -96,56 +119,6 @@ class RoleController extends Controller
         $model = $this->roleRepo->showModel($id);
         $permissions = $model->permissions()->pluck('name')->toArray();
         $groupedPermissions = groupPermissions($permissions);
-        return (string) view('back-office.roles.show_content', get_defined_vars());
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $this->roleRepo->softDeleteModel($id);
-            return redirect()->route(strtolower('roles.index'))->with('success', 'Role deleted successfully.');
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function restore($id)
-    {
-        try {
-            $this->roleRepo->restoreModel($id);
-            return redirect()->route(strtolower('roles.index'))->with('success', 'Role restored successfully.');
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function forceDelete($id)
-    {
-        try {
-            $this->roleRepo->permanentlyDeleteModel($id);
-            return redirect()->route(strtolower('roles.index'))->with('success', 'Role permanently deleted.');
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function bulkDelete()
-    {
-        try {
-            $this->roleRepo->bulkDelete();
-            return redirect()->route(strtolower('roles.index'))->with('success', 'Bulk delete successful.');
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function bulkRestore()
-    {
-        try {
-            $this->roleRepo->bulkRestore();
-            return redirect()->route(strtolower('roles.index'))->with('success', 'Bulk restore successful.');
-        } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 }

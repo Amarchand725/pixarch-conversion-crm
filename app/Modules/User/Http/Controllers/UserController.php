@@ -97,9 +97,12 @@ class UserController extends Controller
             $payload['role'] = 'Agent';
             $response = $this->userRepo->storeModel($payload);
 
-            return successResponse($response, 'Agent registered successfully.');
+            return successResponse($response, $this->singularLabel. ' registered successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
@@ -116,9 +119,12 @@ class UserController extends Controller
         $payload = $request->validated();
         try {
             $this->userRepo->updateModel($user, $payload);
-            return redirect()->route(strtolower('User.index'))->with('success', 'User updated successfully.');
+            return successResponse([], $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
