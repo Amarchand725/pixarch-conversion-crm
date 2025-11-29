@@ -22,17 +22,19 @@ class RoleController extends Controller
     protected $singularLabel;
     protected $pluralLabel;
     protected $permissionPrefix;
+    protected $prefix;
 
     public function __construct(RoleRepository $roleRepo)
     {
         $this->roleRepo = $roleRepo;
         $this->permissionModel = new Permission();
 
-        $this->routePrefix = '/back-office/' . Str::kebab(Route::currentRouteName());
-        $this->pathInitialize = 'back-office.'.Str::plural(Str::snake($this->routePrefix));
-        $this->permissionPrefix = Str::snake($this->routePrefix);
-        $this->singularLabel = Str::ucfirst(Str::singular($this->routePrefix));
-        $this->pluralLabel = $this->singularLabel.' List';
+        $this->prefix = Str::kebab('Role');
+        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
+        $this->pathInitialize = $this->routePrefix;
+        $this->permissionPrefix = Str::snake($this->prefix);
+        $this->singularLabel = Str::ucfirst($this->prefix);
+        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
     }
 
     public function index(Request $request)

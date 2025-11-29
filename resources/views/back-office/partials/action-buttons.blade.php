@@ -19,18 +19,28 @@
             </a>
         @endcan
         @can($permissionPrefix.'-edit')
-            <button
-                data-toggle="tooltip" data-placement="top" title="Edit {{ $singularLabel }}"
-                data-edit-url="{{ route($routeInitialize. '.edit', $model->id) }}"
-                data-url="{{ route($routeInitialize. '.update', $model->id) }}"
-                class="dropdown-item edit-btn"
-                tabindex="0" aria-controls="DataTables_Table_0"
-                type="button" data-bs-toggle="modal"
-                data-bs-target="#create-pop-up-modal-for-file">
-                Edit {{ $singularLabel }}
-            </button>
+            @if($permissionPrefix=='role')
+                <a href="{{ route($routeInitialize.'.edit', $model->id) }}"
+                    class="dropdown-item"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Edit {{ $singularLabel }}">
+                    Edit {{ $singularLabel }}
+                </a>
+            @else
+                <button
+                    data-toggle="tooltip" data-placement="top" title="Edit {{ $singularLabel }}"
+                    data-edit-url="{{ route($routeInitialize. '.edit', $model->id) }}"
+                    data-url="{{ route($routeInitialize. '.update', $model->id) }}"
+                    class="dropdown-item edit-btn"
+                    tabindex="0" aria-controls="DataTables_Table_0"
+                    type="button" data-bs-toggle="modal"
+                    data-bs-target="#create-pop-up-modal-for-file">
+                    Edit {{ $singularLabel }}
+                </button>
+            @endif
         @endcan
-         @can($permissionPrefix.'-delete')
+        @can($permissionPrefix.'-delete')
             <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route($routeInitialize . '.destroy', $model->id) }}">Delete</a>
         @endcan
     </div>

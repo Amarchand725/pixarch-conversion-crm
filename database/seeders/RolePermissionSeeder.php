@@ -129,7 +129,6 @@ class RolePermissionSeeder extends Seeder
             'lead-list',
             'lead-view',
             'lead-create',
-            'lead-edit',
             'lead-delete',
             'lead-bulk-delete',
             'lead-permanent-delete',
@@ -138,7 +137,6 @@ class RolePermissionSeeder extends Seeder
             'lead-status',
             'lead-assign-user',
             'lead-assigned-users-list',
-            'lead-download',
 
             // Source management
             'source-list',

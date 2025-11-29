@@ -40,5 +40,8 @@ return [
             'admin_notification_enabled' => ['value' => true, 'input_type' => 'checkbox'],
             'user_notification_enabled' => ['value' => false, 'input_type' => 'checkbox'],
         ],
+        'customer_info' => [
+            'enabled' => ['value' => true, 'input_type' => 'checkbox'],
+        ],
     ],
 ];

@@ -22,17 +22,19 @@ class UserController extends Controller
     protected $singularLabel;
     protected $pluralLabel;
     protected $permissionPrefix;
+    protected $prefix;
 
     public function __construct(UserRepository $userRepo)
     {
         $this->userRepo = $userRepo;
         $this->roleRepo = new Role();
 
-        $this->routePrefix = '/back-office/' . Str::kebab(Route::currentRouteName());
-        $this->pathInitialize = 'back-office.'.Str::plural(Str::snake($this->routePrefix));
-        $this->permissionPrefix = Str::snake($this->routePrefix);
-        $this->singularLabel = Str::ucfirst(Str::singular($this->routePrefix));
-        $this->pluralLabel = $this->singularLabel.' List';
+        $this->prefix = Str::kebab('User');
+        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
+        $this->pathInitialize = $this->routePrefix;
+        $this->permissionPrefix = Str::snake($this->prefix);
+        $this->singularLabel = Str::ucfirst($this->prefix);
+        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
     }
 
     public function index(Request $request)
@@ -58,9 +60,12 @@ class UserController extends Controller
             model: $query,
             columns: $columns,
             rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
+                $status = $row->statusInfo?->name ?? 'de-active';
                 // pass $row as 'user' for the partial
                 $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->status = view('back-office.partials.status-badge', ['status' => $row->statusInfo?->name])->render();
+                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                                    . strtoupper($status) .
+                                    '</span>';
                 $row->action = view('back-office.partials.action-buttons', [
                     'model' => $row,
                     'permissionPrefix' => $permissionPrefix,

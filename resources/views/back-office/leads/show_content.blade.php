@@ -1,5 +1,5 @@
 <table class="table table-flush-spacing">
-    <tr>
+    {{-- <tr>
         <td class="text-nowrap fw-semibold">Avatar</td>
         <td>
             @php
@@ -9,14 +9,10 @@
             @endphp
             <img src="{{ $avatarPath }}" width="50" height="50" class="rounded-circle" alt="Avatar">
         </td>
-    </tr>
+    </tr> --}}
     <tr>
         <td class="text-nowrap fw-semibold">Name</td>
         <td><span class="text-primary fw-semibold">{{ $model->name??'-' }}</span></td>
-    </tr>
-    <tr>
-        <td class="text-nowrap fw-semibold">Role</td>
-        <td><span class="text-primary fw-semibold">{{ $model?->roles()?->first()?->name??'-' }}</span></td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Email</td>
@@ -25,16 +21,7 @@
     <tr>
         <td class="text-nowrap fw-semibold">Phone</td>
         <td><span class="text-primary fw-semibold">{{ $model->phone??'-' }}</span></td>
-    </tr>
-    <tr>
-        <td class="text-nowrap fw-semibold">Gender</td>
-        <td><span class="text-primary fw-semibold">{{ $model->gender??'-' }}</span></td>
-    </tr>
-    <tr>
-        <td class="text-nowrap fw-semibold">Date of Joining</td>
-        <td><span class="text-primary fw-semibold">{{ $model->doj??'-' }}</span></td>
-    </tr>
-    
+    </tr>    
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>
         <td>{{ date('d, M Y | h:i A', strtotime($model->created_at)) }}</td>

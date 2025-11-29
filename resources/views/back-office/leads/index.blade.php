@@ -43,87 +43,114 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">{{ ($title ?? ''). ' /' }} </span> Drag &amp; Drop</h4>
 
-        <div class="status-row-wrapper">
-            <div class="status-row d-flex overflow-auto pb-2">
-                @forelse($statusLeads as $status)
-                    <div class="status-card card"
-                        data-status-id="{{ $status['status_id'] }}"
-                        data-total="{{ $status['leads']->sum('value') }}"
-                    >
-                        <div class="card-header text-center bg-light border-bottom-0 p-3">
-                            <h5 class="mb-1 text-primary">{{ ucwords($status['status_name']) }}</h5>
-                            <div class="d-flex justify-content-center align-items-center gap-3">
-                                <!-- Total Leads -->
-                                <span class="badge bg-info text-dark fs-6">
-                                    <span class="lead-count">Total: {{ $status['leads']->count() }}</span> Leads
-                                </span>
-
-                                <!-- Total Value -->
-                                <span class="badge bg-success fs-6">
-                                    <span class="total-value">Value: ${{ number_format($status['leads']->sum('value')) }}</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <ul class="list-group list-group-flush task-column">
-                            @forelse($status['leads'] as $lead)
-                                <li class="list-group-item drag-item d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded bg-white"
-                                    data-lead-id="{{ $lead->uuid }}"
-                                    data-value="{{ $lead->value }}"
-                                    style="cursor: grab;">
-
-                                    <div class="d-flex flex-column w-100">
-                                        <!-- Top: Avatar + Name -->
-                                        <div class="d-flex align-items-center gap-2 mb-1">
-                                            <img class="rounded-circle"
-                                                src="{{ optional($lead->currentAssignee?->avatar)->path
-                                                        ? asset('back-office/assets/' . $lead->currentAssignee->avatar->path)
-                                                        : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
-                                                width="36" height="36" alt="Avatar">
-
-                                            <span class="fw-semibold">{{ $lead->name }}</span>
-                                        </div>
-
-                                        <!-- Action Icons centered under name, smaller size -->
-                                        <div class="d-flex gap-1 mt-1 ml-5">
-                                            <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
-                                                <i class="bi bi-person-fill fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
-                                                <i class="bi bi-list-task fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
-                                                <i class="bi bi-sticky fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
-                                                <i class="bi bi-calendar-event fs-6"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Value Badge -->
-                                    <span class="badge bg-success text-white ms-2">
-                                        ${{ number_format($lead->value) }}
-                                    </span>
-                                </li>
-                            @empty
-                                <li class="empty-slot text-center py-4 text-muted"
-                                    style="opacity:.6;border:2px dashed #ccc;cursor:default;">
-                                    Drop lead here
-                                </li>
-                            @endforelse
-                        </ul>
-                    </div>
-                @empty
-                    <li class="empty-slot text-center py-4 text-muted"
-                        style="opacity:.6;border:2px dashed #ccc;cursor:default;">
-                        Drop lead here
-                    </li>
-                @endforelse
-            </div>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="?view=cards" class="btn btn-sm {{ request('view')=='cards' || request('view')==null ? 'btn-primary' : 'btn-outline-primary' }}">
+                <i class="bi bi-grid-3x3-gap"></i> Cards View
+            </a>
+            <a href="?view=list" class="btn btn-sm ms-2 {{ request('view')=='list' ? 'btn-primary' : 'btn-outline-primary' }}">
+                <i class="bi bi-list"></i> List View
+            </a>
         </div>
+        @if(request('view') != 'list')
+            <div class="status-row-wrapper">
+                <div class="status-row d-flex overflow-auto pb-2">
+                    @forelse($statusLeads as $status)
+                        <div class="status-card card"
+                            data-status-id="{{ $status['status_id'] }}"
+                            data-total="{{ $status['leads']->sum('value') }}"
+                        >
+                            <div class="card-header text-center bg-light border-bottom-0 p-3">
+                                <h5 class="mb-1">
+                                    <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status['status_name'])) ?? 'bg-light text-dark' }}">
+                                        {{ strtoupper($status['status_name']) }}
+                                    </span>
+                                </h5>
+                                <div class="d-flex justify-content-center align-items-center gap-3">
+                                    <!-- Total Leads -->
+                                    <span class="badge bg-info text-dark fs-6">
+                                        <span class="lead-count">Total: {{ $status['leads']->count() }}</span> Leads
+                                    </span>
 
-        <!-- /Multiple Lists Draggable ends -->
+                                    <!-- Total Value -->
+                                    <span class="badge bg-success fs-6">
+                                        <span class="total-value">Value: ${{ number_format($status['leads']->sum('value')) }}</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <ul class="list-group list-group-flush task-column">
+                                @forelse($status['leads'] as $lead)
+                                    <li class="list-group-item drag-item d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded bg-white"
+                                        data-lead-id="{{ $lead->uuid }}"
+                                        data-value="{{ $lead->value }}"
+                                        style="cursor: grab;">
+
+                                        <div class="d-flex flex-column w-100">
+                                            <!-- Top: Avatar + Name -->
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <img class="rounded-circle"
+                                                    src="{{ optional($lead->currentAssignee?->avatar)->path
+                                                            ? asset('back-office/assets/' . $lead->currentAssignee->avatar->path)
+                                                            : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                    width="36" height="36" alt="Avatar">
+
+                                                <span class="fw-semibold">{{ $lead->name }}</span>
+                                            </div>
+
+                                            <!-- Action Icons centered under name, smaller size -->
+                                            <div class="d-flex gap-1 mt-1 ml-5">
+                                                <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
+                                                    <i class="bi bi-person-fill fs-6"></i>
+                                                </button>
+                                                <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
+                                                    <i class="bi bi-list-task fs-6"></i>
+                                                </button>
+                                                <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
+                                                    <i class="bi bi-sticky fs-6"></i>
+                                                </button>
+                                                <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
+                                                    <i class="bi bi-calendar-event fs-6"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Value Badge -->
+                                        <span class="badge bg-success text-white ms-2">
+                                            ${{ number_format($lead->value) }}
+                                        </span>
+                                    </li>
+                                @empty
+                                    <li class="empty-slot text-center py-4 text-muted"
+                                        style="opacity:.6;border:2px dashed #ccc;cursor:default;">
+                                        Drop lead here
+                                    </li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    @empty
+                        <li class="empty-slot text-center py-4 text-muted"
+                            style="opacity:.6;border:2px dashed #ccc;cursor:default;">
+                            Drop lead here
+                        </li>
+                    @endforelse
+                </div>
+            </div>
+        @else
+            <div class="card">
+                <div class="card-datatable table-responsive">
+                    <table class="table dataTable dtr-column data_table">
+                        <thead>
+                            <tr>
+                                @foreach($dataTable->headers() as $header)
+                                    <th>{{ $header }}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody id="body"></tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
     </div>
     @push('js')
         <!-- Page JS -->
@@ -235,6 +262,15 @@
                 tooltipTriggerList.forEach(function (tooltipTriggerEl) {
                     new bootstrap.Tooltip(tooltipTriggerEl)
                 })
+            });
+
+            const pageUrl = "{{ url()->current() }}";
+            const columns = @json($dataTable->jsColumns());
+
+            initializeDataTable(pageUrl, columns);
+
+            $('#refresh-record').on('click', function(){
+                $('.table').DataTable().ajax.reload();
             });
         </script>
     @endpush

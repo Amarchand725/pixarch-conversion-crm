@@ -8,21 +8,82 @@ use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
 use Exception;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
     protected $leadRepo;
+    protected $routePrefix;
+    protected $pathInitialize;
+    protected $singularLabel;
+    protected $pluralLabel;
+    protected $permissionPrefix;
+    protected $prefix;
 
     public function __construct(LeadRepository $leadRepo)
     {
         $this->leadRepo = $leadRepo;
+
+        $this->prefix = Str::kebab('Lead');
+        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
+        $this->pathInitialize = $this->routePrefix;
+        $this->permissionPrefix = Str::snake($this->prefix);
+        $this->singularLabel = Str::ucfirst($this->prefix);
+        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $title = 'Leads List';
+        $title = $this->pluralLabel;
+        $permissionPrefix = $this->permissionPrefix;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
+
         $statusLeads = $this->leadRepo->getAllCollection();
-        return view(strtolower('back-office.leads.index'), get_defined_vars());
+
+        $columns = [
+            'assigned_to' => ['label' => 'Assigned Agent', 'html' => true],
+            'name' => ['label' => 'Lead Name'],
+            'status_name' => ['label' => 'Status', 'html' => true],
+            'value' => ['label' => 'Value'],
+            'created_at' => ['label' => 'Created'],
+            'action' => ['label' => 'Action', 'html' => true],
+        ];
+
+        // query builder from repository or your service
+        $query = $this->leadRepo->getAll();
+
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
+                $value = $row->value > 0 ? number_format($row->value, 2) : '0.00';
+                $row->value = $value;
+                
+                $row->assigned_to = view('back-office.partials.avatar', ['user' => $row->assignees->first()])->render();
+                
+                $status = strtolower($row->lastStatusLog?->status?->name ?? '');
+                $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                                    . strtoupper($status) .
+                                    '</span>';
+                $row->action = view('back-office.partials.action-buttons', [
+                    'model' => $row,
+                    'routeInitialize' => $routeInitialize,
+                    'permissionPrefix' => $permissionPrefix,
+                    'singularLabel' => $singularLabel,
+                ])->render();
+
+                return $row;
+            }
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
+        }
+
+        return view(strtolower($this->pathInitialize.'.index'), get_defined_vars());
     }
 
     public function create()
@@ -60,8 +121,8 @@ class LeadController extends Controller
 
     public function show($id)
     {
-        $lead = $this->leadRepo->showModel($id);
-        return view('backOffice.leads.show', compact('lead'));
+        $model = $this->leadRepo->showModel($id);
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
     public function destroy($id)

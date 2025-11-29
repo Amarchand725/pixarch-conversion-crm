@@ -211,15 +211,16 @@ class MakeModuleCommand extends Command
             protected \$singularLabel;
             protected \$pluralLabel;
             protected \$permissionPrefix;
+            protected \$prefix;
 
             public function __construct({$module}Repository \${$variable}Repo)
             {
-                \$this->{$variable}Repo = \${$variable}Repo;
-                \$this->routePrefix = '/back-office/' . Str::kebab(Route::currentRouteName());
-                \$this->pathInitialize = 'back-office.'.Str::plural(Str::snake(\$this->routePrefix));
-                \$this->permissionPrefix = Str::snake(\$this->routePrefix);
-                \$this->singularLabel = Str::ucfirst(Str::singular(\$this->routePrefix));
-                \$this->pluralLabel = \$this->singularLabel.' List';
+                \$this->prefix = Str::kebab('{$module}');
+                \$this->routePrefix = 'back-office.'. Str::plural(\$this->prefix);
+                \$this->pathInitialize = \$this->routePrefix;
+                \$this->permissionPrefix = Str::snake(\$this->prefix);
+                \$this->singularLabel = Str::ucfirst(\$this->prefix);
+                \$this->pluralLabel = Str::ucfirst(Str::plural(\$this->prefix)).' List';
             }
 
             public function index(Request \$request)

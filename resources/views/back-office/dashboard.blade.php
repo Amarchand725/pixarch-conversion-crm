@@ -6,29 +6,13 @@
     <!-- Leads Section -->
     <h4 class="fw-bold py-3">Leads</h4>
     <div class="row g-4">
-
-        @php
-            $statusColors = [
-                'created'            => 'bg-primary text-white',
-                'assigned'           => 'bg-info text-white',
-                'no contacted'       => 'bg-secondary text-white',
-                'contact established'=> 'bg-warning text-dark',
-                'junk'               => 'bg-danger text-white',
-                'potential'          => 'bg-success text-white',
-                'follow up'          => 'bg-info text-white',
-                'hot client'         => 'bg-danger text-white',
-                'sales closed'       => 'bg-success text-white',
-                'pool'               => 'bg-light text-dark',
-            ];
-        @endphp
-
         @foreach($statusLeads as $status)
             <div class="col-lg-4 col-md-6 col-12"> <!-- 3 cards per row -->
                 <div class="card shadow h-100 text-center">
                     <div class="card-body">
 
                         <!-- Status Badge -->
-                        <span class="badge rounded-pill px-3 py-2 {{ $statusColors[strtolower($status['status_name'])] ?? 'bg-light text-dark' }}">
+                        <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status['status_name'])) ?? 'bg-light text-dark' }}">
                             {{ strtoupper($status['status_name']) }}
                         </span>
 
