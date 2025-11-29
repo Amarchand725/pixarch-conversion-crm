@@ -140,17 +140,10 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                <i class="ti ti-logout me-2 ti-sm"></i>
-                                <span class="align-middle">Log Out</span>
-                            </x-dropdown-link>
-                        </form>
+                        <a class="dropdown-item" href="{{ route('back-office.auth.logout') }}">
+                            <i class="ti ti-logout me-2 ti-sm"></i>
+                            <span class="align-middle">Log Out</span>
+                        </a>
                     </li>
                     <!-- Stop impersonation -->
                     @impersonating($guard = null)

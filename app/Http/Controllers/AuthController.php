@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -62,5 +64,34 @@ class AuthController extends Controller
     public function profile(){
         $title = Auth::user()->name . "'s Profile";
         return view('back-office.dashboard.profile', get_defined_vars());
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        if (!Hash::check($request->old_password, auth()->user()->password)) {
+            return response()->json(['error' => false, 'message' => 'The provided old password is incorrect.'], 422);
+        }
+
+        auth()->user()->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'You have changed password successfully!.'], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

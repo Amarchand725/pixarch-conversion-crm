@@ -176,6 +176,56 @@ $("form.submitBtnWithFileUpload").on('submit', function (e) {
     });
 });
 
+$(document).on('submit', '.ajax-form', function(e) {
+    e.preventDefault();
+
+    const form = $(this);
+    const action = form.attr('action');
+    const method = form.data('method') || 'POST';
+
+    // Clear previous errors
+    form.find('.error').text('');
+    form.find('.is-invalid').removeClass('is-invalid');
+
+    $.ajax({
+        url: action,
+        method: method,
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        beforeSend: () => {
+            form.find('button[type="submit"]').prop('disabled', true);
+        },
+        success: (res) => {
+            form.find('button[type="submit"]').prop('disabled', false);
+
+            // Show success message
+            toastr.success(res.message || 'Saved successfully');
+
+            // Optional: reset form
+            // form.trigger('reset');
+        },
+        error: (xhr) => {
+            form.find('button[type="submit"]').prop('disabled', false);
+
+            // Check if it's a validation error
+            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+                const errors = xhr.responseJSON.errors;
+
+                Object.keys(errors).forEach((field) => {
+                    const fieldInput = form.find(`[name="${field}"]`);
+                    fieldInput.addClass('is-invalid');
+                    form.find(`#${field}_error`).text(errors[field][0]);
+                });
+            } else {
+                // Fallback for other errors
+                const message = xhr.responseJSON?.message || 'Something went wrong';
+                toastr.error(message);
+            }
+        }
+    });
+});
+
 function prepareFormDataBeforeSubmit(formElement) {
     $(formElement).find('.summernote').each(function () {
         var content = $(this).summernote('code');
