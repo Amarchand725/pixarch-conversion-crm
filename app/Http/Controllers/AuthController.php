@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardController extends Controller
+class AuthController extends Controller
 {
     protected $leadRepo;
 
@@ -56,11 +56,11 @@ class DashboardController extends Controller
             $agent->statusCounts = collect($statusCounts);
         }
 
-        return view('back-office.dashboard', get_defined_vars());
+        return view('back-office.dashboard.dashboard', get_defined_vars());
     }
 
     public function profile(){
         $title = Auth::user()->name . "'s Profile";
-        return view('back-office.profile', get_defined_vars());
+        return view('back-office.dashboard.profile', get_defined_vars());
     }
 }

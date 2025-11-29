@@ -267,12 +267,6 @@
                         }
                     });
                 });
-            
-                // Initialize Bootstrap tooltips
-                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
-                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                    new bootstrap.Tooltip(tooltipTriggerEl)
-                })
 
                 // Toggle More Info Section
                 document.querySelectorAll('.toggle-more-info').forEach(button => {

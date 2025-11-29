@@ -1,6 +1,6 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
-        <a href="{{ route('dashboard') }}" class="app-brand-link">
+        <a href="{{ route('back-office.auth.dashboard') }}" class="app-brand-link">
             <span class="app-brand-logo demo">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </span>
@@ -24,7 +24,7 @@
             </a>
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('dashboard')?'active':'' }}">
-                    <a href="{{ route('dashboard') }}" class="menu-link">
+                    <a href="{{ route('back-office.auth.dashboard') }}" class="menu-link">
                         <i class="menu-icon tf-icons ti ti-home-2"></i>
                         <div data-i18n="Dashboards">Dashboard</div>
                     </a>

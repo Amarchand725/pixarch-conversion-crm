@@ -138,6 +138,12 @@
     <script>
         var btn = $('#scrollTop');
 
+        // Initialize Bootstrap tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
         $(window).scroll(function() {
           if ($(window).scrollTop() > 300) {
             btn.addClass('show');
