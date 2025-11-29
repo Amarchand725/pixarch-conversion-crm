@@ -21,6 +21,7 @@ class LeadFactory extends Factory
             'name'            => $this->faker->name(),
             'email'           => $this->faker->safeEmail(),
             'phone'           => $this->faker->phoneNumber(),
+            'address'            => $this->faker->address(),
             'value' => $this->faker->numberBetween(0, 100),
             'fields'          => [
                 'message' => $this->faker->sentence(10) 

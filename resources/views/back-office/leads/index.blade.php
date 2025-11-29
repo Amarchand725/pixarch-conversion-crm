@@ -80,44 +80,55 @@
 
                             <ul class="list-group list-group-flush task-column">
                                 @forelse($status['leads'] as $lead)
-                                    <li class="list-group-item drag-item d-flex justify-content-between align-items-center p-3 mb-2 shadow-sm rounded bg-white"
+                                    <li class="list-group-item drag-item d-flex flex-column p-3 mb-2 shadow-sm rounded bg-white"
                                         data-lead-id="{{ $lead->uuid }}"
                                         data-value="{{ $lead->value }}"
                                         style="cursor: grab;">
 
-                                        <div class="d-flex flex-column w-100">
-                                            <!-- Top: Avatar + Name -->
-                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                        <!-- Top row: Avatar + Name + Value -->
+                                        <div class="d-flex justify-content-between align-items-center w-100 mb-2">
+                                            <div class="d-flex align-items-center gap-2">
                                                 <img class="rounded-circle"
-                                                    src="{{ optional($lead->currentAssignee?->avatar)->path
-                                                            ? asset('back-office/assets/' . $lead->currentAssignee->avatar->path)
+                                                    src="{{ optional($lead->assignees->first()?->avatar)->path
+                                                            ? asset('back-office/assets/' . $lead->assignees->first()->avatar->path)
                                                             : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
                                                     width="36" height="36" alt="Avatar">
-
                                                 <span class="fw-semibold">{{ $lead->name }}</span>
                                             </div>
 
-                                            <!-- Action Icons centered under name, smaller size -->
-                                            <div class="d-flex gap-1 mt-1 ml-5">
-                                                <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
-                                                    <i class="bi bi-person-fill fs-6"></i>
-                                                </button>
-                                                <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
-                                                    <i class="bi bi-list-task fs-6"></i>
-                                                </button>
-                                                <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
-                                                    <i class="bi bi-sticky fs-6"></i>
-                                                </button>
-                                                <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
-                                                    <i class="bi bi-calendar-event fs-6"></i>
-                                                </button>
-                                            </div>
+                                            <!-- Value Badge stays on same row -->
+                                            <span class="badge bg-success text-white">
+                                                ${{ number_format($lead->value) }}
+                                            </span>
                                         </div>
 
-                                        <!-- Value Badge -->
-                                        <span class="badge bg-success text-white ms-2">
-                                            ${{ number_format($lead->value) }}
-                                        </span>
+                                        <!-- Action Icons + Toggle -->
+                                        <div class="d-flex gap-1">
+                                            <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
+                                                <i class="bi bi-person-fill fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
+                                                <i class="bi bi-list-task fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
+                                                <i class="bi bi-sticky fs-6"></i>
+                                            </button>
+                                            <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
+                                                <i class="bi bi-calendar-event fs-6"></i>
+                                            </button>
+
+                                            <!-- Toggle More Info -->
+                                            <button class="btn btn-outline-secondary btn-sm ms-auto toggle-more-info" type="button">
+                                                <i class="bi bi-chevron-down"></i> More
+                                            </button>
+                                        </div>
+
+                                        <!-- More Info Section -->
+                                        <div class="more-info mt-2 p-2 border rounded bg-light" style="display: none;">
+                                            <p><strong>Email:</strong> {{ $lead->email ?? 'N/A' }}</p>
+                                            <p><strong>Phone:</strong> {{ $lead->phone ?? 'N/A' }}</p>
+                                            <p><strong>Address:</strong> {{ $lead->address ?? 'N/A' }}</p>
+                                        </div>
                                     </li>
                                 @empty
                                     <li class="empty-slot text-center py-4 text-muted"
@@ -262,6 +273,20 @@
                 tooltipTriggerList.forEach(function (tooltipTriggerEl) {
                     new bootstrap.Tooltip(tooltipTriggerEl)
                 })
+
+                // Toggle More Info Section
+                document.querySelectorAll('.toggle-more-info').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const moreInfo = this.closest('li').querySelector('.more-info');
+                        if (moreInfo.style.display === 'none' || moreInfo.style.display === '') {
+                            moreInfo.style.display = 'block';
+                            this.innerHTML = '<i class="bi bi-chevron-up"></i> Less';
+                        } else {
+                            moreInfo.style.display = 'none';
+                            this.innerHTML = '<i class="bi bi-chevron-down"></i> More';
+                        }
+                    });
+                });
             });
 
             const pageUrl = "{{ url()->current() }}";

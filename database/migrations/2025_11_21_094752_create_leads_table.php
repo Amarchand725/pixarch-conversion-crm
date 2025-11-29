@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('email');
             $table->string('phone')->nullable();
             $table->string('value')->nullable();
+            $table->string('address')->nullable();
             $table->json('fields')->nullable();
             $table->softDeletes();
             $table->timestamps();
