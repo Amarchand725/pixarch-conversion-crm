@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use Lab404\Impersonate\Models\Impersonate;
 use App\Models\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,7 @@ use App\Modules\Lead\Models\Lead;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use Notifiable, ModelTrait, HasFactory, HasRoles, SoftDeletes, LogsModelActivity;
+    use Notifiable, ModelTrait, HasFactory, HasRoles, SoftDeletes, LogsModelActivity, Impersonate;
 
     /**
      * The attributes that are mass assignable.
@@ -73,6 +74,18 @@ class User extends Authenticatable
                     ->value('id');
             }
         });
+    }
+
+    public function canImpersonate(): bool
+    {
+        // Only admins can impersonate others
+        return $this->hasRole('Admin');
+    }
+
+    public function canBeImpersonated(): bool
+    {
+        // Prevent impersonating admins and yourself
+        return !$this->hasRole('Admin') && $this->id !== auth()->id();
     }
 
     public function otpTokens()

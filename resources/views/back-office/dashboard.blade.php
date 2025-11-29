@@ -78,10 +78,12 @@
                             </div>
                             <small>{{ $progress }}% of assigned leads worked</small>
 
-                            <!-- Details Button -->
-                            <a href="{{ route('back-office.users.show', $agent->id) }}" class="btn btn-sm btn-outline-primary mt-3">
-                                View Details
-                            </a>
+                            <!-- Impersonate button -->
+                            @canImpersonate
+                                <a href="{{ route('impersonate', ['id' => $agent->id]) }}" class="btn btn-sm btn-outline-primary mt-3">
+                                    Impersonate
+                                </a>
+                            @endCanImpersonate
                         </div>
                     </div>
                 </div>

@@ -127,15 +127,15 @@
                             </div>
                         </a>
                     </li>
-                    {{-- <li>
+                    <li>
                         <div class="dropdown-divider"></div>
-                    </li> --}}
-                    {{-- <li>
+                    </li>
+                    <li>
                         <a class="dropdown-item" href="#">
                             <i class="ti ti-user-check me-2 ti-sm"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
-                    </li> --}}
+                    </li>
                     <li>
                         <div class="dropdown-divider"></div>
                     </li>
@@ -152,6 +152,18 @@
                             </x-dropdown-link>
                         </form>
                     </li>
+                    <!-- Stop impersonation -->
+                    @impersonating($guard = null)
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('impersonate.leave') }}">
+                            <i class="ti ti-user-check me-2 ti-sm"></i>
+                            <span class="align-middle">Stop Impersonate</span>
+                        </a>
+                    </li>
+                    @endImpersonating
                 </ul>
             </li>
             <!--/ User -->
