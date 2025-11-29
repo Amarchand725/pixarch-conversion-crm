@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Traits\LogsModelActivity;
+use App\Modules\Lead\Models\Lead;
 
 class User extends Authenticatable
 {
@@ -92,5 +93,23 @@ class User extends Authenticatable
     public function statusInfo()
     {
         return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function leads()
+    {
+        // Many-to-many via pivot table `entity_relations`
+        return $this->morphedByMany(
+            Lead::class,         // Related model
+            'model',             // Morph name in pivot (model_type/model_id)
+            'entity_relationships', // Pivot table name
+            'user_id',           // Foreign key on pivot pointing to user
+            'model_id'           // Foreign key on pivot pointing to lead
+        );
+    }
+
+    // Lead activities for this user
+    public function leadLogs()
+    {
+        return $this->hasMany(LogEntityStatus::class, 'author_id');
     }
 }

@@ -25,7 +25,6 @@
                 </div>
             </div>
         @endforeach
-
     </div>
 
     <!-- Agents Section -->
@@ -41,6 +40,52 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Agents Summary Cards -->
+        <h4 class="fw-bold py-3 mt-5">Agents Summary</h4>
+        <div class="row g-4">
+            @foreach($agentsSummary as $agent)
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="card shadow h-100">
+                        <div class="card-body text-center">
+
+                            @php
+                            $avatarPath = optional($agent->avatar)->path
+                                    ? asset('storage/' . $agent->avatar->path)
+                                    : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+                            @endphp
+                            <!-- Agent Avatar + Name -->
+                            <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">
+
+                            <h5 class="fw-bold mb-1">{{ $agent->name }}</h5>
+
+                            <!-- Total vs Worked -->
+                            <div class="mb-2">
+                                <small class="text-muted">Leads Assigned</small>
+                                <h4>{{ $agent->total_assigned }}</h4>
+
+                                <small class="text-muted">Leads Worked/Updated</small>
+                                <h4>{{ $agent->total_updated }}</h4>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            @php
+                                $progress = $agent->total_assigned ? round(($agent->total_updated / $agent->total_assigned) * 100) : 0;
+                            @endphp
+                            <div class="progress mb-3" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $progress }}%;" aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <small>{{ $progress }}% of assigned leads worked</small>
+
+                            <!-- Details Button -->
+                            <a href="{{ route('back-office.users.show', $agent->id) }}" class="btn btn-sm btn-outline-primary mt-3">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
     @endif
 </div>

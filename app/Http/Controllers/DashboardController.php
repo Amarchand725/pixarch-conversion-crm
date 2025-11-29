@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -22,6 +21,41 @@ class DashboardController extends Controller
         
         // Count total agents
         $totalAgents = User::role('Agent')->count();
+
+        $agentsSummary = User::role('Agent')
+            ->with(['leads.lastStatusLog', 'leadLogs'])
+            ->get();
+        
+        foreach ($agentsSummary as $agent) {
+            // Total assigned leads
+            $agent->total_assigned = $agent->leads->count();
+
+            // Total worked leads (unique lead IDs in logs)
+            $agent->total_updated = $agent->leadLogs->pluck('model_id')->unique()->count();
+
+            // Status summary per agent
+            $statusCounts = [];
+
+            foreach ($agent->leads as $lead) {
+                // Get latest status log (lastStatusLog already eager loaded)
+                $latestLog = $lead->lastStatusLog;
+
+                // Only consider updates by this agent
+                $statusName = 'Not Updated';
+                if ($latestLog && $latestLog->author_id == $agent->id) {
+                    $statusName = (string) $latestLog->status; // cast to string to avoid Illegal offset
+                }
+
+                if (!isset($statusCounts[$statusName])) {
+                    $statusCounts[$statusName] = 0;
+                }
+
+                $statusCounts[$statusName]++;
+            }
+
+            $agent->statusCounts = collect($statusCounts);
+        }
+
         return view('back-office.dashboard', get_defined_vars());
     }
 }
