@@ -161,6 +161,22 @@
             $('#loading-gif').hide();
         }
 
+         $(document).on('keyup', '.phoneNumber', function() {
+            var phone = $(this).val();
+            var formattedPhone = formatPhoneNumber(phone);
+            $(this).val(formattedPhone);
+        });
+
+        function formatPhoneNumber(phone) {
+            phone = phone.replace(/\D/g, '');
+            if (phone.length > 3) {
+                var areaCode = phone.substring(0, 3);
+                var telephoneNumber = phone.substring(3, 11);
+                phone = "(" + areaCode + ") - " + telephoneNumber;
+            }
+            return phone;
+        }
+
         $(window).ready(hideLoader);
         @if(Session::has('message'))
             toastr.options =

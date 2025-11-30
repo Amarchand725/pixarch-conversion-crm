@@ -29,7 +29,9 @@
                 </a>
             @else
                 <button
-                    data-toggle="tooltip" data-placement="top" title="Edit {{ $singularLabel }}"
+                    data-toggle="tooltip" 
+                    data-placement="top" 
+                    title="Edit {{ $singularLabel }}"
                     data-edit-url="{{ route($routeInitialize. '.edit', $model->id) }}"
                     data-url="{{ route($routeInitialize. '.update', $model->id) }}"
                     class="dropdown-item edit-btn"

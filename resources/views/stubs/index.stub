@@ -16,7 +16,9 @@
                         
                             <button
                                 id="add-btn"
-                                data-toggle="tooltip" data-placement="top" title="Add {{ $singularLabel }}"
+                                data-toggle="tooltip" data-placement="top" 
+                                title="Add {{ $singularLabel }}"
+                                data-title="Add {{ $singularLabel }}"
                                 data-url="{{ route($routeInitialize.'.store') }}"
                                 data-create-url="{{ route($routeInitialize.'.create') }}"
                                 class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"

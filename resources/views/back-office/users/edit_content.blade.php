@@ -24,8 +24,8 @@
             type="text" 
             id="phone" 
             name="phone" 
-            class="form-control form-control-lg" 
-            placeholder="Enter phone" 
+            class="form-control form-control-lg phoneNumber" 
+            placeholder="(999) - 12345678" 
             value="{{ old('phone', $model->phone) }}"
         />
         <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>

@@ -1,4 +1,3 @@
-
 <div class="row g-3 mb-4">
     <!-- Name Input -->
     <div class="col-12 col-md-6">
@@ -24,8 +23,8 @@
             type="text" 
             id="phone" 
             name="phone" 
-            class="form-control form-control-lg" 
-            placeholder="Enter phone" 
+            class="form-control form-control-lg phoneNumber" 
+            placeholder="(999) - 12345678"
             value="{{ old('phone') }}"
         />
         <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
