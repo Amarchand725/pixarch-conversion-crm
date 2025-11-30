@@ -124,7 +124,7 @@
                                         </div>
 
                                         <!-- More Info Section -->
-                                        <div class="more-info mt-2 p-2 border rounded bg-light" style="display: none;">
+                                        <div class="more-info mt-2 p-2 border rounded bg-light text-wrap text-break" style="display:none;">
                                             <p><strong>Email:</strong> {{ $lead->email ?? 'N/A' }}</p>
                                             <p><strong>Phone:</strong> {{ $lead->phone ?? 'N/A' }}</p>
                                             <p><strong>Address:</strong> {{ $lead->address ?? 'N/A' }}</p>
