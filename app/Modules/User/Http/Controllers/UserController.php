@@ -45,12 +45,12 @@ class UserController extends Controller
         $singularLabel = $this->singularLabel;
 
         $columns = [
-            'agent'     => ['label' => 'Agent', 'html' => true],
-            'role'       => ['label' => 'Role'],
-            'phone'      => ['label' => 'Phone'],
-            'status'     => ['label' => 'Status', 'html' => true],
-            'created_at' => ['label' => 'Created'],
-            'action'     => ['label' => 'Action', 'html' => true],
+            'agent'     => ['label' => 'Agent', 'html' => true, 'searchable' => 'name'],
+            'role'       => ['label' => 'Role', 'searchable' => 'roles.name'],
+            'phone'      => ['label' => 'Phone', 'searchable' => 'phone'],
+            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
         // Get query builder from repository (perfect for DataTables)

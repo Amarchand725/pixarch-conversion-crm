@@ -44,12 +44,12 @@ class LeadController extends Controller
         $statusLeads = $this->leadRepo->getAllCollection();
 
         $columns = [
-            'assigned_to' => ['label' => 'Assigned Agent', 'html' => true],
-            'name' => ['label' => 'Lead Name'],
-            'status_name' => ['label' => 'Status', 'html' => true],
-            'value' => ['label' => 'Value'],
-            'created_at' => ['label' => 'Created'],
-            'action' => ['label' => 'Action', 'html' => true],
+            'assigned_to' => ['label' => 'Assigned Agent', 'html' => true, 'searchable' => false],
+            'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
+            'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
+            'value' => ['label' => 'Value', 'searchable' => 'value'],
+            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
         // query builder from repository or your service

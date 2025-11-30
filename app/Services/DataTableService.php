@@ -21,9 +21,11 @@ class DataTableService
         return collect($this->columns)->map(function ($opts, $key) {
             return [
                 'data'       => $key,
-                'name'       => $key,
+                'name'       => $opts['searchable'] && is_string($opts['searchable']) 
+                                ? $opts['searchable'] 
+                                : $key,
                 'orderable'  => $opts['orderable'] ?? true,
-                'searchable' => $opts['searchable'] ?? true,
+                'searchable' => !empty($opts['searchable']), // only true if searchable is set
             ];
         })->values()->toArray();
     }
@@ -44,11 +46,25 @@ class DataTableService
             if (!empty($meta['db'])) {
                 $dt->editColumn($key, fn($row) => $row->$key);
             } elseif (!empty($meta['html'])) {
-                // computed / HTML column: use rowFormatter for this column
                 $dt->addColumn($key, fn($row) => $this->rowFormatter ? ($this->rowFormatter)($row)->$key : '');
             } else {
-                // computed non-HTML column
                 $dt->addColumn($key, fn($row) => $row->$key ?? null);
+            }
+
+            // Generic filter/search — move inside the loop!
+            if (!empty($meta['searchable']) && $meta['searchable'] !== false) {
+                $dt->filterColumn($key, function($query, $keyword) use ($meta) {
+                    if (str_contains($meta['searchable'], '.')) {
+                        // relation search: 'relation.column'
+                        [$relation, $column] = explode('.', $meta['searchable']);
+                        $query->whereHas($relation, function($q) use ($keyword, $column) {
+                            $q->where($column, 'like', "%{$keyword}%");
+                        });
+                    } else {
+                        // normal DB column
+                        $query->where($meta['searchable'], 'like', "%{$keyword}%");
+                    }
+                });
             }
         }
 

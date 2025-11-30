@@ -8,7 +8,7 @@ function initializeDataTable(pageUrl, columns) {
     $(tableClass).DataTable({
         processing: true,
         serverSide: true,
-        ordering: false,
+        ordering: true,
         ajax: {
             url: pageUrl + "?loaddata=yes",
             type: "GET"

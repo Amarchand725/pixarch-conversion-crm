@@ -44,10 +44,10 @@ class RoleController extends Controller
         $singularLabel = $this->singularLabel;
 
         $columns = [
-            'name'       => ['label' => 'Role Name'],
-            'guard_name'      => ['label' => 'Guard Name'],
-            'created_at' => ['label' => 'Created'],
-            'action'     => ['label' => 'Action', 'html' => true],
+            'name'       => ['label' => 'Role Name', 'searchable' => 'name'],
+            'guard_name'      => ['label' => 'Guard Name', 'searchable' => 'guard_name'],
+            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
         // Get query builder from repository (perfect for DataTables)
