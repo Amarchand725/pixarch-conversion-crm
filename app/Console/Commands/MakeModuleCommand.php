@@ -231,12 +231,10 @@ class MakeModuleCommand extends Command
                 \$singularLabel    = \$this->singularLabel;
 
                 \$columns = [
-                    'agent'      => ['label' => 'Agent', 'html' => true],
-                    'role'       => ['label' => 'Role'],
-                    'phone'      => ['label' => 'Phone'],
-                    'status'     => ['label' => 'Status', 'html' => true],
-                    'created_at' => ['label' => 'Created'],
-                    'action'     => ['label' => 'Action', 'html' => true],
+                    'name'      => ['label' => 'name', 'searchable' => 'name'],
+                    'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+                    'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+                    'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
                 ];
 
                 \$query = \$this->{{variable}}Repo
@@ -247,14 +245,10 @@ class MakeModuleCommand extends Command
                     model: \$query,
                     columns: \$columns,
                     rowFormatter: function (\$row) use (\$routeInitialize, \$permissionPrefix, \$singularLabel) {
-
-                        \$row->agent = view('back-office.partials.avatar', [
-                            'user' => \$row
-                        ])->render();
-
-                        \$row->status = view('back-office.partials.status-badge', [
-                            'status' => \$row->statusInfo?->name
-                        ])->render();
+                        \$status = \$row->status?->name ?? 'de-active';
+                        \$row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass(\$status) .'">'
+                                    . strtoupper(\$status) .
+                                    '</span>';
 
                         \$row->action = view('back-office.partials.action-buttons', [
                             'model'            => \$row,
@@ -298,10 +292,10 @@ class MakeModuleCommand extends Command
                 }
             }
 
-            public function edit(\$id)
+            public function edit({$module} \${$variable})
             {
                 \$title = \$this->pluralLabel;
-                \$model = \$this->userRepo->showModel(\$id);
+                \$model = \$this->userRepo->showModel(\${$variable});
                 \$roles = \$this->roleRepo->get();
                 return (string) view(\$this->pathInitialize.'.edit_content', get_defined_vars());
             }
@@ -320,16 +314,16 @@ class MakeModuleCommand extends Command
                 }
             }
 
-            public function show(\$id)
+            public function show({$module} \${$variable})
             {
-                \$model = \$this->userRepo->showModel(\$id);
+                \$model = \$this->userRepo->showModel(\${$variable});
                 return (string) view(\$this->pathInitialize.'.show_content', get_defined_vars());
             }
 
-            public function destroy(\$id)
+            public function destroy({$module} \${$variable})
             {
                 try {
-                    if(\$this->userRepo->softDeleteModel(\$id)) {
+                    if(\$this->userRepo->softDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
                             'message' => \$this->singularLabel.' Deleted Successfully'
@@ -348,10 +342,10 @@ class MakeModuleCommand extends Command
                 }
             }
 
-            public function restore(\$id)
+            public function restore({{$module} \${$variable})
             {
                 try {
-                    if(\$this->userRepo->restoreModel(\$id)) {
+                    if(\$this->userRepo->restoreModel(\${$variable})) {
                         return redirect()->back()->with('message', 'Record Restored Successfully.');
                     } else {
                         return false;
@@ -364,10 +358,10 @@ class MakeModuleCommand extends Command
                 }
             }
 
-            public function forceDelete(\$id)
+            public function forceDelete({$module} \${$variable})
             {
                 try {
-                    if (\$this->userRepo->permanentlyDeleteModel(\$id)) {
+                    if (\$this->userRepo->permanentlyDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
                             'message' => \$this->singularLabel.' Deleted Successfully'
