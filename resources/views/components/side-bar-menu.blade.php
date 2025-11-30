@@ -17,20 +17,11 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item {{ request()->is('dashboard')?'active open':'' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-settings"></i>
-                <div data-i18n="Dashboard">Dashboard</div>
+        <li class="menu-item {{ request()->is('back-office/auth/dashboard') ? 'active' : '' }}">
+            <a href="{{ route('back-office.auth.dashboard') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-home-2"></i>
+                <div data-i18n="Dashboards">Dashboard</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('dashboard')?'active':'' }}">
-                    <a href="{{ route('back-office.auth.dashboard') }}" class="menu-link">
-                        <i class="menu-icon tf-icons ti ti-home-2"></i>
-                        <div data-i18n="Dashboards">Dashboard</div>
-                    </a>
-                </li>
-                
-            </ul>
         </li>
 
         <!-- Apps & Pages -->
@@ -40,48 +31,27 @@
 
         @can('lead-list')
         <li class="menu-item {{ request()->is('back-office/leads') || request()->is('back-office/leads/*')?'active open':'' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="{{ route('back-office.leads.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-tags"></i>
-                <div data-i18n="Leads">Leads</div>
+                <div data-i18n="Leads List">Leads List</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('back-office/leads')?'active':'' }}">
-                    <a href="{{ route('back-office.leads.index') }}" class="menu-link">
-                        <div data-i18n="Leads List">Leads List</div>
-                    </a>
-                </li>
-            </ul>
         </li>
         @endcan
 
         @can('user-list')
         <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="{{ route('back-office.users.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-users"></i>
-                <div data-i18n="Agents">Agents</div>
+                <div data-i18n="Agents List">Agents List</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('back-office/users')?'active':'' }}">
-                    <a href="{{ route('back-office.users.index') }}" class="menu-link">
-                        <div data-i18n="Agents List">Agents List</div>
-                    </a>
-                </li>
-            </ul>
         </li>
         @endcan
         @can('role-list')
         <li class="menu-item {{ request()->is('back-office/roles') || request()->is('back-office/roles/*')?'active open':'' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <a href="{{ route('back-office.roles.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-settings"></i>
-                <div data-i18n="Roles & Permissions">Roles & Permissions</div>
+                <div data-i18n="Roles List">Roles List</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('back-office/roles')?'active':'' }}">
-                    <a href="{{ route('back-office.roles.index') }}" class="menu-link">
-                        <div data-i18n="Roles List">Roles List</div>
-                    </a>
-                </li>
-            </ul>
         </li>
         @endcan
     </ul>
