@@ -45,9 +45,13 @@ abstract class BaseRepository implements BaseContract
     /**
      * Find a specific model by ID.
      */
-    public function showModel(int|string $id): ?Model
+    public function showModel(Model $model, array $relations = []): Model
     {
-        return $this->model->findOrFail($id);
+        if (!empty($relations)) {
+            $model->load($relations);
+        }
+
+        return $model;
     }
 
     /**
@@ -79,27 +83,24 @@ abstract class BaseRepository implements BaseContract
     /**
      * Soft delete a model.
      */
-    public function softDeleteModel(int|string $id): bool
+    public function softDeleteModel(Model $model): bool
     {
-        $model = $this->model->findOrFail($id);
         return (bool) $model->delete();
     }
 
     /**
      * Restore a soft-deleted model.
      */
-    public function restoreModel(int|string $id): bool
+    public function restoreModel(Model $model): bool
     {
-        $model = $this->model->withTrashed()->findOrFail($id);
         return (bool) $model->restore();
     }
 
     /**
      * Permanently delete a model.
      */
-    public function permanentlyDeleteModel(int|string $id): bool
+    public function permanentlyDeleteModel(Model $model): bool
     {
-        $model = $this->model->withTrashed()->findOrFail($id);
         return (bool) $model->forceDelete();
     }
 }

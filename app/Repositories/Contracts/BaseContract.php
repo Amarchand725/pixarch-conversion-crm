@@ -8,15 +8,15 @@ interface BaseContract
 {
     public function getAll(array $columns = ['*']);
 
-    public function showModel(int|string $id);
+    public function showModel(Model $model, array $relations = []);
 
     public function storeModel(array $data);
 
     public function updateModel(Model $model, array $data);
 
-    public function softDeleteModel(int|string $id);
+    public function softDeleteModel(Model $model);
 
-    public function restoreModel(int|string $id);
+    public function restoreModel(Model $model);
 
-    public function permanentlyDeleteModel(int|string $id);
+    public function permanentlyDeleteModel(Model $model);
 }

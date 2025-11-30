@@ -72,10 +72,7 @@ class RolePermissionSeeder extends Seeder
             'role-view',
             'role-edit',
             'role-delete',
-            'role-bulk-delete',
-            'role-permanent-delete',
             'role-restore',
-            'role-export',
 
             // User management
             'user-list',
@@ -83,20 +80,15 @@ class RolePermissionSeeder extends Seeder
             'user-view',
             'user-edit',
             'user-delete',
-            'user-bulk-delete',
             'user-restore',
-            'user-export',
             'user-status',
-            'user-direct-permission',
+            'user-direct_permission',
 
             // Permission management
             'permission-list',
             'permission-view',
             'permission-delete',
-            'permission-bulk-delete',
-            'permission-permanent-delete',
             'permission-restore',
-            'permission-export',
 
             // Status management
             'status-list',
@@ -104,36 +96,26 @@ class RolePermissionSeeder extends Seeder
             'status-view',
             'status-edit',
             'status-delete',
-            'status-bulk-delete',
-            'status-permanent-delete',
             'status-restore',
-            'status-export',
 
             // Country management
             'country-list',
             'country-view',
             'country-delete',
-            'country-permanent-delete',
             'country-restore',
-            'country-export',
 
             // State management
             'state-list',
             'state-view',
             'state-delete',
-            'state-permanent-delete',
             'state-restore',
-            'state-export',
 
             // Lead management
             'lead-list',
             'lead-view',
             'lead-create',
             'lead-delete',
-            'lead-bulk-delete',
-            'lead-permanent-delete',
             'lead-restore',
-            'lead-export',
             'lead-status',
             'lead-assign-user',
             'lead-assigned-users-list',
@@ -144,18 +126,12 @@ class RolePermissionSeeder extends Seeder
             'source-view',
             'source-edit',
             'source-delete',
-            'source-permanent-delete',
             'source-restore',
-            'source-export',
 
             // Log Activity management
             'log_activity-list',
-            'log_activity-create',
             'log_activity-view',
-            'log_activity-edit',
             'log_activity-delete',
-            'log_activity-bulk-delete',
-            'log_activity-permanent-delete',
             'log_activity-restore',
 
             // Attachment management
@@ -164,8 +140,6 @@ class RolePermissionSeeder extends Seeder
             'attachment-view',
             'attachment-edit',
             'attachment-delete',
-            'attachment-bulk-delete',
-            'attachment-permanent-delete',
             'attachment-restore',
             'attachment-download',
         ];

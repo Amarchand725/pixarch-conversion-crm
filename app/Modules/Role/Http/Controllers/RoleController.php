@@ -6,11 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Modules\Role\Repositories\Eloquent\RoleRepository;
 use App\Modules\Role\Http\Requests\RoleRequest;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 
 class RoleController extends Controller
 {
@@ -96,10 +95,10 @@ class RoleController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $title = $this->pluralLabel;
-        $role = $this->roleRepo->showModel($id);
+        $title = 'Edit '.$this->singularLabel;
+        $role = $this->roleRepo->showModel($role);
         $permissions = $this->permissionModel->orderby('id','DESC')->groupBy('label')->get();
         return view($this->pathInitialize.'.edit', get_defined_vars());
     }
@@ -110,15 +109,15 @@ class RoleController extends Controller
         
         try {
             $this->roleRepo->updateModel($role, $payload);
-            return redirect()->route(strtolower('role.index'))->with('success', 'Role updated successfully.');
+            return redirect()->back()->with('message', 'Role updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', $e->getMessage()); 
         }
     }
 
-    public function show($id)
+    public function show(Role $role)
     {
-        $model = $this->roleRepo->showModel($id);
+        $model = $this->roleRepo->showModel($role);
         $permissions = $model->permissions()->pluck('name')->toArray();
         $groupedPermissions = groupPermissions($permissions);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());

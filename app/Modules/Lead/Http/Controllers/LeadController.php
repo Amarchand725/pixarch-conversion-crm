@@ -102,10 +102,10 @@ class LeadController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Lead $lead)
     {
-        $lead = $this->leadRepo->showModel($id);
-        return view('backOffice.leads.edit', compact('lead'));
+        $lead = $this->leadRepo->showModel($lead);
+        return view($this->pathInitialize.'.edit', compact('lead'));
     }
 
     public function update(LeadRequest $request, Lead $lead)
@@ -119,39 +119,69 @@ class LeadController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(Lead $lead)
     {
-        $model = $this->leadRepo->showModel($id);
+        $model = $this->leadRepo->showModel($lead);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
-    public function destroy($id)
+    public function destroy(Lead $lead)
     {
         try {
-            $this->leadRepo->softDeleteModel($id);
-            return redirect()->route(strtolower('leads.index'))->with('success', 'Lead deleted successfully.');
+            if($this->leadRepo->softDeleteModel($lead)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function restore($id)
+    public function restore(Lead $lead)
     {
         try {
-            $this->leadRepo->restoreModel($id);
-            return redirect()->route(strtolower('leads.index'))->with('success', 'Lead restored successfully.');
+            if($this->leadRepo->restoreModel($lead)) {
+                return redirect()->back()->with('message', 'Record Restored Successfully.');
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function forceDelete($id)
+    public function forceDelete(Lead $lead)
     {
         try {
-            $this->leadRepo->permanentlyDeleteModel($id);
-            return redirect()->route(strtolower('leads.index'))->with('success', 'Lead permanently deleted.');
+            if($this->leadRepo->permanentlyDeleteModel($lead)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 

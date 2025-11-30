@@ -16,6 +16,7 @@ class RoleRepository extends BaseRepository implements RoleContract
 
     public function updateModel(Model $model, array $payload): Model
     {
+        // Sync permissions if any
         if (!empty($payload['permissions'])) {
             $model->syncPermissions($payload['permissions']);
         }

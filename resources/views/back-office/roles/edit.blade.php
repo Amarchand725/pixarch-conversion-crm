@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', ($title ?? '').' - '. config('app.name', 'Laravel'))
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card mb-4">
@@ -18,7 +19,7 @@
                             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                                 <div class="container">
                                     <!-- Add role form -->
-                                    <form action="{{ route('back-office.roles.update', $role->id) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form">
+                                    <form action="{{ route('back-office.roles.update', $role->uuid) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form">
                                         @csrf
                                         @method('PUT')
 

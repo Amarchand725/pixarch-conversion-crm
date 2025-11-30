@@ -111,10 +111,10 @@ class UserController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
         $title = $this->pluralLabel;
-        $model = $this->userRepo->showModel($id);
+        $model = $this->userRepo->showModel($user);
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
@@ -133,16 +133,16 @@ class UserController extends Controller
         }
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $model = $this->userRepo->showModel($id);
+        $model = $this->userRepo->showModel($user);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
-    public function destroy($id)
+    public function destroy(User $user)
     {
         try {
-            if($this->userRepo->softDeleteModel($id)) {
+            if($this->userRepo->softDeleteModel($user)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'
@@ -161,10 +161,10 @@ class UserController extends Controller
         }
     }
 
-    public function restore($id)
+    public function restore(User $user)
     {
         try {
-            if($this->userRepo->restoreModel($id)) {
+            if($this->userRepo->restoreModel($user)) {
                 return redirect()->back()->with('message', 'Record Restored Successfully.');
             } else {
                 return false;
@@ -177,10 +177,10 @@ class UserController extends Controller
         }
     }
 
-    public function forceDelete($id)
+    public function forceDelete(User $user)
     {
         try {
-            if ($this->userRepo->permanentlyDeleteModel($id)) {
+            if ($this->userRepo->permanentlyDeleteModel($user)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'

@@ -41,7 +41,15 @@
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">{{ ($title ?? ''). ' /' }} </span> Drag &amp; Drop</h4>
+        <div class="card mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card-header">
+                        <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Home /</span> {{ $title }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-end mb-3">
             <a href="?view=cards" class="btn btn-sm {{ request('view')=='cards' || request('view')==null ? 'btn-primary' : 'btn-outline-primary' }}">
@@ -163,6 +171,9 @@
             </div>
         @endif
     </div>
+    <!-- Modals -->
+    <x-modals />
+    <!--/ Modals -->
     @push('js')
         <!-- Page JS -->
         <script src="{{ asset('back-office') }}/assets/vendor/libs/sortablejs/sortable.js"></script>

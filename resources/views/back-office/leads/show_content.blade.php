@@ -1,15 +1,4 @@
 <table class="table table-flush-spacing">
-    {{-- <tr>
-        <td class="text-nowrap fw-semibold">Avatar</td>
-        <td>
-            @php
-                $avatarPath = optional($model->avatar)->path
-                        ? asset('storage/' . $model->avatar->path)
-                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
-            @endphp
-            <img src="{{ $avatarPath }}" width="50" height="50" class="rounded-circle" alt="Avatar">
-        </td>
-    </tr> --}}
     <tr>
         <td class="text-nowrap fw-semibold">Name</td>
         <td><span class="text-primary fw-semibold">{{ $model->name??'-' }}</span></td>
@@ -22,6 +11,14 @@
         <td class="text-nowrap fw-semibold">Phone</td>
         <td><span class="text-primary fw-semibold">{{ $model->phone??'-' }}</span></td>
     </tr>    
+    <tr>
+        <td class="text-nowrap fw-semibold">Value</td>
+        <td><span class="text-primary fw-semibold">${{ number_format($model->value, 2) }}</span></td>
+    </tr>   
+     <tr>
+        <td class="text-nowrap fw-semibold">Address</td>
+        <td><span class="text-primary fw-semibold">{{ $model->address }}</span></td>
+    </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>
         <td>{{ date('d, M Y | h:i A', strtotime($model->created_at)) }}</td>

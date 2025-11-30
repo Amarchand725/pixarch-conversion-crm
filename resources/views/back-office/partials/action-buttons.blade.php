@@ -13,14 +13,14 @@
                 data-toggle="tooltip"
                 data-placement="top"
                 title="{{ $singularLabel }} Details"
-                data-show-url="{{ route($routeInitialize. '.show', $model->id) }}"
+                data-show-url="{{ route($routeInitialize. '.show', $model->uuid) }}"
                 >
                 {{ $singularLabel }} Details
             </a>
         @endcan
         @can($permissionPrefix.'-edit')
             @if($permissionPrefix=='role')
-                <a href="{{ route($routeInitialize.'.edit', $model->id) }}"
+                <a href="{{ route($routeInitialize.'.edit', $model->uuid) }}"
                     class="dropdown-item"
                     data-toggle="tooltip"
                     data-placement="top"
@@ -32,8 +32,8 @@
                     data-toggle="tooltip" 
                     data-placement="top" 
                     title="Edit {{ $singularLabel }}"
-                    data-edit-url="{{ route($routeInitialize. '.edit', $model->id) }}"
-                    data-url="{{ route($routeInitialize. '.update', $model->id) }}"
+                    data-edit-url="{{ route($routeInitialize. '.edit', $model->uuid) }}"
+                    data-url="{{ route($routeInitialize. '.update', $model->uuid) }}"
                     class="dropdown-item edit-btn"
                     tabindex="0" aria-controls="DataTables_Table_0"
                     type="button" data-bs-toggle="modal"
@@ -43,7 +43,7 @@
             @endif
         @endcan
         @can($permissionPrefix.'-delete')
-            <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route($routeInitialize . '.destroy', $model->id) }}">Delete</a>
+            <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route($routeInitialize . '.destroy', $model->uuid) }}">Delete</a>
         @endcan
     </div>
 </div>
