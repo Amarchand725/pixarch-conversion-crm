@@ -54,7 +54,8 @@ class LeadController extends Controller
 
         // query builder from repository or your service
         $query = $this->leadRepo->getAll();
-
+        $total_leads = $query->count();
+        
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,

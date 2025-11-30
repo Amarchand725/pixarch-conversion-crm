@@ -45,7 +45,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="card-header">
-                        <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Home /</span> {{ $title }}</h4>
+                        <h4 class="fw-bold mb-0">
+                            <span class="text-muted fw-light">Home /</span> {{ $title }} 
+                            <span class="badge rounded-pill px-3 py-2 bg-primary text-white">
+                                {{ $total_leads }} Leads
+                            </span>
+                        </h4>
                     </div>
                 </div>
             </div>
