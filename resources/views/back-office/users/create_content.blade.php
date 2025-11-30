@@ -50,7 +50,8 @@
             type="date" 
             id="doj" 
             name="doj" 
-            class="form-control form-control-lg" 
+            class="form-control form-control-lg dob-picker" 
+            placeholder="MM-DD-YYYY"
             value="{{ old('doj') }}"
         />
         <span id="doj_error" class="text-danger error">{{ $errors->first('doj') }}</span>
