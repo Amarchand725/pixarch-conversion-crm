@@ -9,6 +9,7 @@ use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Modules\Lead\Models\Lead;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class LeadRepository extends BaseRepository implements LeadContract
 {
@@ -77,6 +78,63 @@ class LeadRepository extends BaseRepository implements LeadContract
         }
 
         return $statusLeads;
+    }
+
+    public function storeModel(array $payload): Model
+    {
+        $model = $this->model;
+        $model->toFill($payload, ['status_id', 'assignee_id']);
+
+        $model->save();
+
+        $logStatues['status_id'] = $payload['status_id'];
+        $logStatues['assignee_id'] = $payload['assignee_id'];
+        $logStatues['model_id'] = $model->id;
+        $logStatues['model_type'] = $model->getMorphClass();
+
+        $log = $model->statusLogs()->firstOrNew();
+        $log->toFill($logStatues);
+        $log->save();
+
+        if (!empty($payload['assignee_id'])) {
+            $model->assignees()->sync([$payload['assignee_id']]);
+        }else{
+            $model->assignees()->sync([auth()->id()]);
+        }
+
+        return $model;
+    }
+
+    public function updateModel(Model $model, array $payload): Model
+    {
+        // Sync permissions if any
+        // if (!empty($payload['permissions'])) {
+        //     $model->syncPermissions($payload['permissions']);
+        // }
+
+        // $model->save();
+
+        // return $model;
+
+        $model->toFill($payload, ['status_id', 'assignee_id']);
+        $model->save();
+
+        $logStatues['status_id'] = $payload['status_id'];
+        $logStatues['assignee_id'] = $payload['assignee_id'];
+        $logStatues['model_id'] = $model->id;
+        $logStatues['model_type'] = $model->getMorphClass();
+
+        $log = $model->statusLogs()->firstOrNew();
+        $log->toFill($logStatues);
+        $log->save();
+
+        if (!empty($payload['assignee_id'])) {
+            $model->assignees()->sync([$payload['assignee_id']]);
+        }else{
+            $model->assignees()->sync([auth()->id()]);
+        }
+
+        return $model;
     }
 
     public function statusModel($payload){

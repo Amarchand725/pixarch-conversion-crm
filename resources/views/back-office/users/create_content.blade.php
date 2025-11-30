@@ -8,7 +8,7 @@
             type="text" 
             id="name" 
             name="name" 
-            class="form-control form-control-lg" 
+            class="form-control" 
             placeholder="Enter name" 
             value="{{ old('name') }}"
         />
@@ -23,7 +23,7 @@
             type="text" 
             id="phone" 
             name="phone" 
-            class="form-control form-control-lg phoneNumber" 
+            class="form-control phoneNumber" 
             placeholder="(999) - 12345678"
             value="{{ old('phone') }}"
         />
@@ -34,7 +34,7 @@
         <label for="gender" class="form-label fw-semibold">
             Gender <span class="text-danger">*</span>
         </label>
-        <select id="gender" name="gender" class="form-select form-select-lg">
+        <select id="gender" name="gender" class="form-select">
             <option value="" selected>Select gender</option>
             <option value="M" selected>Male</option>
             <option value="F">Female</option>
@@ -50,7 +50,7 @@
             type="date" 
             id="doj" 
             name="doj" 
-            class="form-control form-control-lg dob-picker" 
+            class="form-control dob-picker" 
             placeholder="MM-DD-YYYY"
             value="{{ old('doj') }}"
         />
@@ -64,7 +64,7 @@
             type="email" 
             id="email" 
             name="email" 
-            class="form-control form-control-lg" 
+            class="form-control" 
             placeholder="Enter email" 
             value="{{ old('email') }}"
         />
@@ -78,7 +78,7 @@
             type="password" 
             id="password" 
             name="password" 
-            class="form-control form-control-lg" 
+            class="form-control" 
             placeholder="Enter password" 
             value="{{ old('password') }}"
         />
@@ -92,7 +92,7 @@
             type="password" 
             id="password_confirmation" 
             name="password_confirmation" 
-            class="form-control form-control-lg" 
+            class="form-control" 
             placeholder="Enter password confirmation" 
             value="{{ old('password_confirmation') }}"
         />
@@ -111,7 +111,7 @@
             id="avatar" 
             name="avatar" 
             accept=".png, .jpg, .jpeg" 
-            class="form-control form-control-lg"
+            class="form-control"
             onchange="previewAvatar(event)"
         />
         <small class="text-muted">Allowed file types: png, jpg, jpeg.</small>

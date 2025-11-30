@@ -4,6 +4,7 @@ namespace App\Modules\Lead\Models;
 
 use App\Models\EntityRelationship;
 use App\Models\LogEntityStatus;
+use App\Models\Source;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -16,7 +17,16 @@ class Lead extends Model
 {
     use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
 
-    protected $fillable = ['lead_capture_id', 'name', 'email', 'phone', 'fields'];
+    protected $fillable = [
+        'lead_capture_id', 
+        'source_id', 
+        'name', 
+        'email', 
+        'phone', 
+        'value', 
+        'status', 
+        'fields'
+    ];
 
     /**
      * Configure Spatie Activity Log options.
@@ -52,6 +62,11 @@ class Lead extends Model
     public function lastStatusLog()
     {
         return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
+    }
+
+    public function source()
+    {
+        return $this->belongsTo(Source::class, 'source_id');
     }
 
     public function currentAssignee()

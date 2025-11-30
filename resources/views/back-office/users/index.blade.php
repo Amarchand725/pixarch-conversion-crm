@@ -14,24 +14,26 @@
                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
                             <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
                         
-                            <button
-                                id="add-btn"
-                                data-toggle="tooltip" 
-                                data-placement="top" 
-                                title="Add {{ $singularLabel }}"
-                                data-title="Add {{ $singularLabel }}"
-                                data-url="{{ route($routeInitialize.'.store') }}"
-                                data-create-url="{{ route($routeInitialize.'.create') }}"
-                                class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
-                                tabindex="0" aria-controls="DataTables_Table_0"
-                                type="button" 
-                                data-bs-toggle="modal"
-                                data-bs-target="#create-pop-up-modal-for-file">
-                                <span>
-                                    <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block"> Add {{ $singularLabel }} </span>
-                                </span>
-                            </button>
+                            @can($permissionPrefix.'-create')
+                                <button
+                                    id="add-btn"
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="Add {{ $singularLabel }}"
+                                    data-title="Add {{ $singularLabel }}"
+                                    data-url="{{ route($routeInitialize.'.store') }}"
+                                    data-create-url="{{ route($routeInitialize.'.create') }}"
+                                    class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
+                                    tabindex="0" aria-controls="DataTables_Table_0"
+                                    type="button" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#create-pop-up-modal-for-file">
+                                    <span>
+                                        <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
+                                        <span class="d-none d-sm-inline-block"> Add {{ $singularLabel }} </span>
+                                    </span>
+                                </button>
+                            @endcan
                         </div>
                     </div>
                 </div>

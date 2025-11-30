@@ -1,7 +1,7 @@
 <table class="table table-flush-spacing">
     <tr>
         <td class="text-nowrap fw-semibold">Role</td>
-        <td><span class="text-primary fw-semibold">{{ $model->name??'-' }}</span></td>
+        <td>{{ $model->name??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>

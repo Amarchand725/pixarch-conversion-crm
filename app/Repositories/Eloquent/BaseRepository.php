@@ -61,7 +61,6 @@ abstract class BaseRepository implements BaseContract
     {
         try {
             $model = $this->model->create($data);
-            Log::info('Created model', ['id' => $model->id]);
         } catch (\Throwable $e) {
             Log::error('Model creation failed', ['error' => $e->getMessage()]);
             throw $e;

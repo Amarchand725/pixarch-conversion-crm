@@ -3,13 +3,15 @@
 namespace App\Modules\Lead\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Source;
+use App\Models\Status;
+use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
 use Exception;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 class LeadController extends Controller
@@ -21,10 +23,16 @@ class LeadController extends Controller
     protected $pluralLabel;
     protected $permissionPrefix;
     protected $prefix;
+    protected $leadStatus;
+    protected $sourceRepo;
+    protected $userRepo;
 
     public function __construct(LeadRepository $leadRepo)
     {
         $this->leadRepo = $leadRepo;
+        $this->leadStatus = new Status();
+        $this->sourceRepo = new Source();
+        $this->userRepo = new User();
 
         $this->prefix = Str::kebab('Lead');
         $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
@@ -89,24 +97,38 @@ class LeadController extends Controller
 
     public function create()
     {
-        return view('back-office.leads.create');
+        $stages = $this->leadStatus->where('model', 'lead')->get();
+        $sources = $this->sourceRepo->get();
+        $agents = $this->userRepo->role('agent')
+                ->whereHas('status', fn($q) => $q->where('name', 'active'))
+                ->get();
+        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
     public function store(LeadRequest $request)
     {
         $payload = $request->validated();
+        
         try {
-            $this->leadRepo->storeModel($payload);
-            return redirect()->route(strtolower('Lead.index'))->with('success', 'Lead created successfully.');
+            $response = $this->leadRepo->storeModel($payload);
+            return successResponse($response, $this->singularLabel. ' added successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
     public function edit(Lead $lead)
     {
-        $lead = $this->leadRepo->showModel($lead);
-        return view($this->pathInitialize.'.edit', compact('lead'));
+        $stages = $this->leadStatus->where('model', 'lead')->get();
+        $sources = $this->sourceRepo->get();
+        $agents = $this->userRepo->role('agent')
+                ->whereHas('status', fn($q) => $q->where('name', 'active'))
+                ->get();
+        $model = $this->leadRepo->showModel($lead);
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
     public function update(LeadRequest $request, Lead $lead)
@@ -114,9 +136,12 @@ class LeadController extends Controller
         $payload = $request->validated();
         try {
             $this->leadRepo->updateModel($lead, $payload);
-            return redirect()->route(strtolower('Lead.index'))->with('success', 'Lead updated successfully.');
+            return successResponse([], $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 

@@ -89,7 +89,6 @@ class UserController extends Controller
 
     public function create()
     {
-        $title = $this->pluralLabel;
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
@@ -113,7 +112,6 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $title = $this->pluralLabel;
         $model = $this->userRepo->showModel($user);
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());

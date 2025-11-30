@@ -145,3 +145,12 @@ function badgeClass(string $status): string
 
     return $statusColors[strtolower($status)] ?? 'bg-dark text-white';
 }
+
+function statuses(){
+    return [
+        'open',
+        'lost',
+        'won',
+        'abandoned'
+    ];
+}

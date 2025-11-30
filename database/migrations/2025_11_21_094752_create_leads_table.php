@@ -10,12 +10,13 @@ return new class extends Migration {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->foreignId('source_id')->nullable()->constrained('sources')->nullOnDelete();
             $table->foreignId('lead_capture_id')->nullable()->constrained('lead_captures')->nullOnDelete();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('value')->nullable();
-            $table->string('address')->nullable();
+            $table->string('status')->nullable()->comment('open, lost, won, abandoned');
             $table->json('fields')->nullable();
             $table->softDeletes();
             $table->timestamps();

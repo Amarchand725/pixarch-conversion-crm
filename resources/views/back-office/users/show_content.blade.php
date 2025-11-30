@@ -12,27 +12,35 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Name</td>
-        <td><span class="text-primary fw-semibold">{{ $model->name??'-' }}</span></td>
+        <td>{{ $model->name??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Role</td>
-        <td><span class="text-primary fw-semibold">{{ $model?->roles()?->first()?->name??'-' }}</span></td>
+        <td>{{ $model?->roles()?->first()?->name??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Email</td>
-        <td><span class="text-primary fw-semibold">{{ $model->email??'-' }}</span></td>
+        <td>{{ $model->email??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Phone</td>
-        <td><span class="text-primary fw-semibold">{{ $model->phone??'-' }}</span></td>
+        <td>{{ $model->phone??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Gender</td>
-        <td><span class="text-primary fw-semibold">{{ $model->gender??'-' }}</span></td>
+        <td>
+            @if($model->gender=='M')
+                Male
+            @elseif ($model->gender=='F')
+                Female
+            @else
+                Other
+            @endif
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Date of Joining</td>
-        <td><span class="text-primary fw-semibold">{{ $model->doj??'-' }}</span></td>
+        <td>{{ $model->doj??'-' }}</td>
     </tr>
     
     <tr>

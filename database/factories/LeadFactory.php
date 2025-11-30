@@ -17,12 +17,13 @@ class LeadFactory extends Factory
     {
         return [
             'uuid'            => $this->faker->uuid(),
+            'source_id' => $this->faker->numberBetween(1, 17),
             'lead_capture_id' => $this->faker->numberBetween(1, 5),
             'name'            => $this->faker->name(),
             'email'           => $this->faker->safeEmail(),
             'phone'           => $this->faker->phoneNumber(),
-            'address'            => $this->faker->address(),
             'value' => $this->faker->numberBetween(0, 100),
+            'status' => $this->faker->randomElement(['open', 'lost', 'won', 'abandoned']),
             'fields'          => [
                 'message' => $this->faker->sentence(10) 
             ]

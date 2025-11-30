@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\LogEntityStatus;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
 use App\Modules\Lead\Models\Lead;
@@ -45,17 +44,14 @@ class LeadSeeder extends Seeder
 
             $lead->assignees()->sync([rand(3, 10)]);
 
-            LogEntityStatus::create([
-                'author_id'   => 2, // admin
-                'model_id'    => $lead->id,
-                'model_type'  => $lead->getMorphClass(),
-                'status_id'   => $status->id,
-                'assignee_id' => $lead->currentAssignee?->user_id,
-                'meeting_id'  => null,
-                'description' => 'Auto generated status log',
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ]);
+            $logStatues['status_id'] = $status->id;
+            $logStatues['assignee_id'] = $lead->currentAssignee?->user_id;
+            $logStatues['model_id'] = $lead->id;
+            $logStatues['model_type'] = $lead->getMorphClass();
+
+            $log = $lead->statusLogs()->firstOrNew();
+            $log->toFill($logStatues);
+            $log->save();
         }
     }
 }
