@@ -2,7 +2,7 @@
 return [
     'settings' => [
         'company' => [
-            'name' => ['value' => 'Pixarch CRM', 'input_type' => 'text'],
+            'name' => ['value' => '100 KEYS UAE', 'input_type' => 'text'],
             'website_url' => ['value' => 'https://example.com', 'input_type' => 'url'],
             'address' => ['value' => '6600 N Lincoln Ave Ste 316 Acton California 60712 United States.', 'input_type' => 'textarea'],
             'zip_code' => ['value' => '60712', 'input_type' => 'text'],

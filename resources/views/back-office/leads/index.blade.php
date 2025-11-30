@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', ($title ?? '').' - '. config('app.name', 'Laravel'))
+    @section('title', ($title ?? '').' - '. config('app.name', '100 KEYS UAE'))
     @push('css')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
