@@ -46,11 +46,11 @@
                         data-bs-target="#navs-profile" aria-controls="navs-profile" 
                         aria-selected="true"><i class="ti-xs ti ti-user-check me-1"></i> Profile</button>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" 
                         data-bs-target="#navs-teams" aria-controls="navs-teams" 
                         aria-selected="true"><i class="ti-xs ti ti-users me-1"></i> Teams</button>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" 
                         data-bs-target="#navs-password" aria-controls="navs-password" 
@@ -62,7 +62,7 @@
                         <div class="card-body">
                             <!-- User Profile Content -->
                             <div class="row">
-                                <div class="col-xl-4 col-lg-5 col-md-5">
+                                <div class="col-xl-12 col-lg-5 col-md-5">
                                     <!-- About User -->
                                     <div class="card mb-4">
                                         <div class="card-body">
@@ -93,7 +93,7 @@
                                                     <span>{{ auth()->user()->email }}</span>
                                                 </li>
                                             </ul>
-                                            <small class="card-text text-uppercase">Teams</small>
+                                            {{-- <small class="card-text text-uppercase">Teams</small>
                                             <ul class="list-unstyled mb-0 mt-3">
                                                 <li class="d-flex align-items-center mb-3">
                                                     <i class="ti ti-brand-angular text-danger me-2"></i>
@@ -101,12 +101,12 @@
                                                     <span class="fw-bold me-2">Backend Developer</span><span>(126 Members)</span>
                                                     </div>
                                                 </li>
-                                            </ul>
+                                            </ul> --}}
                                         </div>
                                     </div>
                                     <!--/ About User -->
                                 </div>
-                                <div class="col-xl-8 col-lg-7 col-md-7">
+                                {{-- <div class="col-xl-8 col-lg-7 col-md-7">
                                     <!-- Activity Timeline -->
                                     <div class="card card-action mb-4">
                                     <div class="card-header align-items-center">
@@ -216,7 +216,7 @@
                                     </div>
                                     </div>
                                     <!--/ Activity Timeline -->
-                                </div>
+                                </div> --}}
                             </div>
                             <!--/ User Profile Content -->
                         </div>
