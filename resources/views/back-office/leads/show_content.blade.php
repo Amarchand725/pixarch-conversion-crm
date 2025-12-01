@@ -42,7 +42,7 @@
             @endphp 
             <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status->name)) ?? 'bg-light text-dark' }}">
                 {{ strtoupper($status->name) }}
-            
+            </span>
         </td>
     </tr>
     <tr>
