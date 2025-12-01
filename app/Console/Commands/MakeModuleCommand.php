@@ -41,9 +41,9 @@ class MakeModuleCommand extends Command
         $this->createRepository($module);
         $this->createViews($module, $fields);
         $this->createRoute($module);
-        $this->createConfig($module, $fields);
-        $this->createSeeder($module);
-        $this->registerPermissions($module);
+        // $this->createConfig($module, $fields);
+        // $this->createSeeder($module);
+        // $this->registerPermissions($module);
 
         $this->info("✅ Module [{$module}] generated successfully!");
     }
@@ -554,14 +554,14 @@ class MakeModuleCommand extends Command
 
         // List of stubs
         $stubs = [
-            'index.stub'       => "{$viewPath}/index.blade.php",
-            'create_content.stub'      => "{$viewPath}/create_content.blade.php",
-            'edit_content.stub'        => "{$viewPath}/edit_content.blade.php",
-            'show_content.stub'        => "{$viewPath}/show_content.blade.php",
+            'index.stub'          => "{$viewPath}/index.blade.php",
+            'create_content.stub' => "{$viewPath}/create_content.blade.php",
+            'edit_content.stub'   => "{$viewPath}/edit_content.blade.php",
+            'show_content.stub'   => "{$viewPath}/show_content.blade.php",
         ];
 
         foreach ($stubs as $stub => $destination) {
-            $content = file_get_contents(base_path("stubs/views/{$stub}"));
+            $content = file_get_contents(resource_path("views/stubs/{$stub}"));
             file_put_contents($destination, $content);
         }
 

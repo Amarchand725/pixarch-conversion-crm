@@ -18,11 +18,11 @@ class DeleteModuleCommand extends Command
         $lower = Str::lower($name);
         $pluralFolder = Str::plural(strtolower($name));
         $modulePath     = base_path("app/Modules/{$name}");
-        $routePath      = base_path("routes/{$lower}.php");
-        $bladesPath = resource_path("views/{$pluralFolder}");
-        $configPath     = base_path("config/{$lower}.php");
+        $routePath      = base_path("routes/back-office/{$lower}.php");
+        $bladesPath = resource_path("views/back-office/{$pluralFolder}");
+        // $configPath     = base_path("config/{$lower}.php");
         $migrationGlob  = base_path("database/migrations/*_create_" . Str::snake(Str::pluralStudly($name)) . "_table.php");
-        $seederPath     = base_path("database/seeders/{$name}Seeder.php");
+        // $seederPath     = base_path("database/seeders/{$name}Seeder.php");
 
         if (!$this->option('force')) {
             if (!$this->confirm("Are you sure you want to delete the '{$name}' module and all related files?")) {
