@@ -12,6 +12,7 @@ Route::group([
         Route::post('{id}/restore', 'restore')->name('restore');
         Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
         Route::post('update-status', 'updateStatus')->name('update-status');
+        Route::post('import-data', 'import')->name('import');
     });
 
     // 🧱 Resource CRUD

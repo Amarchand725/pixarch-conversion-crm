@@ -10,6 +10,7 @@ use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
+use App\Services\LeadImportService;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 
 class LeadController extends Controller
 {
+    
     protected $leadRepo;
     protected $routePrefix;
     protected $pathInitialize;
@@ -27,6 +29,7 @@ class LeadController extends Controller
     protected $leadStatus;
     protected $sourceRepo;
     protected $userRepo;
+    protected $importService;
 
     public function __construct(LeadRepository $leadRepo)
     {
@@ -248,5 +251,21 @@ class LeadController extends Controller
                 'message' => $e->getMessage()
             ], 500); // optional HTTP 500
         }
+    }
+
+     /**
+     * Upload Excel and import leads
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        $this->importService->import($request->file('file'));
+        return response()->json([
+            'status' => true,
+            'message' => $this->singularLabel.' imported Successfully'
+        ]);
     }
 }
