@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name')->nullable();
-            $table->boolean('status')->default(true);
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('status_id')->nullable()->constrained('statuses')->cascadeOnUpdate()->nullOnDelete();
+            $table->string('name', 100);
             $table->softDeletes();
             $table->timestamps();
         });

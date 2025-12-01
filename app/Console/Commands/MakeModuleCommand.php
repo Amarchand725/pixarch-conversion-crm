@@ -41,8 +41,6 @@ class MakeModuleCommand extends Command
         $this->createRepository($module);
         $this->createViews($module, $fields);
         $this->createRoute($module);
-        // $this->createConfig($module, $fields);
-        // $this->createSeeder($module);
         // $this->registerPermissions($module);
 
         $this->info("✅ Module [{$module}] generated successfully!");
@@ -201,7 +199,8 @@ class MakeModuleCommand extends Command
         use App\Modules\\{$module}\Models\\{$module};
         use Exception;
         use Illuminate\Support\Str;
-        use Illuminate\Support\Facades\Route;
+        use Illuminate\Support\Facades\DB;
+        use Illuminate\Http\Request;
 
         class {$module}Controller extends Controller
         {
@@ -215,6 +214,7 @@ class MakeModuleCommand extends Command
 
             public function __construct({$module}Repository \${$variable}Repo)
             {
+                \$this->\${$variable} = \${$variable}Repo;
                 \$this->prefix = Str::kebab('{$module}');
                 \$this->routePrefix = 'back-office.'. Str::plural(\$this->prefix);
                 \$this->pathInitialize = \$this->routePrefix;
@@ -237,9 +237,7 @@ class MakeModuleCommand extends Command
                     'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
                 ];
 
-                \$query = \$this->{{variable}}Repo
-                    ->getAll()
-                    ->with(['avatar', 'roles', 'statusInfo']);
+                \$query = \$this->{$variable}Repo->getAll();
 
                 \$dataTable = new \\App\\Services\\DataTableService(
                     model: \$query,
@@ -257,8 +255,6 @@ class MakeModuleCommand extends Command
                             'singularLabel'    => \$singularLabel,
                         ])->render();
 
-                        \$row->role = \$row->getRoleNames()[0] ?? 'N/A';
-
                         return \$row;
                     }
                 );
@@ -273,8 +269,6 @@ class MakeModuleCommand extends Command
 
             public function create()
             {
-                \$title = \$this->pluralLabel;
-                \$roles = \$this->roleRepo->get();
                 return (string) view(\$this->pathInitialize.'.create_content', get_defined_vars());
             }
 
@@ -282,7 +276,10 @@ class MakeModuleCommand extends Command
             {
                 \$payload = \$request->validated();
                 try {
-                    \$this->{$variable}Repo->storeModel(\$payload);
+                    \$response = null;
+                    DB::transaction(function () use (&\$response, \$payload) {
+                        \$this->{$variable}Repo->storeModel(\$payload);
+                    });
                     return successResponse(\$response, \$this->singularLabel. ' registered successfully.');
                 } catch (Exception \$e) {
                     return response()->json([
@@ -294,9 +291,7 @@ class MakeModuleCommand extends Command
 
             public function edit({$module} \${$variable})
             {
-                \$title = \$this->pluralLabel;
-                \$model = \$this->userRepo->showModel(\${$variable});
-                \$roles = \$this->roleRepo->get();
+                \$model = \$this->{$variable}Repo->showModel(\${$variable});
                 return (string) view(\$this->pathInitialize.'.edit_content', get_defined_vars());
             }
 
@@ -304,7 +299,10 @@ class MakeModuleCommand extends Command
             {
                 \$payload = \$request->validated();
                 try {
-                    \$this->{$variable}Repo->updateModel(\${$variable}, \$payload);
+                    \$response = null;
+                    DB::transaction(function () use (&\$response, \$payload, \${$variable}) {
+                        \$this->{$variable}Repo->updateModel(\${$variable}, \$payload);
+                    });
                     return successResponse([], \$this->singularLabel. ' updated successfully.');
                 } catch (Exception \$e) {
                     return response()->json([
@@ -316,14 +314,14 @@ class MakeModuleCommand extends Command
 
             public function show({$module} \${$variable})
             {
-                \$model = \$this->userRepo->showModel(\${$variable});
+                \$model = \$this->{$variable}Repo->showModel(\${$variable});
                 return (string) view(\$this->pathInitialize.'.show_content', get_defined_vars());
             }
 
             public function destroy({$module} \${$variable})
             {
                 try {
-                    if(\$this->userRepo->softDeleteModel(\${$variable})) {
+                    if(\$this->{$variable}Repo->softDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
                             'message' => \$this->singularLabel.' Deleted Successfully'
@@ -342,10 +340,10 @@ class MakeModuleCommand extends Command
                 }
             }
 
-            public function restore({{$module} \${$variable})
+            public function restore({$module} \${$variable})
             {
                 try {
-                    if(\$this->userRepo->restoreModel(\${$variable})) {
+                    if(\$this->{$variable}Repo->restoreModel(\${$variable})) {
                         return redirect()->back()->with('message', 'Record Restored Successfully.');
                     } else {
                         return false;
@@ -361,7 +359,7 @@ class MakeModuleCommand extends Command
             public function forceDelete({$module} \${$variable})
             {
                 try {
-                    if (\$this->userRepo->permanentlyDeleteModel(\${$variable})) {
+                    if (\$this->{$variable}Repo->permanentlyDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
                             'message' => \$this->singularLabel.' Deleted Successfully'
@@ -568,151 +566,6 @@ class MakeModuleCommand extends Command
         $this->info("Views created for module: {$module}");
     }
 
-    // protected function createViews(string $module, array $fields = [])
-    // {
-    //     // folder name: lowercase module (Country -> country)
-    //     $pluralFolder = Str::plural(Str::snake($module));
-    //     $viewPath = resource_path("views/back-office/{$pluralFolder}");
-
-    //     if (!file_exists($viewPath)) {
-    //         mkdir($viewPath, 0755, true);
-    //     }
-
-    //     // variable names
-    //     $singular = lcfirst($module);              // Country -> country
-    //     $plural = Str::plural($singular);          // country -> countries
-
-    //     // common header/footer using x-app-layout
-    //     $header = "<x-app-layout>\n    <x-slot name=\"header\">\n        <h2 class=\"font-semibold text-xl text-gray-800 leading-tight\">{{ __('" . ucfirst($module) . "') }}</h2>\n    </x-slot>\n\n    <div class=\"py-12\">\n        <div class=\"max-w-7xl mx-auto sm:px-6 lg:px-8\">\n            <div class=\"bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900\">\n";
-    //     $footer = "            </div>\n        </div>\n    </div>\n</x-app-layout>";
-
-    //     // INDEX
-    //     $index = <<<BLADE
-    // {$header}
-    //                 <div class="flex justify-between items-center mb-4">
-    //                     <h1 class="text-2xl font-bold">All {$module}</h1>
-    //                     <a href="{{ route('{$plural}.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded">+ Add New</a>
-    //                 </div>
-
-    //                 <div class="overflow-x-auto">
-    //                     <table class="min-w-full divide-y divide-gray-200">
-    //                         <thead class="bg-gray-50">
-    //                             <tr>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Name</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
-    //                                 <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
-    //                             </tr>
-    //                         </thead>
-    //                         <tbody class="bg-white divide-y divide-gray-200">
-    //                             @foreach(\${$plural} ?? [] as \${$singular})
-    //                                 <tr>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->id }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->name ?? '-' }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">{{ \${$singular}->status ?? '-' }}</td>
-    //                                     <td class="px-4 py-2 text-sm text-gray-700">
-    //                                         <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="text-blue-600">Edit</a>
-    //                                         <a href="{{ route('{$plural}.show', \${$singular}->id) }}" class="ml-2 text-green-600">View</a>
-    //                                         <form action="{{ route('{$plural}.destroy', \${$singular}->id) }}" method="POST" class="inline">
-    //                                             @csrf
-    //                                             @method('DELETE')
-    //                                             <button type="submit" class="ml-2 text-red-600">Delete</button>
-    //                                         </form>
-    //                                     </td>
-    //                                 </tr>
-    //                             @endforeach
-    //                         </tbody>
-    //                     </table>
-    //                 </div>
-    // {$footer}
-    // BLADE;
-
-    //     // CREATE
-    //     // (You can expand fields dynamically — here we show a simple name + status)
-    //     $create = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">Create {$module}</h1>
-
-    //                 <form action="{{ route('{$plural}.store') }}" method="POST">
-    //                     @csrf
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Name</label>
-    //                         <input type="text" name="name" value="{{ old('name') }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                         @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Status</label>
-    //                         <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                             <option value="1">Active</option>
-    //                             <option value="0">Inactive</option>
-    //                         </select>
-    //                         @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <button class="bg-green-600 text-white px-4 py-2 rounded">Save</button>
-    //                 </form>
-    // {$footer}
-    // BLADE;
-
-    //     // EDIT
-    //     $edit = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">Edit {$module}</h1>
-
-    //                 <form action="{{ route('{$plural}.update', \${$singular}->id) }}" method="POST">
-    //                     @csrf
-    //                     @method('PUT')
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Name</label>
-    //                         <input type="text" name="name" value="{{ old('name', \${$singular}->name) }}" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                         @error('name') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <div class="mb-4">
-    //                         <label class="block text-gray-700">Status</label>
-    //                         <select name="status" class="border-gray-300 rounded-md shadow-sm mt-1 block w-full">
-    //                             <option value="active" {{ (old('status', \${$singular}->status) === 'active') ? 'selected' : '' }}>Active</option>
-    //                             <option value="inactive" {{ (old('status', \${$singular}->status) === 'inactive') ? 'selected' : '' }}>Inactive</option>
-    //                         </select>
-    //                         @error('status') <span class="text-red-600 text-sm">{{ \$message }}</span> @enderror
-    //                     </div>
-
-    //                     <button class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-    //                 </form>
-    // {$footer}
-    // BLADE;
-
-    //     // SHOW
-    //     $show = <<<BLADE
-    // {$header}
-    //                 <h1 class="text-2xl font-bold mb-4">View {$module}</h1>
-
-    //                 <div class="mb-4">
-    //                     <strong>ID:</strong> {{ \${$singular}->id }}
-    //                 </div>
-
-    //                 <div class="mb-4">
-    //                     <strong>Name:</strong> {{ \${$singular}->name ?? '-' }}
-    //                 </div>
-
-    //                 <div class="mb-4">
-    //                     <strong>Status:</strong> {{ \${$singular}->status ?? '-' }}
-    //                 </div>
-
-    //                 <a href="{{ route('{$plural}.edit', \${$singular}->id) }}" class="bg-blue-600 text-white px-4 py-2 rounded">Edit</a>
-    // {$footer}
-    // BLADE;
-
-    //     // write files
-    //     file_put_contents("{$viewPath}/index.blade.php", $index);
-    //     file_put_contents("{$viewPath}/create.blade.php", $create);
-    //     file_put_contents("{$viewPath}/edit.blade.php", $edit);
-    //     file_put_contents("{$viewPath}/show.blade.php", $show);
-    // }
-
     protected function createRoute($module)
     {
         $singular = Str::lower($module);                 // e.g., country
@@ -778,49 +631,4 @@ class MakeModuleCommand extends Command
 
     //     $adminRole->syncPermissions(Permission::where('guard_name', 'user')->get());
     // }
-
-    // protected function createConfig($module, $fields)
-    // {
-    //     $configPath = "config/modules/" . strtolower($module) . ".php";
-    //     $config = [
-    //         'fields' => collect($fields)->map(function ($f) {
-    //             [$name, $type] = explode(':', $f);
-    //             return [
-    //                 'name' => $name,
-    //                 'type' => $type,
-    //                 'show_in_list' => true,
-    //                 'show_in_form' => true,
-    //                 'show_in_create' => true,
-    //                 'show_in_edit' => true,
-    //                 'show_in_show' => true,
-    //             ];
-    //         })->values()->toArray(),
-    //     ];
-    //     $this->files->put(config_path(strtolower($module) . '.php'), '<?php return ' . var_export($config, true) . ';');
-    // }
-
-    // protected function createSeeder($module)
-    // {
-    //     $path = "database/seeders/{$module}Seeder.php";
-    //     $stub = <<<PHP
-    //     <?php
-
-    //     namespace Database\\Seeders;
-
-    //     use Illuminate\\Database\\Seeder;
-    //     use App\Modules\\{$module}\Models\\{$module};
-
-    //     class {$module}Seeder extends Seeder
-    //     {
-    //         public function run(): void
-    //         {
-    //             {$module}::factory()->count(5)->create();
-    //         }
-    //     }
-    //     PHP;
-
-    //     $this->files->put(base_path($path), $stub);
-    // }
-
-
 }

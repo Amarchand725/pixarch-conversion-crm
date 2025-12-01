@@ -7,8 +7,9 @@ use App\Modules\Team\Repositories\Eloquent\TeamRepository;
 use App\Modules\Team\Http\Requests\TeamRequest;
 use App\Modules\Team\Models\Team;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 
 class TeamController extends Controller
 {
@@ -22,6 +23,7 @@ class TeamController extends Controller
 
     public function __construct(TeamRepository $teamRepo)
     {
+        $this->teamRepo = $teamRepo;
         $this->prefix = Str::kebab('Team');
         $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
         $this->pathInitialize = $this->routePrefix;
@@ -44,9 +46,7 @@ class TeamController extends Controller
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        $query = $this->{{variable}}Repo
-            ->getAll()
-            ->with(['avatar', 'roles', 'statusInfo']);
+        $query = $this->teamRepo->getAll();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,
@@ -64,8 +64,6 @@ class TeamController extends Controller
                     'singularLabel'    => $singularLabel,
                 ])->render();
 
-                $row->role = $row->getRoleNames()[0] ?? 'N/A';
-
                 return $row;
             }
         );
@@ -80,8 +78,6 @@ class TeamController extends Controller
 
     public function create()
     {
-        $title = $this->pluralLabel;
-        $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
@@ -89,7 +85,10 @@ class TeamController extends Controller
     {
         $payload = $request->validated();
         try {
-            $this->teamRepo->storeModel($payload);
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $this->teamRepo->storeModel($payload);
+            });
             return successResponse($response, $this->singularLabel. ' registered successfully.');
         } catch (Exception $e) {
             return response()->json([
@@ -101,9 +100,7 @@ class TeamController extends Controller
 
     public function edit(Team $team)
     {
-        $title = $this->pluralLabel;
-        $model = $this->userRepo->showModel($team);
-        $roles = $this->roleRepo->get();
+        $model = $this->teamRepo->showModel($team);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
@@ -111,8 +108,11 @@ class TeamController extends Controller
     {
         $payload = $request->validated();
         try {
-            $this->teamRepo->updateModel($team, $payload);
-            return successResponse([], $this->singularLabel. ' updated successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $team) {
+                $this->teamRepo->updateModel($team, $payload);
+            });
+            return successResponse($response, $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -123,14 +123,14 @@ class TeamController extends Controller
 
     public function show(Team $team)
     {
-        $model = $this->userRepo->showModel($team);
+        $model = $this->teamRepo->showModel($team);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
     public function destroy(Team $team)
     {
         try {
-            if($this->userRepo->softDeleteModel($team)) {
+            if($this->teamRepo->softDeleteModel($team)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'
@@ -149,10 +149,10 @@ class TeamController extends Controller
         }
     }
 
-    public function restore({Team $team)
+    public function restore(Team $team)
     {
         try {
-            if($this->userRepo->restoreModel($team)) {
+            if($this->teamRepo->restoreModel($team)) {
                 return redirect()->back()->with('message', 'Record Restored Successfully.');
             } else {
                 return false;
@@ -168,7 +168,7 @@ class TeamController extends Controller
     public function forceDelete(Team $team)
     {
         try {
-            if ($this->userRepo->permanentlyDeleteModel($team)) {
+            if ($this->teamRepo->permanentlyDeleteModel($team)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'
