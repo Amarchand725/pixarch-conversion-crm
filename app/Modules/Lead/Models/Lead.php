@@ -11,11 +11,12 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Traits\ModelTrait;
+use App\Models\Traits\NotifiesUsers;
 use App\Models\User;
 
 class Lead extends Model
 {
-    use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
+    use SoftDeletes, LogsActivity, HasFactory, ModelTrait, NotifiesUsers;
 
     protected $fillable = [
         'lead_capture_id', 

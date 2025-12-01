@@ -1,4 +1,4 @@
-
+@method('PUT')
 <div class="row g-3 mb-4">
     <!-- Name Input -->
     <div class="col-12 col-md-6">

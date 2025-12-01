@@ -10,8 +10,11 @@
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
+            @php 
+                $unreadNotifications = auth()->user()->unreadNotifications;
+            @endphp 
             <!-- Notification -->
-            {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
+            <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
                 <a
                 class="nav-link dropdown-toggle hide-arrow"
                 href="javascript:void(0);"
@@ -20,80 +23,65 @@
                 aria-expanded="false"
                 >
                 <i class="ti ti-bell ti-md"></i>
-                <span class="badge bg-danger rounded-pill badge-notifications">2</span>
+                <span class="badge bg-danger rounded-pill badge-notifications">{{ count($unreadNotifications) }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end py-0">
                     <li class="dropdown-menu-header border-bottom">
                         <div class="dropdown-header d-flex align-items-center py-3">
-                        <h5 class="text-body mb-0 me-auto">Notification</h5>
-                        <a
-                            href="javascript:void(0)"
-                            class="dropdown-notifications-all text-body"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Mark all as read"
-                            ><i class="ti ti-mail-opened fs-4"></i
-                        ></a>
+                            <h5 class="text-body mb-0 me-auto">Notification</h5>
+                            <a
+                                href="javascript:void(0)"
+                                class="dropdown-notifications-all text-body"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Mark all as read">
+                                <i class="ti ti-mail-opened fs-4"></i>
+                            </a>
                         </div>
                     </li>
-                    <li class="dropdown-notifications-list scrollable-container">
-                        <ul class="list-group list-group-flush">
-                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                <img src="{{ asset('back-office') }}/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">Congratulation Lettie 🎉</h6>
-                                <p class="mb-0">Won the monthly best seller gold badge</p>
-                                <small class="text-muted">1h ago</small>
-                            </div>
-                            <div class="flex-shrink-0 dropdown-notifications-actions">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                ><span class="ti ti-x"></span
-                                ></a>
-                            </div>
+                    @if(count($unreadNotifications) == 0)
+                        <li class="dropdown-notifications-list scrollable-container">
+                            <div class="text-center p-3">
+                                <p class="mb-0">No new notifications</p>
                             </div>
                         </li>
-                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                <span class="avatar-initial rounded-circle bg-label-danger">CF</span>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-1">Charles Franklin</h6>
-                                <p class="mb-0">Accepted your connection</p>
-                                <small class="text-muted">12hr ago</small>
-                            </div>
-                            <div class="flex-shrink-0 dropdown-notifications-actions">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                ><span class="ti ti-x"></span
-                                ></a>
-                            </div>
-                            </div>
-                        </li>
-                    </ul>
-                    </li>
+                    @else
+                        @foreach ($unreadNotifications as $notification)
+                            <li class="dropdown-notifications-list scrollable-container">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                        <div class="d-flex">
+                                            <div class="flex-shrink-0 me-3">
+                                                <div class="avatar">
+                                                    <img src="{{ asset('back-office') }}/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">{{ $notification->data['title'] }}🎉</h6>
+                                                <p class="mb-0">{{ $notification->data['message'] }}</p>
+                                                <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                            </div>
+                                            <div class="flex-shrink-0 dropdown-notifications-actions">
+                                                <a href="javascript:void(0)" class="dropdown-notifications-read">
+                                                    <span class="badge badge-dot"></span>
+                                                </a>
+                                                <a href="javascript:void(0)" class="dropdown-notifications-archive">
+                                                    <span class="ti ti-x"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endforeach
+                    @endif
                     <li class="dropdown-menu-footer border-top">
-                        <a
-                        href="javascript:void(0);"
-                        class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center"
-                        >
-                        View all notifications
+                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
+                            View all notifications
                         </a>
                     </li>
                 </ul>
-            </li> --}}
+            </li>
             <!--/ Notification -->
 
             <!-- User -->

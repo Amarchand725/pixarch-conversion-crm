@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace App\Models\Traits;
 
 use App\Notifications\SystemNotification;
 use Illuminate\Support\Facades\Notification;
@@ -23,20 +23,4 @@ trait NotifiesUsers
     {
         $this->notifyUsers([$user], $title, $message, $url, $type, $extra);
     }
-
-    // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE DEMO
-    // $assignees = $dba->users; // belongsTo
-    // if ($assignees && $assignees->count()) {
-    //     foreach ($assignees as $user) {
-    //         $link = rtrim(env('FULL_APP_URL'), '/') . '/dbas/' . $dba->uuid;
-    //         $dbaName = $dba->name ?? 'N/A';
-    //         $dba->notifyUser(
-    //             $user,
-    //             'DBA Process Status',
-    //             "DBA '{$dbaName}' status has been updated.",
-    //             $link,
-    //             'dba_process_status'
-    //         );
-    //     }
-    // }
 }

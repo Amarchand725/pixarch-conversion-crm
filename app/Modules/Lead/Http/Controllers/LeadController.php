@@ -13,6 +13,7 @@ use App\Modules\Lead\Models\Lead;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LeadController extends Controller
 {
@@ -110,7 +111,10 @@ class LeadController extends Controller
         $payload = $request->validated();
         
         try {
-            $response = $this->leadRepo->storeModel($payload);
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $response = $this->leadRepo->storeModel($payload);
+            });
             return successResponse($response, $this->singularLabel. ' added successfully.');
         } catch (Exception $e) {
             return response()->json([

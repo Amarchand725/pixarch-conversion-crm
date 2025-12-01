@@ -20,8 +20,7 @@ class UserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'phone'    => [
-                'required',
-                'phone',
+                'nullable',
                 'regex:/^\(\d{3}\)\s-\s\d{8}$/',
                 Rule::unique('users', 'phone')->ignore($user),
             ],

@@ -2,7 +2,6 @@
 
 namespace App\Modules\Lead\Repositories\Eloquent;
 
-use App\Models\LogEntityStatus;
 use App\Models\Status;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
@@ -98,6 +97,23 @@ class LeadRepository extends BaseRepository implements LeadContract
 
         if (!empty($payload['assignee_id'])) {
             $model->assignees()->sync([$payload['assignee_id']]);
+
+            // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
+            $assignees = $model->assignees; // belongsTo
+            if ($assignees && $assignees->count()) {
+                foreach ($assignees as $user) {
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
+                    
+                    $leadName = $model->name ?? 'N/A';
+                    $model->notifyUser(
+                        $user,
+                        'New Lead Assigned',
+                        "Lead '{$leadName}' has been assigned to you.",
+                        $link,
+                        'lead_assigned'
+                    );
+                }
+            }
         }else{
             $model->assignees()->sync([auth()->id()]);
         }
@@ -107,15 +123,6 @@ class LeadRepository extends BaseRepository implements LeadContract
 
     public function updateModel(Model $model, array $payload): Model
     {
-        // Sync permissions if any
-        // if (!empty($payload['permissions'])) {
-        //     $model->syncPermissions($payload['permissions']);
-        // }
-
-        // $model->save();
-
-        // return $model;
-
         $model->toFill($payload, ['status_id', 'assignee_id']);
         $model->save();
 
@@ -130,6 +137,22 @@ class LeadRepository extends BaseRepository implements LeadContract
 
         if (!empty($payload['assignee_id'])) {
             $model->assignees()->sync([$payload['assignee_id']]);
+
+            // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
+            $assignees = $model->assignees; // belongsTo
+            if ($assignees && $assignees->count()) {
+                foreach ($assignees as $user) {
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
+                    $leadName = $model->name ?? 'N/A';
+                    $model->notifyUser(
+                        $user,
+                        'New Lead Assigned',
+                        "Lead '{$leadName}' has been assigned to you.",
+                        $link,
+                        'lead_assigned'
+                    );
+                }
+            }
         }else{
             $model->assignees()->sync([auth()->id()]);
         }
@@ -147,16 +170,31 @@ class LeadRepository extends BaseRepository implements LeadContract
             $assignee_id = auth()->id();
         }
 
-        LogEntityStatus::create([
-            'author_id'   => auth()->id(), // logged-in user
-            'model_id'    => $model->id,
-            'model_type'  => $model->getMorphClass(),
-            'status_id'   => $payload['status_id'],
-            'assignee_id' => $assignee_id,
-            'description' => 'Status updated via drag & drop',
-            'created_at'  => now(),
-            'updated_at'  => now(),
-        ]);
+        $logStatues['description'] = 'Status updated via drag & drop';
+        $logStatues['status_id'] = $payload['status_id'];
+        $logStatues['assignee_id'] = $assignee_id;
+        $logStatues['model_id'] = $model->id;
+        $logStatues['model_type'] = $model->getMorphClass();
+
+        $log = $model->statusLogs()->make();
+        $log->toFill($logStatues);
+        $log->save();
+
+        // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
+        $assignees = $model->assignees; // belongsTo
+        if ($assignees && $assignees->count()) {
+            foreach ($assignees as $user) {
+                $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
+                $leadName = $model->name ?? 'N/A';
+                $model->notifyUser(
+                    $user,
+                    'Lead Status Updated',
+                    "Assigned Lead '{$leadName}' status has been updated.",
+                    $link,
+                    'lead_status_updated'
+                );
+            }
+        }
 
         return response()->json(['success' => true]);
     }

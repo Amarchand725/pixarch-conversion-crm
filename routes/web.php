@@ -8,6 +8,7 @@ Route::get('/', function () {
     return redirect()->route('back-office.auth.dashboard');
 });
 
+
 // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route::middleware('auth')->group(function () {

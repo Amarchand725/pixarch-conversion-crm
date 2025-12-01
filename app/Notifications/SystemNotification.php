@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Str;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class SystemNotification extends Notification implements ShouldQueue
 {
@@ -29,7 +29,20 @@ class SystemNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast'];
+        return ['database', 'broadcast', 'mail'];
+    }
+
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->subject($this->title)
+            ->view('emails.system_notification', [
+                'title' => $this->title,
+                'message' => $this->message,
+                'url' => $this->url,
+                'type' => $this->type,
+                'extra' => $this->extra,
+            ]);
     }
 
     public function toDatabase($notifiable)
