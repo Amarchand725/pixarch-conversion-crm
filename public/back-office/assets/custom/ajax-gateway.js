@@ -246,7 +246,7 @@ $('#add-btn, .add-btn').on('click', function () {
 $(document).on('click', '.edit-btn', function () {
     var targeted_modal = $(this).attr('data-bs-target');
     var store_url = $(this).attr('data-url');
-    var modal_label = $(this).attr('title');
+    var modal_label = $(this).attr('data-title');
     var content_url = $(this).attr('data-edit-url');
     loadForm(targeted_modal, store_url, modal_label, content_url);
 });

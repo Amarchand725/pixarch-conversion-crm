@@ -3,12 +3,12 @@
 namespace App\Modules\LeadCapture\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
-use App\Modules\LeadCapture\Repositories\Eloquent\LeadCaptureRepository;
 use App\Modules\LeadCapture\Http\Requests\LeadCaptureRequest;
 use App\Modules\LeadCapture\Models\LeadCapture;
 use App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class LeadCaptureController extends BaseModuleController
 {

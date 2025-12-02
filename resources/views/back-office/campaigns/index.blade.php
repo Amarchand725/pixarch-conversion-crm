@@ -1,48 +1,72 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">{{ __('Campaign') }}</h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
-
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-2xl font-bold">All Campaign</h1>
-                    <a href="{{ route('campaigns.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded">+ Add New</a>
+    @section('title', ($title ?? '').' - '. config('app.name', 'Laravel'))
+    
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card-header">
+                            <h4 class="fw-bold mb-0"><span class="text-muted fw-light">Home /</span> {{ $title }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="dt-buttons btn-group flex-wrap float-end mt-4">
+                            <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
+                        
+                            <x-action-button
+                                type="button"
+                                id="add-btn"
+                                btn-class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
+                                title="Add {{ $singularLabel }}"
+                                label="Add {{ $singularLabel }}"
+                                icon="ti ti-plus me-0 me-sm-1 ti-xs"
+                                data-bs-toggle="modal"
+                                data-bs-target="#create-pop-up-modal-for-file"
+                                :data-attributes="[
+                                    'data-url' => route($routeInitialize.'.store'),
+                                    'data-create-url' => route($routeInitialize.'.create')
+                                ]"
+                            />
+                        </div>
+                    </div>
                 </div>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">#</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Name</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
-                                <th class="px-4 py-2 text-left text-sm font-semibold text-gray-700">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($campaigns ?? [] as $campaign)
-                                <tr>
-                                    <td class="px-4 py-2 text-sm text-gray-700">{{ $campaign->id }}</td>
-                                    <td class="px-4 py-2 text-sm text-gray-700">{{ $campaign->name ?? '-' }}</td>
-                                    <td class="px-4 py-2 text-sm text-gray-700">{{ $campaign->status ?? '-' }}</td>
-                                    <td class="px-4 py-2 text-sm text-gray-700">
-                                        <a href="{{ route('campaigns.edit', $campaign->id) }}" class="text-blue-600">Edit</a>
-                                        <a href="{{ route('campaigns.show', $campaign->id) }}" class="ml-2 text-green-600">View</a>
-                                        <form action="{{ route('campaigns.destroy', $campaign->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="ml-2 text-red-600">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            </div>
+            <!-- Users List Table -->
+            <div class="card">
+                <div class="card-datatable table-responsive">
+                    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                        <div class="container">
+                            <table class="dt-row-grouping table dataTable dtr-column data_table">
+                                <thead>
+                                    <tr>
+                                        @foreach($dataTable->headers() as $header)
+                                            <th>{{ $header }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody id="body"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Modals -->
+    <x-modals />
+    <!--/ Modals -->
+
+    @push('js')
+        <script type="text/javascript">
+            const pageUrl = "{{ url()->current() }}";
+            const columns = @json($dataTable->jsColumns());
+
+            initializeDataTable(pageUrl, columns);
+
+            $('#refresh-record').on('click', function(){
+                $('.table').DataTable().ajax.reload();
+            });
+        </script>
+    @endpush
 </x-app-layout>

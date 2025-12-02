@@ -3,12 +3,12 @@
 namespace App\Modules\Campaign\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
-use App\Modules\Campaign\Repositories\Eloquent\CampaignRepository;
 use App\Modules\Campaign\Http\Requests\CampaignRequest;
 use App\Modules\Campaign\Models\Campaign;
 use App\Modules\Campaign\Repositories\Contracts\CampaignContract;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class CampaignController extends BaseModuleController
 {

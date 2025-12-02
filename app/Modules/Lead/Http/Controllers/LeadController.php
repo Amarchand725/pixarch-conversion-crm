@@ -253,4 +253,30 @@ class LeadController extends BaseModuleController
             'message' => $this->singularLabel.' imported Successfully'
         ]);
     }
+
+    public function actionCreate($action, Lead $lead)
+    {
+        $agents = $this->userRepo->role('agent')
+                ->whereHas('status', fn($q) => $q->where('name', 'active'))
+                ->get();
+        return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
+    }
+
+    public function actionStore(LeadRequest $request)
+    {
+        $payload = $request->validated();
+        
+        try {
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $response = $this->leadRepo->storeModel($payload);
+            });
+            return successResponse($response, $this->singularLabel. ' added successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }

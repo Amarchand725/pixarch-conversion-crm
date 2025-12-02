@@ -54,6 +54,11 @@
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/toastr/toastr.css') }}">
     <!-- Page CSS -->
+    <style>
+      a.dropdown-toggle::after {
+        display: none !important;
+      }
+    </style>
     @stack('css')
 
     <!-- Helpers -->

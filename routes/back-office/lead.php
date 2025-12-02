@@ -13,6 +13,9 @@ Route::group([
         Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
         Route::post('update-status', 'updateStatus')->name('update-status');
         Route::post('import-data', 'import')->name('import');
+
+        Route::get('action/create/{action}/{lead?}', 'actionCreate')->name('action.create');
+        Route::post('action/store', 'actionStore')->name('action.store');
     });
 
     // 🧱 Resource CRUD

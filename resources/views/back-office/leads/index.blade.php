@@ -58,24 +58,20 @@
                         <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
                     
                         @can($permissionPrefix.'-create')
-                            <button
+                            <x-action-button
+                                type="button"
                                 id="add-btn"
-                                data-toggle="tooltip" 
-                                data-placement="top" 
+                                btn-class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
                                 title="Add {{ $singularLabel }}"
-                                data-title="Add {{ $singularLabel }}"
-                                data-url="{{ route($routeInitialize.'.store') }}"
-                                data-create-url="{{ route($routeInitialize.'.create') }}"
-                                class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
-                                tabindex="0" aria-controls="DataTables_Table_0"
-                                type="button" 
+                                label="Add {{ $singularLabel }}"
+                                icon="ti ti-plus me-0 me-sm-1 ti-xs"
                                 data-bs-toggle="modal"
-                                data-bs-target="#create-pop-up-modal-for-file">
-                                <span>
-                                    <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block"> Add {{ $singularLabel }} </span>
-                                </span>
-                            </button>
+                                data-bs-target="#create-pop-up-modal-for-file"
+                                :data-attributes="[
+                                    'data-url' => route($routeInitialize.'.store'),
+                                    'data-create-url' => route($routeInitialize.'.create')
+                                ]"
+                            />
                         @endcan
                     </div>
                 </div>
@@ -90,7 +86,8 @@
                 <i class="bi bi-list"></i> List View
             </a>
         </div>
-        @if(request('view') != 'list')
+        
+        @if(request('view') != 'list') {{-- Cards --}}
             <div class="status-row-wrapper">
                 <div class="status-row d-flex overflow-auto pb-2">
                     @forelse($statusLeads as $status)
@@ -143,18 +140,65 @@
 
                                         <!-- Action Icons + Toggle -->
                                         <div class="d-flex gap-1">
-                                            <button class="btn btn-outline-primary btn-sm lead-action-btn p-1" data-action="assign" title="Assign">
-                                                <i class="bi bi-person-fill fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-success btn-sm lead-action-btn p-1" data-action="task" title="Add Task">
-                                                <i class="bi bi-list-task fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-warning btn-sm lead-action-btn p-1" data-action="note" title="Add Note">
-                                                <i class="bi bi-sticky fs-6"></i>
-                                            </button>
-                                            <button class="btn btn-outline-info btn-sm lead-action-btn p-1" data-action="meeting" title="Schedule Meeting">
-                                                <i class="bi bi-calendar-event fs-6"></i>
-                                            </button>
+                                            <x-action-button
+                                                type="button"
+                                                id="assign-btn"
+                                                btn-class="btn btn-outline-primary btn-sm p-1 edit-btn"
+                                                title="Assign {{ $singularLabel }}"
+                                                label="{{ $singularLabel }} Action"
+                                                icon="bi bi-person-fill fs-6"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#create-pop-up-modal-for-file"
+                                                :data-attributes="[
+                                                    'data-url' => route($routeInitialize.'.action.store'),
+                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'assign', 'id' => $lead->id])
+                                                ]"
+                                            />
+
+                                            <x-action-button
+                                                type="button"
+                                                id="note-btn"
+                                                btn-class="btn btn-outline-warning btn-sm p-1 edit-btn"
+                                                title="{{ $singularLabel }} Note"
+                                                label="{{ $singularLabel }} Action"
+                                                icon="bi bi-sticky fs-6"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#create-pop-up-modal-for-file"
+                                                :data-attributes="[
+                                                    'data-url' => route($routeInitialize.'.action.store'),
+                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'note', 'id' => $lead->id])
+                                                ]"
+                                            />
+
+                                            <x-action-button
+                                                type="button"
+                                                id="meeting-btn"
+                                                btn-class="btn btn-outline-info btn-sm lead-action-btn p-1 edit-btn"
+                                                title="{{ $singularLabel }} Meeting Schedule"
+                                                label="{{ $singularLabel }} Action"
+                                                icon="bi bi-calendar-event fs-6"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#create-pop-up-modal-for-file"
+                                                :data-attributes="[
+                                                    'data-url' => route($routeInitialize.'.action.store'),
+                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'meeting', 'id' => $lead->id])
+                                                ]"
+                                            />
+
+                                            <x-action-button
+                                                type="button"
+                                                id="status-btn"
+                                                btn-class="btn btn-outline-success btn-sm lead-action-btn p-1 edit-btn"
+                                                title="{{ $singularLabel }} Status"
+                                                label="{{ $singularLabel }} Action"
+                                                icon="bi bi-list-check fs-6"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#create-pop-up-modal-for-file"
+                                                :data-attributes="[
+                                                    'data-url' => route($routeInitialize.'.action.store'),
+                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'status', 'id' => $lead->id])
+                                                ]"
+                                            />
 
                                             <!-- Toggle More Info -->
                                             <button class="btn btn-outline-secondary btn-sm ms-auto toggle-more-info" type="button">
@@ -194,7 +238,7 @@
                     @endforelse
                 </div>
             </div>
-        @else
+        @else {{-- Listing --}}
             <div class="card">
                 <div class="card-datatable table-responsive">
                     <table class="table dataTable dtr-column data_table">
