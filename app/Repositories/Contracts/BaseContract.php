@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface BaseContract
 {
+    public function getAllCollection(array $columns = ['*']);
     public function getAll(array $columns = ['*']);
 
     public function showModel(Model $model, array $relations = []);

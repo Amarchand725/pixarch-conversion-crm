@@ -2,7 +2,7 @@
 
 namespace App\Modules\Lead\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
@@ -10,45 +10,32 @@ use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
+use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Services\LeadImportService;
 use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class LeadController extends Controller
-{
-    
-    protected $leadRepo;
-    protected $routePrefix;
-    protected $pathInitialize;
-    protected $singularLabel;
-    protected $pluralLabel;
-    protected $permissionPrefix;
-    protected $prefix;
+class LeadController extends BaseModuleController
+{  
     protected $leadStatus;
     protected $sourceRepo;
     protected $userRepo;
     protected $importService;
 
-    public function __construct(LeadRepository $leadRepo)
-    {
-        $this->leadRepo = $leadRepo;
+    public function __construct(
+        protected LeadContract $leadRepo
+    ){
         $this->leadStatus = new Status();
         $this->sourceRepo = new Source();
         $this->userRepo = new User();
 
-        $this->prefix = Str::kebab('Lead');
-        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
-        $this->pathInitialize = $this->routePrefix;
-        $this->permissionPrefix = Str::snake($this->prefix);
-        $this->singularLabel = Str::ucfirst($this->prefix);
-        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
     public function index(Request $request)
     {
-        $title = $this->pluralLabel;
         $permissionPrefix = $this->permissionPrefix;
         $routeInitialize = $this->routePrefix;
         $singularLabel = $this->singularLabel;
@@ -96,7 +83,7 @@ class LeadController extends Controller
             return $dataTable->ajax();
         }
 
-        return view(strtolower($this->pathInitialize.'.index'), get_defined_vars());
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
     public function create()
