@@ -2,52 +2,54 @@
 
 namespace App\Modules\BusinessSetting\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Modules\BusinessSetting\Repositories\Eloquent\BusinessSettingRepository;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Modules\BusinessSetting\Http\Requests\BusinessSettingRequest;
 use App\Modules\BusinessSetting\Models\BusinessSetting;
+use App\Modules\BusinessSetting\Repositories\Contracts\BusinessSettingContract;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
-class BusinessSettingController extends Controller
+class BusinessSettingController extends BaseModuleController
 {
-    protected $businessSettingRepo;
-
-    public function __construct(BusinessSettingRepository $businessSettingRepo)
-    {
-        $this->businessSettingRepo = $businessSettingRepo;
+    public function __construct(
+        protected BusinessSettingContract $businessSettingRepo
+    ){
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
     public function index()
     {
         $businessSettings = $this->businessSettingRepo->getAll();
-        return view(strtolower('business_settings.index'), compact('businessSettings'));
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
-    public function create()
+    public function edit(BusinessSetting $business)
     {
-        return view('business_settings.create');
-    }
-
-    public function edit($id)
-    {
-        $businessSetting = $this->businessSettingRepo->showModel($id);
-        return view('business_settings.edit', compact('businessSetting'));
+        $model = $this->businessSettingRepo->showModel($business);
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
     public function update(BusinessSettingRequest $request, BusinessSetting $businessSetting)
     {
         $payload = $request->validated();
         try {
-            $this->businessSettingRepo->updateModel($businessSetting, $payload);
-            return redirect()->route(strtolower('BusinessSetting.index'))->with('success', 'BusinessSetting updated successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $businessSetting) {
+                $this->businessSettingRepo->updateModel($businessSetting, $payload);
+            });
+            return successResponse($response, $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function show($id)
+    public function show(BusinessSetting $business)
     {
-        $businessSetting = $this->businessSettingRepo->showModel($id);
-        return view('business_settings.show', compact('businessSetting'));
+        $model = $this->businessSettingRepo->showModel($business);
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 }

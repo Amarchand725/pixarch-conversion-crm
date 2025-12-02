@@ -2,44 +2,29 @@
 
 namespace App\Modules\User\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use Spatie\Permission\Models\Role;
-use App\Modules\User\Repositories\Eloquent\UserRepository;
 use App\Modules\User\Http\Requests\UserRequest;
 use App\Models\User;
+use App\Modules\User\Repositories\Contracts\UserContract;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Route;
 
-class UserController extends Controller
+class UserController extends BaseModuleController
 {
-    protected $userRepo;
     protected $roleRepo;
 
-    protected $routePrefix;
-    protected $pathInitialize;
-    protected $singularLabel;
-    protected $pluralLabel;
-    protected $permissionPrefix;
-    protected $prefix;
-
-    public function __construct(UserRepository $userRepo)
-    {
-        $this->userRepo = $userRepo;
+    public function __construct(
+        protected UserContract $userRepo
+    ){
         $this->roleRepo = new Role();
 
-        $this->prefix = Str::kebab('User');
-        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
-        $this->pathInitialize = $this->routePrefix;
-        $this->permissionPrefix = Str::snake($this->prefix);
-        $this->singularLabel = Str::ucfirst($this->prefix);
-        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
     public function index(Request $request)
     {
-        $title = $this->pluralLabel;
         $permissionPrefix = $this->permissionPrefix;
         $routeInitialize = $this->routePrefix;
         $singularLabel = $this->singularLabel;
@@ -84,7 +69,7 @@ class UserController extends Controller
             return $dataTable->ajax();
         }
 
-        return view($this->pathInitialize.'.index', get_defined_vars());
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
     public function create()

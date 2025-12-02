@@ -42,6 +42,13 @@
                 </button>
             @endif
         @endcan
+        @if($permissionPrefix=='user')
+            @can('impersonate')
+                <a href="{{ route('impersonate', ['id' => $model->id]) }}" class="dropdown-item">
+                    Impersonate
+                </a>
+            @endcan
+        @endif
         @can($permissionPrefix.'-delete')
             <a href="javascript:;" class="dropdown-item delete" data-del-url="{{ route($routeInitialize . '.destroy', $model->uuid) }}">Delete</a>
         @endcan

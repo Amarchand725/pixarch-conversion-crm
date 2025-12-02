@@ -83,6 +83,7 @@ class RolePermissionSeeder extends Seeder
             'user-restore',
             'user-status',
             'user-direct_permission',
+            'user-impersonate',
 
             // Permission management
             'permission-list',

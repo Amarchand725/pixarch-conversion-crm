@@ -12,7 +12,13 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         // Individual repository bindings generated automatically
-        // $this->app->bind(\App\Repositories\Contracts\AttachmentRepositoryContract::class, \App\Repositories\Eloquents\AttachmentRepository::class);
+        $this->app->bind(\App\Modules\Lead\Repositories\Contracts\LeadContract::class, \App\Modules\Lead\Repositories\Eloquent\LeadRepository::class);
+        $this->app->bind(\App\Modules\Team\Repositories\Contracts\TeamContract::class, \App\Modules\Team\Repositories\Eloquent\TeamRepository::class);
+        $this->app->bind(\App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract::class, \App\Modules\LeadCapture\Repositories\Eloquent\LeadCaptureRepository::class);
+        $this->app->bind(\App\Modules\Campaign\Repositories\Contracts\CampaignContract::class, \App\Modules\Campaign\Repositories\Eloquent\CampaignRepository::class);
+        $this->app->bind(\App\Modules\BusinessSetting\Repositories\Contracts\BusinessSettingContract::class, \App\Modules\BusinessSetting\Repositories\Eloquent\BusinessSettingRepository::class);
+        $this->app->bind(\App\Modules\Role\Repositories\Contracts\RoleContract::class, \App\Modules\Role\Repositories\Eloquent\RoleRepository::class);
+        $this->app->bind(\App\Modules\User\Repositories\Contracts\UserContract::class, \App\Modules\User\Repositories\Eloquent\UserRepository::class);
     }
 
     /**

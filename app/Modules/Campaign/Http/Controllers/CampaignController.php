@@ -2,93 +2,173 @@
 
 namespace App\Modules\Campaign\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Modules\Campaign\Repositories\Eloquent\CampaignRepository;
 use App\Modules\Campaign\Http\Requests\CampaignRequest;
 use App\Modules\Campaign\Models\Campaign;
+use App\Modules\Campaign\Repositories\Contracts\CampaignContract;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
-class CampaignController extends Controller
+class CampaignController extends BaseModuleController
 {
-    protected $campaignRepo;
-
-    public function __construct(CampaignRepository $campaignRepo)
-    {
-        $this->campaignRepo = $campaignRepo;
+    public function __construct(
+        protected CampaignContract $campaignRepo
+    ){
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $campaigns = $this->campaignRepo->getAll();
-        return view(strtolower('campaigns.index'), compact('campaigns'));
+        $permissionPrefix = $this->permissionPrefix;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
+
+        $columns = [
+            'name'      => ['label' => 'name', 'searchable' => 'name'],
+            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
+        ];
+
+        $query = $this->campaignRepo->getAll();
+
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: function ($row) use ($routeInitialize, $permissionPrefix, $singularLabel) {
+                $status = $row->status?->name ?? 'de-active';
+                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                            . strtoupper($status) .
+                            '</span>';
+
+                $row->action = view('back-office.partials.action-buttons', [
+                    'model'            => $row,
+                    'permissionPrefix' => $permissionPrefix,
+                    'routeInitialize'  => $routeInitialize,
+                    'singularLabel'    => $singularLabel,
+                ])->render();
+
+                return $row;
+            }
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
+        }
+
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
     public function create()
     {
-        return view('campaigns.create');
+        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
     public function store(CampaignRequest $request)
     {
         $payload = $request->validated();
         try {
-            $this->campaignRepo->storeModel($payload);
-            return redirect()->route(strtolower('Campaign.index'))->with('success', 'Campaign created successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $this->campaignRepo->storeModel($payload);
+            });
+            return successResponse($response, $this->singularLabel. ' registered successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function edit($id)
+    public function edit(Campaign $campaign)
     {
-        $campaign = $this->campaignRepo->showModel($id);
-        return view('campaigns.edit', compact('campaign'));
+        $model = $this->campaignRepo->showModel($campaign);
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
     public function update(CampaignRequest $request, Campaign $campaign)
     {
         $payload = $request->validated();
         try {
-            $this->campaignRepo->updateModel($campaign, $payload);
-            return redirect()->route(strtolower('Campaign.index'))->with('success', 'Campaign updated successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $campaign) {
+                $this->campaignRepo->updateModel($campaign, $payload);
+            });
+            return successResponse($response, $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function show($id)
+    public function show(Campaign $campaign)
     {
-        $campaign = $this->campaignRepo->showModel($id);
-        return view('campaigns.show', compact('campaign'));
+        $model = $this->campaignRepo->showModel($campaign);
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
-    public function destroy($id)
+    public function destroy(Campaign $campaign)
     {
         try {
-            $this->campaignRepo->softDeleteModel($id);
-            return redirect()->route(strtolower('campaigns.index'))->with('success', 'Campaign deleted successfully.');
+            if($this->campaignRepo->softDeleteModel($campaign)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function restore($id)
+    public function restore(Campaign $campaign)
     {
         try {
-            $this->campaignRepo->restoreModel($id);
-            return redirect()->route(strtolower('campaigns.index'))->with('success', 'Campaign restored successfully.');
+            if($this->campaignRepo->restoreModel($campaign)) {
+                return redirect()->back()->with('message', 'Record Restored Successfully.');
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function forceDelete($id)
+    public function forceDelete(Campaign $campaign)
     {
         try {
-            $this->campaignRepo->permanentlyDeleteModel($id);
-            return redirect()->route(strtolower('campaigns.index'))->with('success', 'Campaign permanently deleted.');
+            if ($this->campaignRepo->permanentlyDeleteModel($campaign)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => true,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 

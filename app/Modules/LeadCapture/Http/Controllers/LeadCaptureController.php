@@ -2,93 +2,173 @@
 
 namespace App\Modules\LeadCapture\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Modules\LeadCapture\Repositories\Eloquent\LeadCaptureRepository;
 use App\Modules\LeadCapture\Http\Requests\LeadCaptureRequest;
 use App\Modules\LeadCapture\Models\LeadCapture;
+use App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
-class LeadCaptureController extends Controller
+class LeadCaptureController extends BaseModuleController
 {
-    protected $leadCaptureRepo;
-
-    public function __construct(LeadCaptureRepository $leadCaptureRepo)
-    {
-        $this->leadCaptureRepo = $leadCaptureRepo;
+    public function __construct(
+        protected LeadCaptureContract $leadCaptureRepo
+    ){
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $leadCaptures = $this->leadCaptureRepo->getAll();
-        return view(strtolower('lead_captures.index'), compact('leadCaptures'));
+        $permissionPrefix = $this->permissionPrefix;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
+
+        $columns = [
+            'name'      => ['label' => 'name', 'searchable' => 'name'],
+            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
+        ];
+
+        $query = $this->leadCaptureRepo->getAll();
+
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: function ($row) use ($routeInitialize, $permissionPrefix, $singularLabel) {
+                $status = $row->status?->name ?? 'de-active';
+                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                            . strtoupper($status) .
+                            '</span>';
+
+                $row->action = view('back-office.partials.action-buttons', [
+                    'model'            => $row,
+                    'permissionPrefix' => $permissionPrefix,
+                    'routeInitialize'  => $routeInitialize,
+                    'singularLabel'    => $singularLabel,
+                ])->render();
+
+                return $row;
+            }
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
+        }
+
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
     public function create()
     {
-        return view('lead_captures.create');
+        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
     public function store(LeadCaptureRequest $request)
     {
         $payload = $request->validated();
         try {
-            $this->leadCaptureRepo->storeModel($payload);
-            return redirect()->route(strtolower('LeadCapture.index'))->with('success', 'LeadCapture created successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $this->leadCaptureRepo->storeModel($payload);
+            });
+            return successResponse($response, $this->singularLabel. ' registered successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function edit($id)
+    public function edit(LeadCapture $leadCapture)
     {
-        $leadCapture = $this->leadCapture->showModel($id);
-        return view('lead_captures.edit', compact('leadCapture'));
+        $model = $this->leadCaptureRepo->showModel($leadCapture);
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
     public function update(LeadCaptureRequest $request, LeadCapture $leadCapture)
     {
         $payload = $request->validated();
         try {
-            $this->leadCaptureRepo->updateModel($leadCapture, $payload);
-            return redirect()->route(strtolower('LeadCapture.index'))->with('success', 'LeadCapture updated successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $leadCapture) {
+                $this->leadCaptureRepo->updateModel($leadCapture, $payload);
+            });
+            return successResponse($response, $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function show($id)
+    public function show(LeadCapture $leadCapture)
     {
-        $leadCapture = $this->leadCaptureRepo->showModel($id);
-        return view('lead_captures.show', compact('leadCapture'));
+        $model = $this->leadCaptureRepo->showModel($leadCapture);
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
-    public function destroy($id)
+    public function destroy(LeadCapture $leadCapture)
     {
         try {
-            $this->leadCaptureRepo->softDeleteModel($id);
-            return redirect()->route(strtolower('lead_captures.index'))->with('success', 'LeadCapture deleted successfully.');
+            if($this->leadCaptureRepo->softDeleteModel($leadCapture)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function restore($id)
+    public function restore(LeadCapture $leadCapture)
     {
         try {
-            $this->leadCaptureRepo->restoreModel($id);
-            return redirect()->route(strtolower('lead_captures.index'))->with('success', 'LeadCapture restored successfully.');
+            if($this->leadCaptureRepo->restoreModel($leadCapture)) {
+                return redirect()->back()->with('message', 'Record Restored Successfully.');
+            } else {
+                return false;
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 
-    public function forceDelete($id)
+    public function forceDelete(LeadCapture $leadCapture)
     {
         try {
-            $this->leadCaptureRepo->permanentlyDeleteModel($id);
-            return redirect()->route(strtolower('lead_captures.index'))->with('success', 'LeadCapture permanently deleted.');
+            if ($this->leadCaptureRepo->permanentlyDeleteModel($leadCapture)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => true,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
         } catch (Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 

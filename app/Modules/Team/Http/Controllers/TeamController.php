@@ -2,42 +2,29 @@
 
 namespace App\Modules\Team\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Modules\Team\Repositories\Eloquent\TeamRepository;
+use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Modules\Team\Http\Requests\TeamRequest;
 use App\Modules\Team\Models\Team;
+use App\Modules\Team\Repositories\Contracts\TeamContract;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class TeamController extends Controller
+class TeamController extends BaseModuleController
 {
-    protected $teamRepo;
-    protected $routePrefix;
-    protected $pathInitialize;
-    protected $singularLabel;
-    protected $pluralLabel;
-    protected $permissionPrefix;
-    protected $prefix;
-
-    public function __construct(TeamRepository $teamRepo)
-    {
-        $this->teamRepo = $teamRepo;
-        $this->prefix = Str::kebab('Team');
-        $this->routePrefix = 'back-office.'. Str::plural($this->prefix);
-        $this->pathInitialize = $this->routePrefix;
-        $this->permissionPrefix = Str::snake($this->prefix);
-        $this->singularLabel = Str::ucfirst($this->prefix);
-        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)).' List';
+    public function __construct(
+        protected TeamContract $teamRepo
+    ){
+        // Initialize common module variables automatically
+        $this->autoInit();
     }
 
     public function index(Request $request)
     {
-        $title            = $this->pluralLabel;
         $permissionPrefix = $this->permissionPrefix;
-        $routeInitialize  = $this->routePrefix;
-        $singularLabel    = $this->singularLabel;
+        $routeInitialize = $this->routePrefix;
+        $singularLabel = $this->singularLabel;
 
         $columns = [
             'name'      => ['label' => 'name', 'searchable' => 'name'],
@@ -72,7 +59,7 @@ class TeamController extends Controller
             return $dataTable->ajax();
         }
 
-        return view($this->pathInitialize.'.index', get_defined_vars());
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
 
