@@ -20,9 +20,7 @@ class DeleteModuleCommand extends Command
         $modulePath     = base_path("app/Modules/{$name}");
         $routePath      = base_path("routes/back-office/{$lower}.php");
         $bladesPath = resource_path("views/back-office/{$pluralFolder}");
-        // $configPath     = base_path("config/{$lower}.php");
         $migrationGlob  = base_path("database/migrations/*_create_" . Str::snake(Str::pluralStudly($name)) . "_table.php");
-        // $seederPath     = base_path("database/seeders/{$name}Seeder.php");
 
         if (!$this->option('force')) {
             if (!$this->confirm("Are you sure you want to delete the '{$name}' module and all related files?")) {
@@ -60,12 +58,6 @@ class DeleteModuleCommand extends Command
             $this->warn("⚠️ Blade folder not found: {$bladesPath}");
         }
 
-        // 🧩 4. Delete Config File
-        if (File::exists($configPath)) {
-            File::delete($configPath);
-            $this->info("✅ Config file deleted: {$configPath}");
-        }
-
         // 🧩 5. Delete Migration Files
         $migrations = glob($migrationGlob);
         if (!empty($migrations)) {
@@ -75,12 +67,6 @@ class DeleteModuleCommand extends Command
             }
         } else {
             $this->warn("⚠️ No migrations found for {$name}");
-        }
-
-        // 🧩 6. Delete Seeder File
-        if (File::exists($seederPath)) {
-            File::delete($seederPath);
-            $this->info("✅ Seeder deleted: {$seederPath}");
         }
 
         // ✅ 5️⃣ Optional refresh (full refresh)

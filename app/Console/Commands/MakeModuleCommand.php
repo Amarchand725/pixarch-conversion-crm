@@ -193,8 +193,8 @@ class MakeModuleCommand extends Command
 
         namespace App\Modules\\{$module}\Http\Controllers;
 
-        use App\Http\Controllers\Controller;
-        use App\Modules\\{$module}\Repositories\Eloquent\\{$module}Repository;
+        use App\Http\Controllers\BackOffice\BaseModuleController;
+        use App\Modules\\{$module}\Repositories\Contracts\\{$module}Contract;
         use App\Modules\\{$module}\Http\Requests\\{$module}Request;
         use App\Modules\\{$module}\Models\\{$module};
         use Exception;
@@ -202,30 +202,17 @@ class MakeModuleCommand extends Command
         use Illuminate\Support\Facades\DB;
         use Illuminate\Http\Request;
 
-        class {$module}Controller extends Controller
+        class {$module}Controller extends BaseModuleController
         {
-            protected \${$variable}Repo;
-            protected \$routePrefix;
-            protected \$pathInitialize;
-            protected \$singularLabel;
-            protected \$pluralLabel;
-            protected \$permissionPrefix;
-            protected \$prefix;
-
-            public function __construct({$module}Repository \${$variable}Repo)
-            {
-                \$this->\${$variable} = \${$variable}Repo;
-                \$this->prefix = Str::kebab('{$module}');
-                \$this->routePrefix = 'back-office.'. Str::plural(\$this->prefix);
-                \$this->pathInitialize = \$this->routePrefix;
-                \$this->permissionPrefix = Str::snake(\$this->prefix);
-                \$this->singularLabel = Str::ucfirst(\$this->prefix);
-                \$this->pluralLabel = Str::ucfirst(Str::plural(\$this->prefix)).' List';
+            public function __construct(
+                protected {$module}Contract \${$variable}Repo
+            ){
+                // Initialize common module variables automatically
+                \$this->autoInit();
             }
 
             public function index(Request \$request)
             {
-                \$title            = \$this->pluralLabel;
                 \$permissionPrefix = \$this->permissionPrefix;
                 \$routeInitialize  = \$this->routePrefix;
                 \$singularLabel    = \$this->singularLabel;
@@ -263,7 +250,7 @@ class MakeModuleCommand extends Command
                     return \$dataTable->ajax();
                 }
 
-                return view(\$this->pathInitialize.'.index', get_defined_vars());
+                return view(strtolower(\$this->pathInitialize.'.index'), \$this->viewWithVars(get_defined_vars()));
             }
 
 
