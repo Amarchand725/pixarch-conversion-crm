@@ -66,7 +66,7 @@ class LeadController extends BaseModuleController
                 $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                                     . strtoupper($status) .
                                     '</span>';
-                $row->action = view('back-office.partials.action-buttons', [
+                $row->action = view($this->pathInitialize.'.actions', [
                     'model' => $row,
                     'routeInitialize' => $routeInitialize,
                     'permissionPrefix' => $permissionPrefix,
@@ -81,7 +81,7 @@ class LeadController extends BaseModuleController
             return $dataTable->ajax();
         }
 
-        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
+        return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
     }
 
     public function create()
@@ -223,13 +223,18 @@ class LeadController extends BaseModuleController
         }
     }
 
-    public function updateStatus(LeadStatusRequest $request)
+    public function updateStatus(LeadStatusRequest $request, Lead $lead)
     {
         $payload = $request->validated();
         
         try {
-            $this->leadRepo->statusModel($payload);
-            return response()->json(['success' => true]);
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $lead) {
+                
+                $response = $this->leadRepo->statusModel($lead, $payload);
+            });
+
+            return successResponse($response, $this->singularLabel. ' updated action successfully.');
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -254,29 +259,12 @@ class LeadController extends BaseModuleController
         ]);
     }
 
-    public function actionCreate($action, Lead $lead)
+    public function actionEdit($action, Lead $lead)
     {
+        $stages = $this->leadStatus->where('model', 'lead')->get();
         $agents = $this->userRepo->role('agent')
                 ->whereHas('status', fn($q) => $q->where('name', 'active'))
                 ->get();
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
-    }
-
-    public function actionStore(LeadRequest $request)
-    {
-        $payload = $request->validated();
-        
-        try {
-            $response = null;
-            DB::transaction(function () use (&$response, $payload) {
-                $response = $this->leadRepo->storeModel($payload);
-            });
-            return successResponse($response, $this->singularLabel. ' added successfully.');
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => false,
-                'error' => $e->getMessage()
-            ]);
-        }
     }
 }

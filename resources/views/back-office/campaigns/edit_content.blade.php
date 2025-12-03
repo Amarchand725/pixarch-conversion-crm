@@ -1,4 +1,3 @@
-@method('PUT')
 <div class="row g-3 mb-4">
     <!-- Name Input -->
     <div class="col-12 col-md-6">
@@ -9,38 +8,73 @@
             type="text" 
             id="name" 
             name="name" 
-            class="form-control form-control-lg" 
+            class="form-control" 
             placeholder="Enter name" 
             value="{{ old('name', $model->name) }}"
         />
         <span id="name_error" class="text-danger error">{{ $errors->first('name') }}</span>
     </div>
-    <!-- Name Input -->
     <div class="col-12 col-md-6">
-        <label for="phone" class="form-label fw-semibold">
-            Phone
+        <label for="type" class="form-label fw-semibold">
+            Type <span class="text-danger">*</span>
+        </label>
+        <select id="type" name="type" class="form-select form-select-lg">
+            <option value="">Select type</option>
+            @foreach (campaignTypes() as $type)
+                <option value="{{ $type }}" {{ $model->type==$type?'selected':'' }}>{{ ucfirst($type) }}</option>
+            @endforeach
+        </select>
+        <span id="type_error" class="text-danger error">{{ $errors->first('type') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="budget" class="form-label fw-semibold">
+            Name <span class="text-danger">*</span>
         </label>
         <input 
             type="text" 
-            id="phone" 
-            name="phone" 
-            class="form-control form-control-lg" 
-            placeholder="Enter phone" 
-            value="{{ old('phone', $model->phone) }}"
+            id="budget" 
+            name="budget" 
+            class="form-control" 
+            placeholder="Enter budget" 
+            value="{{ old('budget', $model->budget) }}"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '');"
         />
-        <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
+        <span id="budget_error" class="text-danger error">{{ $errors->first('budget') }}</span>
     </div>
-    <!-- Name Input -->
     <div class="col-12 col-md-6">
-        <label for="status" class="form-label fw-semibold">
-            Status <span class="text-danger">*</span>
+        <label for="start_date" class="form-label fw-semibold">
+            Start Date <span class="text-danger">*</span>
         </label>
-        <select id="status" name="status" class="form-select form-select-lg">
-            <option value="">Select status</option>
-            <option value="1" {{ $model->status==1 ? 'selected' :'' }}>Active</option>
-            <option value="0" {{ $model->status==0 ? 'selected' :'' }}>De-Active</option>
-        </select>
-        <span id="status_error" class="text-danger error">{{ $errors->first('status') }}</span>
+        <input 
+            type="date" 
+            id="start_date" 
+            name="start_date" 
+            class="form-control" 
+            placeholder="Enter start_date" 
+            value="{{ old('start_date', $model->start_date) }}"
+        />
+        <span id="start_date_error" class="text-danger error">{{ $errors->first('start_date') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="end_date" class="form-label fw-semibold">
+            End Date <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="date" 
+            id="end_date" 
+            name="end_date" 
+            class="form-control" 
+            placeholder="Enter end_date" 
+            value="{{ old('end_date', $model->end_date) }}"
+        />
+        <span id="end_date_error" class="text-danger error">{{ $errors->first('end_date') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
+        <label for="description" class="form-label fw-semibold">
+            Description <span class="text-danger">*</span>
+        </label>
+        <textarea class="form-control" name="description" rows="5">{{ old('description', $model->description) }}</textarea>
+        <span id="description_error" class="text-danger error">{{ $errors->first('description') }}</span>
     </div>
 </div>
 

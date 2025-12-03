@@ -26,7 +26,11 @@ class CampaignController extends BaseModuleController
         $singularLabel = $this->singularLabel;
 
         $columns = [
-            'name'      => ['label' => 'name', 'searchable' => 'name'],
+            'name'      => ['label' => 'Name', 'searchable' => 'name'],
+            'type'      => ['label' => 'Type', 'searchable' => 'type'],
+            'budget'      => ['label' => 'Budget', 'searchable' => 'budget'],
+            'start_date'      => ['label' => 'Start Date', 'searchable' => 'start_date'],
+            'end_date'      => ['label' => 'End Date', 'searchable' => 'end_date'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],

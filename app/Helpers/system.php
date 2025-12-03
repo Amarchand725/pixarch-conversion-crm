@@ -154,3 +154,12 @@ function statuses(){
         'abandoned'
     ];
 }
+
+function campaignTypes(): array
+{
+    return [
+        'Email',
+        'Social',
+        'Call',
+    ];
+}

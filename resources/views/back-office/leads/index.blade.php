@@ -128,7 +128,7 @@
                                                     src="{{ optional($lead->assignees->first()?->avatar)->path
                                                             ? asset('back-office/assets/' . $lead->assignees->first()->avatar->path)
                                                             : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
-                                                    width="36" height="36" alt="Avatar">
+                                                    width="36" height="36" alt="Avatar" title="{{ $lead?->assignees->first()->name ?? '' }}">
                                                 <span class="fw-semibold">{{ $lead->name }}</span>
                                             </div>
 
@@ -150,8 +150,8 @@
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#create-pop-up-modal-for-file"
                                                 :data-attributes="[
-                                                    'data-url' => route($routeInitialize.'.action.store'),
-                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'assign', 'id' => $lead->id])
+                                                    'data-url' => route($routeInitialize.'.update-status', $lead->uuid),
+                                                    'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'assign', 'lead' => $lead->uuid])
                                                 ]"
                                             />
 
@@ -159,14 +159,14 @@
                                                 type="button"
                                                 id="note-btn"
                                                 btn-class="btn btn-outline-warning btn-sm p-1 edit-btn"
-                                                title="{{ $singularLabel }} Note"
+                                                title="Add Note"
                                                 label="{{ $singularLabel }} Action"
                                                 icon="bi bi-sticky fs-6"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#create-pop-up-modal-for-file"
                                                 :data-attributes="[
-                                                    'data-url' => route($routeInitialize.'.action.store'),
-                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'note', 'id' => $lead->id])
+                                                    'data-url' => route($routeInitialize.'.update-status', $lead->uuid),
+                                                    'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'note', 'lead' => $lead->uuid])
                                                 ]"
                                             />
 
@@ -174,14 +174,14 @@
                                                 type="button"
                                                 id="meeting-btn"
                                                 btn-class="btn btn-outline-info btn-sm lead-action-btn p-1 edit-btn"
-                                                title="{{ $singularLabel }} Meeting Schedule"
+                                                title="Schedule Meeting"
                                                 label="{{ $singularLabel }} Action"
                                                 icon="bi bi-calendar-event fs-6"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#create-pop-up-modal-for-file"
                                                 :data-attributes="[
-                                                    'data-url' => route($routeInitialize.'.action.store'),
-                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'meeting', 'id' => $lead->id])
+                                                    'data-url' => route($routeInitialize.'.update-status', $lead->uuid),
+                                                    'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'meeting', 'lead' => $lead->uuid])
                                                 ]"
                                             />
 
@@ -189,14 +189,14 @@
                                                 type="button"
                                                 id="status-btn"
                                                 btn-class="btn btn-outline-success btn-sm lead-action-btn p-1 edit-btn"
-                                                title="{{ $singularLabel }} Status"
+                                                title="Change Status"
                                                 label="{{ $singularLabel }} Action"
                                                 icon="bi bi-list-check fs-6"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#create-pop-up-modal-for-file"
                                                 :data-attributes="[
-                                                    'data-url' => route($routeInitialize.'.action.store'),
-                                                    'data-edit-url' => route($routeInitialize.'.action.create', ['action' => 'status', 'id' => $lead->id])
+                                                    'data-url' => route($routeInitialize.'.update-status', $lead->uuid),
+                                                    'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'status', 'lead' => $lead->uuid])
                                                 ]"
                                             />
 
@@ -314,19 +314,25 @@
                             const leadEl = evt.item;
                             const oldCard = evt.from.closest(".status-card");
                             const newCard = evt.to.closest(".status-card");
-
+                            
                             const leadId = leadEl.dataset.leadId;
                             const statusId = newCard.dataset.statusId;
 
+                            // Use a placeholder in Blade
+                            let urlTemplate = "{{ route('back-office.leads.update-status', ':lead') }}";
+
+                            // Replace placeholder with actual lead ID
+                            let url = urlTemplate.replace(':lead', leadId);
+                            
                             // Send AJAX to update status first
-                            fetch("{{ route('back-office.leads.update-status') }}", {
+                            fetch(url, {
                                 method: 'POST',
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
                                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                 },
-                                body: JSON.stringify({ lead_id: leadId, status_id: statusId })
+                                body: JSON.stringify({ status_id: statusId })
                             })
                             .then(res => res.json())
                             .then(data => {

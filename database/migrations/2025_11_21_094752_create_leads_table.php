@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('value')->nullable();
+            $table->decimal('value', 12, 2)->nullable()->comment('Potential or actual value of the lead');
             $table->string('status')->nullable()->comment('open, lost, won, abandoned');
             $table->json('fields')->nullable();
             $table->softDeletes();

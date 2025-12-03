@@ -36,6 +36,12 @@ class StatusSeeder extends Seeder
             ['model' => 'Lead', 'name' => 'hot client'],
             ['model' => 'Lead', 'name' => 'sales closed'],
             ['model' => 'Lead', 'name' => 'pool'],
+
+            //Meeting
+            ['model' => 'Meeting', 'name' => 'Upcoming'],
+            ['model' => 'Meeting', 'name' => 'Missed'],
+            ['model' => 'Meeting', 'name' => 'Rescheduled'],
+            ['model' => 'Meeting', 'name' => 'Completed'],
         ];
         
         foreach ($data as $item) {

@@ -1,5 +1,3 @@
-<input type="hidden" name="lead_id" value="{{ $lead->uuid }}">
-
 <div class="row">
 
     <!-- LEFT SIDE TABS -->
@@ -32,10 +30,10 @@
             <!-- ASSIGN -->
             <div class="tab-pane fade {{ $action=='assign'?'show active':'' }}" id="assignTab">
                 <div class="mb-3">
-                    <label class="form-label">Assign to Agent</label>
-                    <select class="form-select" name="assigned_to">
+                    <label for="assignee_id" class="form-label">Lead Assignee</label>
+                    <select class="form-select" name="assignee_id">
                         @foreach ($agents as $agent)
-                            <option value="{{ $agent->id }}">{{ $agent->name }}</option>
+                            <option value="{{ $agent->uuid }}" {{ $lead?->assignees->first()->id==$agent->id ? "selected" : '' }}>{{ $agent->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -44,35 +42,48 @@
             <!-- NOTE -->
             <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
                 <div class="mb-3">
-                    <label class="form-label">Add Note</label>
-                    <textarea class="form-control" name="note" rows="5"></textarea>
+                    <label for="description" class="form-label">Add Note</label>
+                    <textarea class="form-control" name="description" rows="5">{{ $lead?->lastStatusLog?->description ?? '' }}</textarea>
                 </div>
             </div>
 
+            @php $meeting = $lead?->lastStatusLog?->meeting; @endphp
             <!-- MEETING -->
             <div class="tab-pane fade {{ $action=='meeting'?'show active':'' }}" id="meetingTab">
                 <div class="mb-3">
-                    <label class="form-label">Meeting Date & Time</label>
-                    <input type="datetime-local" class="form-control" name="meeting_time">
+                    <label for="start_date_time" class="form-label">Start Date & Time</label>
+                    <input type="datetime-local" class="form-control" value="{{ old('start_date_time', $meeting->start_date_time ?? '') }}" name="start_date_time">
+                </div>
+                <div class="mb-3">
+                    <label for="end_date_time" class="form-label">End Date & Time</label>
+                    <input type="datetime-local" class="form-control" value="{{ old('end_date_time', $meeting->end_date_time ?? '') }}" name="end_date_time">
+                </div>
+                <div class="mb-3">
+                    <label for="attendee_id" class="form-label">Meeting Attendee</label>
+                    <select class="form-select" name="attendee_id">
+                        <option value="">Select meeting attendee</option>
+                        @foreach ($agents as $attendee)
+                            <option value="{{ $attendee->uuid }}" {{ $meeting?->attendees->first()->id==$attendee->id ? 'selected' : '' }}>{{ $attendee->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 
             <!-- STATUS -->
             <div class="tab-pane fade {{ $action=='status'?'show active':'' }}" id="statusTab">
                 <div class="mb-3">
-                    <label class="form-label">Lead Status</label>
-                    <select class="form-select" name="status">
-                        <option value="new">New</option>
-                        <option value="contacted">Contacted</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="qualified">Qualified</option>
-                        <option value="closed">Closed</option>
-                        <option value="rejected">Rejected</option>
+                    <label for="status_id" class="form-label fw-semibold">
+                        Stages
+                    </label>
+                    <select name="status_id" id="status_id" class="select2 form-select status_id">
+                        <option value="">Select Stage</option>
+                        @foreach($stages as $stage)
+                            <option value="{{$stage?->uuid}}" {{ $lead?->lastStatusLog?->status_id==$stage->id ? 'selected' : '' }}>{{ ucfirst($stage->name ?? '-') }}</option>
+                        @endforeach
                     </select>
+                    <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
                 </div>
             </div>
-
         </div>
     </div>
-
 </div>

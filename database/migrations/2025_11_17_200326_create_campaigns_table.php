@@ -12,8 +12,11 @@ return new class extends Migration {
             $table->uuid('uuid')->unique();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
-            $table->foreignId('lead_capture_id')->nullable()->constrained('lead_captures')->nullOnDelete();
-            $table->string('name')->nullable();
+            $table->string('name');
+            $table->string('type')->nullable(); // e.g., Email, Social, Call
+            $table->decimal('budget', 12, 2)->nullable()->comment('Total budget allocated for the campaign');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

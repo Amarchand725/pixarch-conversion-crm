@@ -9,13 +9,12 @@ Route::group([
     Route::controller(LeadController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-        Route::post('{id}/restore', 'restore')->name('restore');
-        Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
-        Route::post('update-status', 'updateStatus')->name('update-status');
+        Route::post('{lead}/restore', 'restore')->name('restore');
+        Route::delete('{lead}/force-delete', 'forceDelete')->name('forceDelete');
+        Route::post('{lead}/update-status', 'updateStatus')->name('update-status');
         Route::post('import-data', 'import')->name('import');
 
-        Route::get('action/create/{action}/{lead?}', 'actionCreate')->name('action.create');
-        Route::post('action/store', 'actionStore')->name('action.store');
+        Route::get('action/edit/{action}/{lead?}', 'actionEdit')->name('action.edit');
     });
 
     // 🧱 Resource CRUD

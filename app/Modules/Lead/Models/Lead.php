@@ -4,6 +4,7 @@ namespace App\Modules\Lead\Models;
 
 use App\Models\EntityRelationship;
 use App\Models\LogEntityStatus;
+use App\Models\Meeting;
 use App\Models\Source;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -73,5 +74,15 @@ class Lead extends Model
     public function currentAssignee()
     {
         return $this->hasOne(EntityRelationship::class, 'model_id');
+    }
+
+    public function meeting()
+    {
+        return $this->belongsTo(Meeting::class, 'lead_id');
+    }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class);
     }
 }

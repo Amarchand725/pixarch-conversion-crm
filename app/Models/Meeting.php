@@ -6,7 +6,7 @@ use App\Models\Traits\LogsModelActivity;
 use App\Models\Traits\ModelTrait;
 use App\Modules\Lead\Models\Lead;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\NotifiesUsers;
+use App\Models\Traits\NotifiesUsers;
 
 class Meeting extends Model
 {

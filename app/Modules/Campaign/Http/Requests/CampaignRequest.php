@@ -2,7 +2,9 @@
 
 namespace App\Modules\Campaign\Http\Requests;
 
+use App\Models\Status;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CampaignRequest extends FormRequest
 {
@@ -14,8 +16,22 @@ class CampaignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'status' => 'nullable|boolean',
+            'status_id' => ['nullable', 'exists:statuses,id'],
+            'name' => ['required', 'string', 'max:255'],
+            'type' => ['nullable', Rule::in(campaignTypes())],
+            'budget'    => [ 'nullable'],
+            'start_date_time' => ['nullable', 'date', 'date_format:Y-m-d\TH:i'],
+            'end_date_time'   => ['nullable', 'date', 'date_format:Y-m-d\TH:i', 'after_or_equal:start_date_time'],
+            'description' => ['nullable', 'string'],
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('status_id')) {
+            $this->merge([
+                'status_id' => Status::where('uuid', $this->input('status_id'))->value('id')
+            ]);
+        }
     }
 }
