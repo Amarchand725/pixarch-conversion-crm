@@ -1,6 +1,6 @@
 <div class="row g-3 mb-4">
     <!-- Name Input -->
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-12">
         <label for="name" class="form-label fw-semibold">
             Name <span class="text-danger">*</span>
         </label>
@@ -16,9 +16,9 @@
     </div>
     <div class="col-12 col-md-6">
         <label for="type" class="form-label fw-semibold">
-            Type <span class="text-danger">*</span>
+            Type
         </label>
-        <select id="type" name="type" class="form-select form-select-lg">
+        <select id="type" name="type" class="form-select">
             <option value="">Select type</option>
             @foreach (campaignTypes() as $type)
                 <option value="{{ $type }}">{{ ucfirst($type) }}</option>
@@ -28,7 +28,7 @@
     </div>
     <div class="col-12 col-md-6">
         <label for="budget" class="form-label fw-semibold">
-            Name <span class="text-danger">*</span>
+            Budget
         </label>
         <input 
             type="text" 
@@ -43,7 +43,7 @@
     </div>
     <div class="col-12 col-md-6">
         <label for="start_date" class="form-label fw-semibold">
-            Start Date <span class="text-danger">*</span>
+            Start Date
         </label>
         <input 
             type="date" 
@@ -57,7 +57,7 @@
     </div>
     <div class="col-12 col-md-6">
         <label for="end_date" class="form-label fw-semibold">
-            End Date <span class="text-danger">*</span>
+            End Date
         </label>
         <input 
             type="date" 
@@ -69,12 +69,24 @@
         />
         <span id="end_date_error" class="text-danger error">{{ $errors->first('end_date') }}</span>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-12">
         <label for="description" class="form-label fw-semibold">
-            Description <span class="text-danger">*</span>
+            Description
         </label>
-        <textarea class="form-control" name="description" rows="5">{{ old('description') }}</textarea>
+        <textarea class="form-control" placeholder="Enter description" name="description" rows="5">{{ old('description') }}</textarea>
         <span id="description_error" class="text-danger error">{{ $errors->first('description') }}</span>
+    </div>
+    <div class="col-12 col-md-12">
+        <label for="status_id" class="form-label fw-semibold">
+            Status
+        </label>
+        <select id="status_id" name="status_id" class="form-select">
+            <option value="">Select status</option>
+            @foreach ($statuses as $status)
+                <option value="{{ $status->uuid }}">{{ ucfirst($status->name) }}</option>
+            @endforeach
+        </select>
+        <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
     </div>
 </div>
 

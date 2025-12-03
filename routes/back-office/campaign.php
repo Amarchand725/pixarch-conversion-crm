@@ -15,5 +15,5 @@ Route::group([
 
     // 🧱 Resource CRUD
     Route::resource('/', CampaignController::class)
-            ->parameters(['' => 'campaign']);
+        ->parameters(['' => 'campaign']);
 });

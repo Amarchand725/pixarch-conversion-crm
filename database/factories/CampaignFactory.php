@@ -20,14 +20,14 @@ class CampaignFactory extends Factory
         // Get a random active status id from statuses table
         $statusId = Status::where('model', 'Campaign')->where('name', 'active')->value('id');
 
-        // Get a random lead_capture id
-        $leadCaptureId = LeadCapture::inRandomOrder()->value('id');
-
         return [
-            'status_id'        => $statusId,
-            'lead_capture_id'  => $leadCaptureId,
-            'name'             => $this->faker->sentence(3),
-            'description'      => $this->faker->paragraph(),
+            'status_id'   => $statusId,
+            'name'        => $this->faker->sentence(3),
+            'type'        => $this->faker->randomElement(['Email', 'Social', 'Call']),
+            'budget'      => $this->faker->numberBetween(500, 50000),  // numeric budget
+            'start_date'  => $this->faker->dateTimeBetween('-1 month', 'now'),
+            'end_date'    => $this->faker->dateTimeBetween('now', '+1 month'),
+            'description' => $this->faker->paragraph(),
         ];
     }
 }

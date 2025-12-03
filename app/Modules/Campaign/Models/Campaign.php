@@ -42,4 +42,9 @@ class Campaign extends Model
     {
         return \Database\Factories\CampaignFactory::new();
     }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

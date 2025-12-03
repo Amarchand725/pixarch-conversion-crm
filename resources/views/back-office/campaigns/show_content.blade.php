@@ -25,7 +25,11 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Status</td>
-        <td>{{ ucfirst($model?->status?->name) }}</td>
+        <td>
+            <span class="badge rounded-pill px-3 py-2 {{ badgeClass($model?->status?->name) }}">
+            {{ ucfirst($model?->status?->name) }}
+            </span>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>

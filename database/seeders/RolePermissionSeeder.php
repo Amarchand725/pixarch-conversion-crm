@@ -144,6 +144,24 @@ class RolePermissionSeeder extends Seeder
             'attachment-delete',
             'attachment-restore',
             'attachment-download',
+
+            //Campaign management
+            'campaign-list',
+            'campaign-create',
+            'campaign-view',
+            'campaign-edit',
+            'campaign-delete',
+            'campaign-restore',
+            'campaign-status',
+
+            //Lead Capture management
+            'lead_capture-list',
+            'lead_capture-create',
+            'lead_capture-view',
+            'lead_capture-edit',
+            'lead_capture-delete',
+            'lead_capture-restore',
+            'lead_capture-status',
         ];
 
         return $generalPermissions;

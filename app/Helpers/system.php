@@ -139,8 +139,8 @@ function badgeClass(string $status): string
         'hot client'          => 'bg-danger text-white',
         'sales closed'        => 'bg-success text-white',
         'pool'                => 'bg-info text-white',
-        'active'   => 'badge bg-success',
-        'de-active' => 'badge bg-secondary',
+        'active'              => 'badge bg-success',
+        'de-active'           => 'badge bg-danger',
     ];
 
     return $statusColors[strtolower($status)] ?? 'bg-dark text-white';

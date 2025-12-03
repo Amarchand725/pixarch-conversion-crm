@@ -38,6 +38,15 @@
         </li>
         @endcan
 
+        @can('campaign-list')
+        <li class="menu-item {{ request()->is('back-office/campaigns') || request()->is('back-office/campaigns/*')?'active open':'' }}">
+            <a href="{{ route('back-office.campaigns.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-files"></i>
+                <div data-i18n="Campaigns List">Campaigns List</div>
+            </a>
+        </li>
+        @endcan
+
         @can('user-list')
         <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
             <a href="{{ route('back-office.users.index') }}" class="menu-link">

@@ -3,6 +3,7 @@
 namespace App\Modules\Campaign\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Models\Status;
 use App\Modules\Campaign\Http\Requests\CampaignRequest;
 use App\Modules\Campaign\Models\Campaign;
 use App\Modules\Campaign\Repositories\Contracts\CampaignContract;
@@ -12,9 +13,12 @@ use Illuminate\Http\Request;
 
 class CampaignController extends BaseModuleController
 {
+    protected $status;
+
     public function __construct(
         protected CampaignContract $campaignRepo
     ){
+        $this->status = new Status();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -67,6 +71,7 @@ class CampaignController extends BaseModuleController
 
     public function create()
     {
+        $statuses = $this->status->where('model', 'Campaign')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
@@ -89,6 +94,7 @@ class CampaignController extends BaseModuleController
 
     public function edit(Campaign $campaign)
     {
+        $statuses = $this->status->where('model', 'Campaign')->get();
         $model = $this->campaignRepo->showModel($campaign);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
