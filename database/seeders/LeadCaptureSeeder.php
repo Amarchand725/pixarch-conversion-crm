@@ -9,6 +9,6 @@ class LeadCaptureSeeder extends Seeder
 {
     public function run(): void
     {
-        LeadCapture::factory()->count(5)->create();
+        LeadCapture::factory()->count(3)->create();
     }
 }

@@ -10,11 +10,11 @@ return new class extends Migration {
         Schema::create('lead_captures', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->nullOnDelete();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->nullOnDelete();
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
             $table->string('name')->comment('e.g Contact form, facebook lead form');
-            $table->json('fields')->nullable();
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

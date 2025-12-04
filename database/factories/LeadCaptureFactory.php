@@ -1,59 +1,39 @@
 <?php
+
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Status;
+use App\Modules\Campaign\Models\Campaign;
 use App\Modules\LeadCapture\Models\LeadCapture;
+use App\Modules\LeadCapture\Models\CaptureFormField;
 
 class LeadCaptureFactory extends Factory
 {
     protected $model = LeadCapture::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
-        // Get a random active status id for LeadCapture model
         $statusId = Status::where('model', 'LeadCapture')
                           ->where('name', 'active')
                           ->value('id');
 
-        // Generate fake form fields
-        $fields = [
-            [
-                'label' => 'First Name',
-                'type'  => 'text',
-                'required' => true,
-            ],
-            [
-                'label' => 'Last Name',
-                'type'  => 'text',
-                'required' => true,
-            ],
-            [
-                'label' => 'Email',
-                'type'  => 'email',
-                'required' => true,
-            ],
-            [
-                'label' => 'Phone',
-                'type'  => 'tel',
-                'required' => false,
-            ],
-            [
-                'label' => 'Message',
-                'type'  => 'textarea',
-                'required' => false,
-            ],
-        ];
-
         return [
-            'status_id' => $statusId,
-            'name'      => $this->faker->sentence(3),
-            'fields'    => json_encode($fields), // Store as JSON in DB
+            'status_id'   => $statusId,
+            'campaign_id' => Campaign::factory(), // auto create campaign and link it
+            'name'        => $this->faker->sentence(2),
+            'description' => $this->faker->paragraph(),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (LeadCapture $capture) {
+            CaptureFormField::factory()
+                ->count(5) // 🔥 create 5 fields per lead capture
+                ->create([
+                    'lead_capture_id' => $capture->id,
+                ]);
+        });
     }
 }

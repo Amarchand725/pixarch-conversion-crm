@@ -9,6 +9,6 @@ class CampaignSeeder extends Seeder
 {
     public function run(): void
     {
-        Campaign::factory()->count(5)->create();
+        Campaign::factory()->count(3)->create();
     }
 }
