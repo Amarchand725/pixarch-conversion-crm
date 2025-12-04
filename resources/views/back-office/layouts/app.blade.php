@@ -136,6 +136,7 @@
     <script src="{{ asset('back-office/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
 
     <!-- Custom Ajax Gateway JS -->
+    <script src="{{ asset('back-office/assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('back-office') }}/assets/custom/ajax-gateway.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
