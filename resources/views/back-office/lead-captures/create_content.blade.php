@@ -43,6 +43,7 @@
     </div>
 </div>
 
+<script src="{{ asset('back-office/assets/custom/js/form-fields.js') }}"></script>
 <script>
     $('select').each(function () {
       $(this).select2({
@@ -50,81 +51,83 @@
       });
     });
 
-     let fieldIndex = 0;
+    let existingFields = []; // no existing fields for create
 
-    // Add field
-    $('#add-field').on('click', function () {
-        let html = `
-        <div class="card p-3 mb-3 border field-item">
-          <div class="row g-3">
+    // let fieldIndex = 0;
 
-            <div class="col-md-3">
-              <label class="form-label fw-bold">Label</label>
-              <input type="text" name="fields[${fieldIndex}][label]" class="form-control"
-                     placeholder="Full Name" required>
-            </div>
+    // // Add field
+    // $('#add-field').on('click', function () {
+    //     let html = `
+    //     <div class="card p-3 mb-3 border field-item">
+    //       <div class="row g-3">
 
-            <div class="col-md-3">
-              <label class="form-label fw-bold">Type</label>
-              <select name="fields[${fieldIndex}][type]" 
-                      class="form-select field-type"
-                      data-index="${fieldIndex}">
-                <option value="text">Text</option>
-                <option value="email">Email</option>
-                <option value="number">Number</option>
-                <option value="textarea">Textarea</option>
-                <option value="select">Select</option>
-                <option value="file">File</option>
-              </select>
-            </div>
+    //         <div class="col-md-3">
+    //           <label class="form-label fw-bold">Label</label>
+    //           <input type="text" name="fields[${fieldIndex}][label]" class="form-control"
+    //                  placeholder="Full Name" required>
+    //         </div>
 
-            <div class="col-md-3">
-              <label class="form-label fw-bold">Placeholder</label>
-              <input type="text" name="fields[${fieldIndex}][placeholder]"
-                     class="form-control" placeholder="Write here...">
-            </div>
+    //         <div class="col-md-3">
+    //           <label class="form-label fw-bold">Type</label>
+    //           <select name="fields[${fieldIndex}][type]" 
+    //                   class="form-select field-type"
+    //                   data-index="${fieldIndex}">
+    //             <option value="text">Text</option>
+    //             <option value="email">Email</option>
+    //             <option value="number">Number</option>
+    //             <option value="textarea">Textarea</option>
+    //             <option value="select">Select</option>
+    //             <option value="file">File</option>
+    //           </select>
+    //         </div>
 
-            <div class="col-md-2">
-              <label class="form-label fw-bold">Required</label>
-              <select name="fields[${fieldIndex}][required]" class="form-select">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-              </select>
-            </div>
+    //         <div class="col-md-3">
+    //           <label class="form-label fw-bold">Placeholder</label>
+    //           <input type="text" name="fields[${fieldIndex}][placeholder]"
+    //                  class="form-control" placeholder="Write here...">
+    //         </div>
 
-            <div class="col-md-1 d-flex align-items-end">
-              <button type="button" class="btn btn-icon btn-outline-danger btn-sm remove-field">
-                <i class="ti ti-x"></i>
-              </button>
-            </div>
+    //         <div class="col-md-2">
+    //           <label class="form-label fw-bold">Required</label>
+    //           <select name="fields[${fieldIndex}][required]" class="form-select">
+    //             <option value="0">No</option>
+    //             <option value="1">Yes</option>
+    //           </select>
+    //         </div>
 
-            <div class="col-12 mt-2 select-options d-none" id="options-${fieldIndex}">
-              <label class="form-label fw-bold">Select Options (comma separated)</label>
-              <input type="text" name="fields[${fieldIndex}][options]"
-                     class="form-control"
-                     placeholder="Male, Female, Other">
-            </div>
+    //         <div class="col-md-1 d-flex align-items-end">
+    //           <button type="button" class="btn btn-icon btn-outline-danger btn-sm remove-field">
+    //             <i class="ti ti-x"></i>
+    //           </button>
+    //         </div>
 
-          </div>
-        </div>
-        `;
+    //         <div class="col-12 mt-2 select-options d-none" id="options-${fieldIndex}">
+    //           <label class="form-label fw-bold">Select Options (comma separated)</label>
+    //           <input type="text" name="fields[${fieldIndex}][options]"
+    //                  class="form-control"
+    //                  placeholder="Male, Female, Other">
+    //         </div>
 
-        $('#fields-wrapper').append(html);
-        fieldIndex++;
-    });
+    //       </div>
+    //     </div>
+    //     `;
 
-    // Remove field
-    $(document).on('click', '.remove-field', function () {
-      $(this).closest('.field-item').remove();
-    });
+    //     $('#fields-wrapper').append(html);
+    //     fieldIndex++;
+    // });
 
-    // Show/hide select options
-    $(document).on('change', '.field-type', function () {
-      const index = $(this).data('index');
-      const optionsBox = $('#options-' + index);
+    // // Remove field
+    // $(document).on('click', '.remove-field', function () {
+    //   $(this).closest('.field-item').remove();
+    // });
 
-      $(this).val() === 'select'
-          ? optionsBox.removeClass('d-none')
-          : optionsBox.addClass('d-none');
-    });
+    // // Show/hide select options
+    // $(document).on('change', '.field-type', function () {
+    //   const index = $(this).data('index');
+    //   const optionsBox = $('#options-' + index);
+
+    //   $(this).val() === 'select'
+    //       ? optionsBox.removeClass('d-none')
+    //       : optionsBox.addClass('d-none');
+    // });
 </script>
