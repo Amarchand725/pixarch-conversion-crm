@@ -36,6 +36,7 @@ class UserController extends BaseModuleController
             'role'       => ['label' => 'Role', 'searchable' => 'roles.name'],
             'phone'      => ['label' => 'Phone', 'searchable' => 'phone'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -53,6 +54,9 @@ class UserController extends BaseModuleController
                 $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                                     . strtoupper($status) .
                                     '</span>';
+
+                $author = $row->author ?? '';
+                $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
                 $row->action = view('back-office.partials.action-buttons', [
                     'model' => $row,
                     'permissionPrefix' => $permissionPrefix,

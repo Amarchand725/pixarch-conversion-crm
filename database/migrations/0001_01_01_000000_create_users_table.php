@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique()->index();
+            $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->unsignedBigInteger('status_id')->nullable()->constrained('statuses')->cascadeOnUpdate()->nullOnDelete();
             $table->string('username')->unique()->nullable();
             $table->string('name');

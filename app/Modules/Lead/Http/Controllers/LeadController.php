@@ -45,6 +45,7 @@ class LeadController extends BaseModuleController
             'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
             'value' => ['label' => 'Value', 'searchable' => 'value'],
+            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -66,6 +67,9 @@ class LeadController extends BaseModuleController
                 $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                                     . strtoupper($status) .
                                     '</span>';
+
+                $author = $row->author ?? '';
+                $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
                 $row->action = view($this->pathInitialize.'.actions', [
                     'model' => $row,
                     'routeInitialize' => $routeInitialize,

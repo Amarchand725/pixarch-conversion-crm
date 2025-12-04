@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('source_id')->nullable()->constrained('sources')->nullOnDelete();
             $table->foreignId('lead_capture_id')->nullable()->constrained('lead_captures')->nullOnDelete();
             $table->string('name');

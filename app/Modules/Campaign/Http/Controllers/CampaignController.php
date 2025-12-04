@@ -36,6 +36,7 @@ class CampaignController extends BaseModuleController
             'start_date'      => ['label' => 'Start Date', 'searchable' => 'start_date'],
             'end_date'      => ['label' => 'End Date', 'searchable' => 'end_date'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -51,6 +52,8 @@ class CampaignController extends BaseModuleController
                             . strtoupper($status) .
                             '</span>';
 
+                $author = $row->author ?? '';
+                $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
                 $row->action = view('back-office.partials.action-buttons', [
                     'model'            => $row,
                     'permissionPrefix' => $permissionPrefix,

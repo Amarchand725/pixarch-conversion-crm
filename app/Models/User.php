@@ -125,4 +125,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LogEntityStatus::class, 'author_id');
     }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }

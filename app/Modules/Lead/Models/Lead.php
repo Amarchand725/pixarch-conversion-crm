@@ -85,4 +85,9 @@ class Lead extends Model
     {
         return $this->hasMany(Meeting::class);
     }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 }
