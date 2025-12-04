@@ -13,7 +13,7 @@ class CaptureFormFieldFactory extends Factory
     public function definition()
     {
         return [
-            'lead_capture_id' => LeadCapture::factory(), // links to unique lead capture
+            'lead_capture_id' => $this->faker->randomElement(LeadCapture::pluck('id')->toArray()), // links to unique lead capture
             'label' => $this->faker->word(),
             'name' => $this->faker->slug(),
             'type' => $this->faker->randomElement(['text', 'email', 'tel', 'textarea']),

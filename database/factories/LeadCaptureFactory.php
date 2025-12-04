@@ -20,7 +20,7 @@ class LeadCaptureFactory extends Factory
 
         return [
             'status_id'   => $statusId,
-            'campaign_id' => Campaign::factory(), // auto create campaign and link it
+            'campaign_id' => $this->faker->randomElement(Campaign::pluck('id')->toArray()),
             'name'        => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(),
         ];

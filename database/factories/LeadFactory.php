@@ -1,8 +1,10 @@
 <?php
 namespace Database\Factories;
 
+use App\Models\Source;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Modules\Lead\Models\Lead;
+use App\Modules\LeadCapture\Models\LeadCapture;
 
 class LeadFactory extends Factory
 {
@@ -17,8 +19,8 @@ class LeadFactory extends Factory
     {
         return [
             'uuid'            => $this->faker->uuid(),
-            'source_id' => $this->faker->numberBetween(1, 17),
-            'lead_capture_id' => $this->faker->numberBetween(1, 5),
+            'source_id' => $this->faker->randomElement(Source::pluck('id')->toArray()),
+            'lead_capture_id' => $this->faker->randomElement(LeadCapture::pluck('id')->toArray()),
             'name'            => $this->faker->name(),
             'email'           => $this->faker->safeEmail(),
             'phone'           => $this->faker->phoneNumber(),
