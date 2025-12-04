@@ -65,7 +65,7 @@
             <div class="card-body">
               <!-- Logo -->
               <div class="app-brand justify-content-center mb-4 mt-2">
-                <a href="#" class="app-brand-link">
+                <a href="{{ route('login') }}" class="app-brand-link">
                   <span class="app-brand-logo demo">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                   </span>

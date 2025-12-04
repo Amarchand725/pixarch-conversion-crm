@@ -3,6 +3,7 @@
 namespace App\Modules\User\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Models\Status;
 use Spatie\Permission\Models\Role;
 use App\Modules\User\Http\Requests\UserRequest;
 use App\Models\User;
@@ -13,12 +14,13 @@ use Illuminate\Http\Request;
 class UserController extends BaseModuleController
 {
     protected $roleRepo;
+    protected $status;
 
     public function __construct(
         protected UserContract $userRepo
     ){
         $this->roleRepo = new Role();
-
+        $this->status = new Status();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -74,6 +76,7 @@ class UserController extends BaseModuleController
 
     public function create()
     {
+        $statuses = $this->status->where('model', 'User')->get();
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
@@ -97,6 +100,7 @@ class UserController extends BaseModuleController
 
     public function edit(User $user)
     {
+        $statuses = $this->status->where('model', 'User')->get();
         $model = $this->userRepo->showModel($user);
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());

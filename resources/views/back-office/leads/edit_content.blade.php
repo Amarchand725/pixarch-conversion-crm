@@ -80,7 +80,7 @@
         <select name="status_id" id="status_id" class="select2 form-select status_id">
             <option value="">Select Stage</option>
             @foreach($stages as $stage)
-                <option value="{{$stage?->uuid}}" {{ $model?->lastStatusLog?->status?->id==$stage->id ? 'selected' : '' }}>{{$stage->name ?? '-'}}</option>
+                <option value="{{$stage?->uuid}}" {{ $model?->lastStatusLog?->status?->id==$stage->id ? 'selected' : '' }}>{{ ucfirst($stage->name ?? '-')}}</option>
             @endforeach
         </select>
         <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
@@ -105,7 +105,7 @@
         <select name="assignee_id" id="assignee_id" class="select2 form-select">
             <option value="">Select Status</option>
             @foreach($agents as $agent)
-                <option value="{{ $agent?->uuid }}" {{ $assignee->id==$agent->id ? 'selected' : '' }}>{{ $agent->name  }}</option>
+                <option value="{{ $agent?->uuid }}" {{ $assignee->id==$agent->id ? 'selected' : '' }}>{{ $agent->name  }} ({{ $agent->email }})</option>
             @endforeach
         </select>
         <span id="assignee_id_error" class="text-danger error">{{ $errors->first('assignee_id') }}</span>

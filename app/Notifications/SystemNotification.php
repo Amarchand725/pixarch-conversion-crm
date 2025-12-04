@@ -44,16 +44,25 @@ class SystemNotification extends Notification implements ShouldQueue
         //         'extra' => $this->extra,
         //     ]);
 
-        return (new MailMessage)
-            ->subject($this->title)
-            ->markdown('emails.system_notification', [
-                'title' => $this->title,
-                'message' => $this->message,
-                'url' => $this->url,
-                'type' => $this->type,
-                'extra' => $this->extra,
-            ]);
+        // return (new MailMessage)
+        //     ->subject($this->title)
+        //     ->markdown('emails.system_notification', [
+        //         'title' => $this->title,
+        //         'message' => $this->message,
+        //         'url' => $this->url,
+        //         'type' => $this->type,
+        //         'extra' => $this->extra,
+        //     ]);
 
+        $mail = (new MailMessage)
+                ->subject($this->title)
+                ->line($this->message);
+
+            if ($this->url) {
+                $mail->action('View', $this->url);
+            }
+
+            return $mail->line('Thank you for using our application!');
     }
 
     public function toDatabase($notifiable)

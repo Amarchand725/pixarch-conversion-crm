@@ -33,7 +33,7 @@
                     <label for="assignee_id" class="form-label">Lead Assignee</label>
                     <select class="form-select" name="assignee_id">
                         @foreach ($agents as $agent)
-                            <option value="{{ $agent->uuid }}" {{ $lead?->assignees->first()->id==$agent->id ? "selected" : '' }}>{{ $agent->name }}</option>
+                            <option value="{{ $agent->uuid }}" {{ $lead?->assignees->first()->id==$agent->id ? "selected" : '' }}>{{ $agent->name }} ({{ $agent->email }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -63,7 +63,7 @@
                     <select class="form-select" name="attendee_id">
                         <option value="">Select meeting attendee</option>
                         @foreach ($agents as $attendee)
-                            <option value="{{ $attendee->uuid }}" {{ $meeting?->attendees->first()->id==$attendee->id ? 'selected' : '' }}>{{ $attendee->name }}</option>
+                            <option value="{{ $attendee->uuid }}" {{ $meeting?->attendees->first()->id==$attendee->id ? 'selected' : '' }}>{{ $attendee->name }} ({{ $attendee->email }})</option>
                         @endforeach
                     </select>
                 </div>
@@ -87,3 +87,10 @@
         </div>
     </div>
 </div>
+<script>
+    $('select').each(function () {
+        $(this).select2({
+            dropdownParent: $(this).parent(),
+        });
+    });
+</script>

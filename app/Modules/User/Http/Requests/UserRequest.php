@@ -3,6 +3,7 @@
 namespace App\Modules\User\Http\Requests;
 
 use App\Enum\GenderEnum;
+use App\Models\Status;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,6 +19,7 @@ class UserRequest extends FormRequest
         $user = $this->route('user');
 
         return [
+            'status_id' => ['nullable', 'exists:statuses,id'],
             'name' => ['required', 'string', 'max:255'],
             'phone'    => [
                 'nullable',
@@ -38,5 +40,14 @@ class UserRequest extends FormRequest
             ],
             'avatar' => [ 'nullable'],
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('status_id')) {
+            $this->merge([
+                'status_id' => Status::where('uuid', $this->input('status_id'))->value('id')
+            ]);
+        }
     }
 }
