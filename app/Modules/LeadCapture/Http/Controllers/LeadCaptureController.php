@@ -33,7 +33,7 @@ class LeadCaptureController extends BaseModuleController
             'name'      => ['label' => 'name', 'searchable' => 'name'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
-            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 

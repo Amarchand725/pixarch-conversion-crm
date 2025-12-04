@@ -41,12 +41,12 @@ class LeadController extends BaseModuleController
         $statusLeads = $this->leadRepo->getAllCollection();
 
         $columns = [
-            'assigned_to' => ['label' => 'Assigned Agent', 'html' => true, 'searchable' => false],
+            'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
             'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
             'value' => ['label' => 'Value', 'searchable' => 'value'],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
-            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 

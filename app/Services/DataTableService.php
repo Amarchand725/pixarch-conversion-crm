@@ -43,6 +43,15 @@ class DataTableService
         $dt = DataTables::of($this->model);
 
         foreach ($this->columns as $key => $meta) {
+            // 🔥 Format created_at manually
+            if ($key === 'created_at') {
+                $dt->editColumn('created_at', function ($row) {
+                    return $row->created_at
+                        ? $row->created_at->format('d M Y | h:i A')
+                        : null;
+                });
+                continue;
+            }
             if (!empty($meta['db'])) {
                 $dt->editColumn($key, fn($row) => $row->$key);
             } elseif (!empty($meta['html'])) {

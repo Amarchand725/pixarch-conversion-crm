@@ -31,7 +31,7 @@ class RoleController extends BaseModuleController
         $columns = [
             'name'       => ['label' => 'Role Name', 'searchable' => 'name'],
             'guard_name'      => ['label' => 'Guard Name', 'searchable' => 'guard_name'],
-            'created_at' => ['label' => 'Created', 'searchable' => 'created_at'],
+            'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
