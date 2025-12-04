@@ -44,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
             ->group(function () {
                 Route::as('users.')->prefix('users')->group(base_path('routes/back-office/user.php'));
                 Route::as('campaigns.')->prefix('campaigns')->group(base_path('routes/back-office/campaign.php'));
-                Route::as('lead-capture.')->prefix('lead-capture')->group(base_path('routes/back-office/lead-capture.php'));
+                Route::as('lead-captures.')->prefix('lead-captures')->group(base_path('routes/back-office/lead-capture.php'));
                 Route::as('leads.')->prefix('leads')->group(base_path('routes/back-office/lead.php'));
                 Route::as('roles.')->prefix('roles')->group(base_path('routes/back-office/role.php'));
                 Route::as('auth.')->prefix('auth')->group(base_path('routes/back-office/auth.php'));

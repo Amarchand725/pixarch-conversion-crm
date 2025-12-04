@@ -42,4 +42,9 @@ class LeadCapture extends Model
     {
         return \Database\Factories\LeadCaptureFactory::new();
     }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class, 'status_id');
+    }
 }

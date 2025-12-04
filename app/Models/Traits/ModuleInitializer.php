@@ -22,8 +22,9 @@ trait ModuleInitializer
         $this->routePrefix = 'back-office.' . Str::plural($this->prefix);
         $this->pathInitialize = $this->routePrefix;
         $this->permissionPrefix = Str::snake($this->prefix);
-        $this->singularLabel = Str::ucfirst($this->prefix);
-        $this->pluralLabel = Str::ucfirst(Str::plural($this->prefix)) . ' List';
+        $cleanPrefix = Str::of($this->prefix)->replace('-', ' ')->trim();
+        $this->singularLabel = Str::ucfirst($cleanPrefix);
+        $this->pluralLabel = Str::ucfirst(Str::plural($cleanPrefix)) . ' List';
     }
 
     /**
