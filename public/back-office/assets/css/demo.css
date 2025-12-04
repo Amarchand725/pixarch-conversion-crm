@@ -18,13 +18,15 @@
   justify-content: center;
   display: -ms-flexbox;
   display: flex;
-  width: 34px;
-  height: 24px;
+  width: 95px;
+  height: 38px;
 }
 
 .app-brand-logo.demo svg {
-  width: 35px;
-  height: 24px;
+  /* width: 35px;
+  height: 24px; */
+  width: 95px;
+  height: 38px;
 }
 
 .app-brand-text.demo {

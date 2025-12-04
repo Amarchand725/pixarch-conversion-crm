@@ -4,7 +4,7 @@
             <span class="app-brand-logo demo">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </span>
-            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', '100 KEYS UAE') }}</span>
+            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', '100KEYS UAE') }}</span>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">

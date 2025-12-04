@@ -21,10 +21,10 @@ trait ModuleInitializer
         $this->prefix = Str::kebab($name);
         $this->routePrefix = 'back-office.' . Str::plural($this->prefix);
         $this->pathInitialize = $this->routePrefix;
-        $this->permissionPrefix = Str::snake($this->prefix);
+        $this->permissionPrefix = Str::snake($name);
         $cleanPrefix = Str::of($this->prefix)->replace('-', ' ')->trim();
-        $this->singularLabel = Str::ucfirst($cleanPrefix);
-        $this->pluralLabel = Str::ucfirst(Str::plural($cleanPrefix)) . ' List';
+        $this->singularLabel = Str::title($cleanPrefix);
+        $this->pluralLabel = Str::title(Str::plural($cleanPrefix)) . ' List';
     }
 
     /**

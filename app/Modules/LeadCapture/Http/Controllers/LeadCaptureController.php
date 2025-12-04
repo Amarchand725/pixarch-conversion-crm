@@ -3,6 +3,7 @@
 namespace App\Modules\LeadCapture\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Models\Status;
 use App\Modules\LeadCapture\Http\Requests\LeadCaptureRequest;
 use App\Modules\LeadCapture\Models\LeadCapture;
 use App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract;
@@ -12,9 +13,12 @@ use Illuminate\Http\Request;
 
 class LeadCaptureController extends BaseModuleController
 {
+    protected $status;
+
     public function __construct(
         protected LeadCaptureContract $leadCaptureRepo
     ){
+        $this->status = new Status();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -63,6 +67,7 @@ class LeadCaptureController extends BaseModuleController
 
     public function create()
     {
+        $statuses = $this->status->where('model', 'LeadCapture')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
@@ -85,6 +90,7 @@ class LeadCaptureController extends BaseModuleController
 
     public function edit(LeadCapture $leadCapture)
     {
+        $statuses = $this->status->where('model', 'LeadCapture')->get();
         $model = $this->leadCaptureRepo->showModel($leadCapture);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
