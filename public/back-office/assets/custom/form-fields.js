@@ -16,11 +16,11 @@ function renderField(field = {}) {
     <div class="card p-3 mb-3 border field-item">
       <div class="row g-3">
         <div class="col-md-3">
-          <label class="form-label fw-bold">Label</label>
-          <input type="text" name="fields[${index}][label]" class="form-control" placeholder="Full Name" value="${label}" required>
+          <label class="form-label fw-bold">Label <span class="text-danger">*</span></label>
+          <input type="text" name="fields[${index}][label]" class="form-control" placeholder="Full Name" value="${label}">
         </div>
         <div class="col-md-3">
-          <label class="form-label fw-bold">Type</label>
+          <label class="form-label fw-bold">Type <span class="text-danger">*</span></label>
           <select name="fields[${index}][type]" class="form-select field-type" data-index="${index}">
             <option value="text" ${type=='text' ? 'selected' : ''}>Text</option>
             <option value="email" ${type=='email' ? 'selected' : ''}>Email</option>
@@ -35,7 +35,7 @@ function renderField(field = {}) {
           <input type="text" name="fields[${index}][placeholder]" class="form-control" placeholder="Write here..." value="${placeholder}">
         </div>
         <div class="col-md-2">
-          <label class="form-label fw-bold">Required</label>
+          <label class="form-label fw-bold">Required <span class="text-danger">*</span></label>
           <select name="fields[${index}][required]" class="form-select">
             <option value="0" ${required==0 ? 'selected' : ''}>No</option>
             <option value="1" ${required==1 ? 'selected' : ''}>Yes</option>
@@ -76,7 +76,7 @@ $(document).on('click', '#add-field', function () {
 
 // Initialize existing fields if editing
 $(document).ready(function() {
-    if (typeof existingFields !== 'undefined' && Array.isArray(existingFields)) {
-        existingFields.forEach(field => renderField(field));
-    }
+  if (typeof existingFields !== 'undefined' && Array.isArray(existingFields)) {
+    existingFields.forEach(field => renderField(field));
+  }
 });

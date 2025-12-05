@@ -4,6 +4,7 @@ namespace App\Modules\LeadCapture\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Models\Status;
+use App\Modules\Campaign\Models\Campaign;
 use App\Modules\LeadCapture\Http\Requests\LeadCaptureRequest;
 use App\Modules\LeadCapture\Models\LeadCapture;
 use App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract;
@@ -14,11 +15,13 @@ use Illuminate\Http\Request;
 class LeadCaptureController extends BaseModuleController
 {
     protected $status;
+    protected $campaigns;
 
     public function __construct(
         protected LeadCaptureContract $leadCaptureRepo
     ){
         $this->status = new Status();
+        $this->campaigns = new Campaign();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -70,6 +73,8 @@ class LeadCaptureController extends BaseModuleController
 
     public function create()
     {
+        $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
+        $campaigns = $this->campaigns->where('status_id', $status_id)->get();
         $statuses = $this->status->where('model', 'LeadCapture')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
@@ -77,6 +82,7 @@ class LeadCaptureController extends BaseModuleController
     public function store(LeadCaptureRequest $request)
     {
         $payload = $request->validated();
+        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
@@ -93,6 +99,8 @@ class LeadCaptureController extends BaseModuleController
 
     public function edit(LeadCapture $leadCapture)
     {
+        $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
+        $campaigns = $this->campaigns->where('status_id', $status_id)->get();
         $statuses = $this->status->where('model', 'LeadCapture')->get();
         $model = $this->leadCaptureRepo->showModel($leadCapture);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());

@@ -15,7 +15,7 @@ class LeadCapture extends Model
 {
     use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
 
-    protected $fillable = ['status_id', 'name', 'fields'];
+    protected $fillable = ['status_id', 'campaign_id', 'name', 'description'];
 
     protected static function booted()
     {
@@ -52,5 +52,10 @@ class LeadCapture extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function fields()
+    {
+        return $this->hasMany(CaptureFormField::class, 'lead_capture_id');
     }
 }
