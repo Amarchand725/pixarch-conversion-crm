@@ -15,7 +15,7 @@ class Campaign extends Model
 {
     use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
 
-    protected $fillable = ['status_id', 'lead_capture_id', 'name', 'description'];
+    protected $fillable = ['status_id', 'lead_capture_id', 'name', 'type', 'budget', 'start_date', 'end_date', 'description'];
 
     protected static function booted()
     {

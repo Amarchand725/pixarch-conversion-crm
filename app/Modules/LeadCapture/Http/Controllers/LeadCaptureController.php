@@ -78,7 +78,6 @@ class LeadCaptureController extends BaseModuleController
     {
         $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
         $campaigns = $this->campaigns->where('status_id', $status_id)->get();
-        $statuses = $this->status->where('model', 'LeadCapture')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 

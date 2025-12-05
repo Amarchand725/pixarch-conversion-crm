@@ -20,8 +20,8 @@ class CampaignRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'type' => ['nullable', Rule::in(campaignTypes())],
             'budget'    => [ 'nullable'],
-            'start_date_time' => ['nullable', 'date', 'date_format:Y-m-d\TH:i'],
-            'end_date_time'   => ['nullable', 'date', 'date_format:Y-m-d\TH:i', 'after_or_equal:start_date_time'],
+            'start_date' => ['nullable', 'date', 'date_format:Y-m-d'],
+            'end_date'   => ['nullable', 'date', 'date_format:Y-m-d', 'after_or_equal:start_date'],
             'description' => ['nullable', 'string'],
         ];
     }

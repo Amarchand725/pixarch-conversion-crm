@@ -124,18 +124,6 @@
                 style="width: 80px; height: 80px; object-fit: cover; display: none;">
         </div>
     </div>
-    <div class="col-12 col-md-12">
-        <label for="status_id" class="form-label fw-semibold">
-            Status
-        </label>
-        <select id="status_id" name="status_id" class="form-select">
-            <option value="">Select status</option>
-            @foreach ($statuses as $status)
-                <option value="{{ $status->uuid }}">{{ ucfirst($status->name) }}</option>
-            @endforeach
-        </select>
-        <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
-    </div>
 </div>
 
 <script>

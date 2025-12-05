@@ -76,7 +76,6 @@ class UserController extends BaseModuleController
 
     public function create()
     {
-        $statuses = $this->status->where('model', 'User')->get();
         $roles = $this->roleRepo->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }

@@ -69,7 +69,6 @@ class CampaignController extends BaseModuleController
 
     public function create()
     {
-        $statuses = $this->status->where('model', 'Campaign')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
