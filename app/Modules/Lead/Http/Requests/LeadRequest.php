@@ -38,6 +38,11 @@ class LeadRequest extends FormRequest
             'status_id' => ['nullable', 'exists:statuses,id'],
             'assignee_id' => ['nullable', 'exists:users,id'],
             'status' => ['nullable', Rule::in(statuses())],
+
+            'fields' => ['nullable', 'array'],
+
+            // Dynamic Field Validations
+            'fields.*' => ['nullable'],
         ];
     }
 

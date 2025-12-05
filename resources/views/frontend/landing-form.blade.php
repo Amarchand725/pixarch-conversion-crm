@@ -1,116 +1,130 @@
 @extends('frontend.layouts.app')
 @section('title', ($title ?? '').' - '. config('app.name', '100Keys UAE'))
-
+@push('css')
+    <style>
+        .btn-primary {
+            background: linear-gradient(90deg, #5a8dee, #36a3f7);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .form-control:focus {
+            border-color: #36a3f7;
+            box-shadow: 0 0 0 0.2rem rgba(54, 163, 247, 0.25);
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card">
-            <!-- Pricing Plans -->
-            <div class="pb-sm-5 pb-2 rounded-top">
+            <div class="pb-5 rounded-top bg-light">
                 <div class="container py-5">
-                    <!-- Application Logo & Name -->
-                    <div class="app-brand text-center mb-4 mt-2">
-                        <a href="{{ route('lead-capture.public', $model->uuid) }}" class="d-inline-flex flex-column align-items-center text-decoration-none">
-                            <!-- Logo with subtle animation -->
-                            <span class="app-brand-logo mb-2 animate-bounce">
-                                <x-application-logo class="w-24 h-24 fill-current text-primary" />
-                            </span>
 
-                            <!-- App Name -->
-                            <span class="app-brand-text fw-bold fs-4 text-dark">
-                                {{ config('app.name', 'Laravel') }}
+                    <!-- Application Logo & Name -->
+                    <div class="text-center mb-5">
+                        <a href="{{ route('lead-capture.public', $model->uuid) }}" class="d-inline-flex flex-column align-items-center text-decoration-none">
+                            <span class="app-brand-logo mb-3 animate-bounce">
+                                <x-application-logo class="w-28 h-28 fill-current text-primary" />
                             </span>
+                            <span class="fw-bold fs-3 text-dark">{{ config('app.name', 'Laravel') }}</span>
                         </a>
                     </div>
 
-                    <h2 class="text-center mb-3 mt-0 mt-md-4 fw-semibold">
-                        {{ $model->name }}
-                    </h2>
-                    <p class="text-center">
-                        {{ $model->description ?? '' }}
-                    </p>
-                    <div class="row mx-0 gy-3 px-lg-5">
-                        <form action="{{ route('lead-capture.store', $model->uuid) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form" data-modal-id="create-pop-up-modal-for-file" enctype="multipart/form-data">
+                    <!-- Form Card -->
+                    <div class="card shadow-sm border-0 p-4 mx-auto" style="max-width: 900px;">
+                        <h2 class="text-center fw-semibold mb-3">{{ $model->name }}</h2>
+                        <p class="text-center text-muted mb-4">{{ $model->description ?? '' }}</p>
+
+                        <form action="{{ route('lead-capture.store', $model->uuid) }}" method="POST" class="row g-3 needs-validation" id="create-form" enctype="multipart/form-data" novalidate>
                             @csrf
 
-                            @foreach($model->fields as $field)
-                                <div class="col-12 mb-3">
-                                    <label class="form-label fw-semibold" for="{{ $field->name }}">
-                                        {{ ucfirst($field->label) }}
-                                        @if($field->required)
-                                            <span class="text-danger">*</span>
-                                        @endif
+                            <!-- Default Fields -->
+                            @foreach (['name','phone','email','value'] as $fieldKey)
+                                @php
+                                    $label = ucfirst($fieldKey);
+                                    $type = $fieldKey === 'value' ? 'number' : ($fieldKey === 'email' ? 'email' : ($fieldKey === 'phone' ? 'tel' : 'text'));
+                                    $placeholder = "Enter $label";
+                                    $value = old($fieldKey);
+                                @endphp
+
+                                <div class="col-md-6">
+                                    <label for="{{ $fieldKey }}" class="form-label fw-semibold">
+                                        {{ $label }}
+                                        @if($fieldKey === 'name') <span class="text-danger">*</span> @endif
                                     </label>
 
-                                    @php
-                                        $value = old($field->name, $field->value ?? '');
-                                    @endphp
+                                    @if($type === 'tel')
+                                        <input
+                                            type="tel"
+                                            id="{{ $fieldKey }}"
+                                            name="{{ $fieldKey }}"
+                                            class="form-control phoneNumber shadow-sm"
+                                            placeholder="{{ $placeholder }}"
+                                            value="{{ $value }}"
+                                            @if($fieldKey==='name') required @endif
+                                        />
+                                    @else
+                                        <input
+                                            type="{{ $type }}"
+                                            id="{{ $fieldKey }}"
+                                            name="{{ $fieldKey }}"
+                                            class="form-control shadow-sm"
+                                            placeholder="{{ $placeholder }}"
+                                            value="{{ $value }}"
+                                            @if($fieldKey==='name') required @endif
+                                        />
+                                    @endif
 
-                                    @if(in_array($field->type, ['text', 'email', 'number']))
-                                        <input
-                                            type="{{ $field->type }}"
-                                            class="form-control"
-                                            id="{{ $field->name }}"
-                                            name="{{ $field->name }}"
-                                            placeholder="{{ $field->placeholder ?? '' }}"
-                                            value="{{ $value }}"
-                                        />
-                                    @elseif($field->type === 'tel')
-                                        <input
-                                            type="{{ $field->type }}"
-                                            class="form-control phoneNumber"
-                                            id="{{ $field->name }}"
-                                            name="{{ $field->name }}"
-                                            value="{{ $value }}"
-                                            placeholder="(999) - 12345678"
-                                        />
-                                    @elseif($field->type === 'textarea')
-                                        <textarea
-                                            class="form-control"
-                                            id="{{ $field->name }}"
-                                            name="{{ $field->name }}"
-                                            placeholder="{{ $field->placeholder ?? '' }}"
-                                        >{{ $value }}</textarea>
-                                    @elseif($field->type === 'file')
-                                        <input
-                                            type="file"
-                                            class="form-control"
-                                            id="{{ $field->name }}"
-                                            name="{{ $field->name }}"
-                                        />
-                                    @elseif($field->type === 'select')
-                                        <select
-                                            name="{{ $field->name }}"
-                                            id="{{ $field->name }}"
-                                            class="form-select select2"
-                                        >
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first($fieldKey) ?? "Please enter $label." }}
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            <!-- Dynamic Fields -->
+                            @foreach($model->fields as $key=>$field)
+                                @php
+                                    $value = old($field->name, $field->value ?? '');
+                                @endphp
+                                <div class="col-md-6">
+                                    <label for="{{ $field->name }}" class="form-label fw-semibold">{{ ucfirst($field->label) }} @if($field->required)<span class="text-danger">*</span>@endif</label>
+
+                                    @if(in_array($field->type, ['text','email','number']))
+                                        <input type="{{ $field->type }}" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" placeholder="{{ $field->placeholder ?? '' }}" value="{{ $value }}" @if($field->required) required @endif />
+                                    @elseif($field->type==='tel')
+                                        <input type="tel" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control phoneNumber shadow-sm" value="{{ $value }}" placeholder="(999) - 12345678" @if($field->required) required @endif />
+                                    @elseif($field->type==='textarea')
+                                        <textarea id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" placeholder="{{ $field->placeholder ?? '' }}" @if($field->required) required @endif>{{ $value }}</textarea>
+                                    @elseif($field->type==='file')
+                                        <input type="file" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" @if($field->required) required @endif />
+                                    @elseif($field->type==='select')
+                                        <select id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-select form-select-lg shadow-sm select2" @if($field->required) required @endif>
                                             <option value="">Select {{ $field->label }}</option>
                                             @if(!empty($field->options))
                                                 @foreach(explode(',', $field->options) as $option)
-                                                    <option value="{{ trim($option) }}" {{ trim($option) == $value ? 'selected' : '' }}>
-                                                        {{ trim($option) }}
-                                                    </option>
+                                                    <option value="{{ trim($option) }}" {{ trim($option)==$value ? 'selected' : '' }}>{{ trim($option) }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
                                     @endif
+
+                                    <div class="invalid-feedback">Please enter {{ strtolower($field->label) }}.</div>
                                 </div>
                             @endforeach
 
-                            <div class="col-12 mt-3 action-btn">
-                                <div class="demo-inline-spacing sub-btn">
-                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                    <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                        Cancel
-                                    </button>
-                                </div>
-                                <div class="demo-inline-spacing loading-btn" style="display: none;">
-                                    <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
-                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                    Loading...
-                                    </button>
-                                    <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                        Cancel
-                                    </button>
+                            <!-- Submit Buttons -->
+                            <div class="col-12 mt-4 d-flex flex-wrap justify-content-start gap-3 align-items-center">
+                                <button type="submit" class="btn btn-primary btn-lg px-4 shadow-sm">Submit</button>
+                                <button type="reset" class="btn btn-outline-secondary btn-lg px-4">Cancel</button>
+                                <div class="spinner-border text-primary ms-2 d-none" id="loading-spinner" role="status">
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
                         </form>
@@ -180,4 +194,20 @@
             });
         });
     </script>
+    <!-- Optional: Client-side Bootstrap validation -->
+    {{-- <script>
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+    </script> --}}
 @endpush
