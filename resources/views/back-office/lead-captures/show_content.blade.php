@@ -1,7 +1,26 @@
 <table class="table table-flush-spacing">
     <tr>
-        <td class="text-nowrap fw-semibold">Name</td>
+        <td class="text-nowrap fw-semibold">Campaign Name</td>
+        <td>{{ ucfirst($model?->campaign?->name ?? '-') }}</td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Lead Capture Form Name</td>
         <td>{{ $model->name ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Shareable Link</td>
+        <td class="d-flex align-items-center">
+            <input 
+                type="text" 
+                id="shareableLink" 
+                value="{{ $model->shareable_link ?? '' }}" 
+                class="form-control form-control-sm me-2" 
+                readonly
+            />
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyLink()">
+                Copy
+            </button>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Status</td>
@@ -32,3 +51,16 @@
         </tr>
     @endif
 </table>
+
+<script>
+    function copyLink() {
+        const copyText = document.getElementById('shareableLink');
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // for mobile devices
+        navigator.clipboard.writeText(copyText.value).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(() => {
+            alert('Failed to copy link.');
+        });
+    }
+</script>

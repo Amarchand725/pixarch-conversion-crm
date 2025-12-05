@@ -162,6 +162,15 @@ class RolePermissionSeeder extends Seeder
             'lead_capture-delete',
             'lead_capture-restore',
             'lead_capture-status',
+
+            //Faq management
+            'faq-list',
+            'faq-create',
+            'faq-view',
+            'faq-edit',
+            'faq-delete',
+            'faq-restore',
+            'faq-status',
         ];
 
         return $generalPermissions;

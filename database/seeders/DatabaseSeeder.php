@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CampaignSeeder::class,
             LeadCaptureSeeder::class,
             LeadSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

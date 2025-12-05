@@ -1,27 +1,20 @@
 <?php
 
-namespace App\Modules\LeadCapture\Http\Controllers;
+namespace App\Modules\Faq\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
-use App\Models\Status;
-use App\Modules\Campaign\Models\Campaign;
-use App\Modules\LeadCapture\Http\Requests\LeadCaptureRequest;
-use App\Modules\LeadCapture\Models\LeadCapture;
-use App\Modules\LeadCapture\Repositories\Contracts\LeadCaptureContract;
+use App\Modules\Faq\Repositories\Contracts\FaqContract;
+use App\Modules\Faq\Http\Requests\FaqRequest;
+use App\Modules\Faq\Models\Faq;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class LeadCaptureController extends BaseModuleController
+class FaqController extends BaseModuleController
 {
-    protected $status;
-    protected $campaigns;
-
     public function __construct(
-        protected LeadCaptureContract $leadCaptureRepo
+        protected FaqContract $faqRepo
     ){
-        $this->status = new Status();
-        $this->campaigns = new Campaign();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -29,19 +22,19 @@ class LeadCaptureController extends BaseModuleController
     public function index(Request $request)
     {
         $permissionPrefix = $this->permissionPrefix;
-        $routeInitialize = $this->routePrefix;
-        $singularLabel = $this->singularLabel;
+        $routeInitialize  = $this->routePrefix;
+        $singularLabel    = $this->singularLabel;
 
         $columns = [
-            'campaign_id'      => ['label' => 'Campaign Name', 'searchable' => 'campaigns.name'],
-            'name'      => ['label' => 'Capture Form Name', 'searchable' => 'name'],
+            'question'      => ['label' => 'Question', 'searchable' => 'question'],
+            'answer'     => ['label' => 'Answer', 'searchable' => 'answer'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        $query = $this->leadCaptureRepo->getAll();
+        $query = $this->faqRepo->getAll();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,
@@ -52,12 +45,6 @@ class LeadCaptureController extends BaseModuleController
                             . strtoupper($status) .
                             '</span>';
 
-                $author = $row->author ?? '-';
-                if($author != '-') {
-                    $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
-                }else{
-                    $row->author_id = $author;
-                }
                 $row->action = view('back-office.partials.action-buttons', [
                     'model'            => $row,
                     'permissionPrefix' => $permissionPrefix,
@@ -65,7 +52,6 @@ class LeadCaptureController extends BaseModuleController
                     'singularLabel'    => $singularLabel,
                 ])->render();
 
-                $row->campaign_id = $row->campaign?->name ?? '-';
                 return $row;
             }
         );
@@ -77,22 +63,19 @@ class LeadCaptureController extends BaseModuleController
         return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
 
+
     public function create()
     {
-        $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
-        $campaigns = $this->campaigns->where('status_id', $status_id)->get();
-        $statuses = $this->status->where('model', 'LeadCapture')->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
-    public function store(LeadCaptureRequest $request)
+    public function store(FaqRequest $request)
     {
         $payload = $request->validated();
-        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
-                $this->leadCaptureRepo->storeModel($payload);
+                $this->faqRepo->storeModel($payload);
             });
             return successResponse($response, $this->singularLabel. ' registered successfully.');
         } catch (Exception $e) {
@@ -103,24 +86,21 @@ class LeadCaptureController extends BaseModuleController
         }
     }
 
-    public function edit(LeadCapture $leadCapture)
+    public function edit(Faq $faq)
     {
-        $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
-        $campaigns = $this->campaigns->where('status_id', $status_id)->get();
-        $statuses = $this->status->where('model', 'LeadCapture')->get();
-        $model = $this->leadCaptureRepo->showModel($leadCapture);
+        $model = $this->faqRepo->showModel($faq);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
-    public function update(LeadCaptureRequest $request, LeadCapture $leadCapture)
+    public function update(FaqRequest $request, Faq $faq)
     {
         $payload = $request->validated();
         try {
             $response = null;
-            DB::transaction(function () use (&$response, $payload, $leadCapture) {
-                $this->leadCaptureRepo->updateModel($leadCapture, $payload);
+            DB::transaction(function () use (&$response, $payload, $faq) {
+                $this->faqRepo->updateModel($faq, $payload);
             });
-            return successResponse($response, $this->singularLabel. ' updated successfully.');
+            return successResponse([], $this->singularLabel. ' updated successfully.');
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -129,16 +109,16 @@ class LeadCaptureController extends BaseModuleController
         }
     }
 
-    public function show(LeadCapture $leadCapture)
+    public function show(Faq $faq)
     {
-        $model = $this->leadCaptureRepo->showModel($leadCapture);
+        $model = $this->faqRepo->showModel($faq);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
-    public function destroy(LeadCapture $leadCapture)
+    public function destroy(Faq $faq)
     {
         try {
-            if($this->leadCaptureRepo->softDeleteModel($leadCapture)) {
+            if($this->faqRepo->softDeleteModel($faq)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'
@@ -157,10 +137,10 @@ class LeadCaptureController extends BaseModuleController
         }
     }
 
-    public function restore(LeadCapture $leadCapture)
+    public function restore(Faq $faq)
     {
         try {
-            if($this->leadCaptureRepo->restoreModel($leadCapture)) {
+            if($this->faqRepo->restoreModel($faq)) {
                 return redirect()->back()->with('message', 'Record Restored Successfully.');
             } else {
                 return false;
@@ -173,10 +153,10 @@ class LeadCaptureController extends BaseModuleController
         }
     }
 
-    public function forceDelete(LeadCapture $leadCapture)
+    public function forceDelete(Faq $faq)
     {
         try {
-            if ($this->leadCaptureRepo->permanentlyDeleteModel($leadCapture)) {
+            if ($this->faqRepo->permanentlyDeleteModel($faq)) {
                 return response()->json([
                     'status' => true,
                     'message' => $this->singularLabel.' Deleted Successfully'
@@ -198,8 +178,8 @@ class LeadCaptureController extends BaseModuleController
     public function bulkDelete()
     {
         try {
-            $this->leadCaptureRepo->bulkDelete();
-            return redirect()->route(strtolower('lead_captures.index'))->with('success', 'Bulk delete successful.');
+            $this->faqRepo->bulkDelete();
+            return redirect()->route(strtolower('faqs.index'))->with('success', 'Bulk delete successful.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -208,8 +188,8 @@ class LeadCaptureController extends BaseModuleController
     public function bulkRestore()
     {
         try {
-            $this->leadCaptureRepo->bulkRestore();
-            return redirect()->route(strtolower('lead_captures.index'))->with('success', 'Bulk restore successful.');
+            $this->faqRepo->bulkRestore();
+            return redirect()->route(strtolower('faqs.index'))->with('success', 'Bulk restore successful.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }

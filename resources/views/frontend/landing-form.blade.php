@@ -130,105 +130,39 @@
                 <div class="row mx-4">
                     <div class="col-12">
                         <div id="faq" class="accordion accordion-without-arrow">
-                            <div class="card accordion-item">
-                            <h6 class="accordion-header">
-                                <button
-                                class="accordion-button"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                aria-expanded="true"
-                                data-bs-target="#faq-1"
-                                aria-controls="faq-1"
-                                >
-                                What counts towards the 100 responses limit?
-                                </button>
-                            </h6>
+                            @if($faqs->count())
+                                <div class="accordion" id="faqAccordion">
+                                    @foreach($faqs as $index => $faq)
+                                        <div class="card accordion-item">
+                                            <h6 class="accordion-header" id="heading-{{ $index }}">
+                                                <button
+                                                    class="accordion-button {{ $index != 0 ? 'collapsed' : '' }}"
+                                                    type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#collapse-{{ $index }}"
+                                                    aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
+                                                    aria-controls="collapse-{{ $index }}"
+                                                >
+                                                    {{ $faq->question }}
+                                                </button>
+                                            </h6>
 
-                            <div id="faq-1" class="accordion-collapse collapse show" data-bs-parent="#faq">
-                                <div class="accordion-body">
-                                We count all responses submitted through all your forms in a month. If you already
-                                received 100 responses this month, you won’t be able to receive any more of them until
-                                next month when the counter resets.
+                                            <div
+                                                id="collapse-{{ $index }}"
+                                                class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}"
+                                                aria-labelledby="heading-{{ $index }}"
+                                                data-bs-parent="#faqAccordion"
+                                            >
+                                                <div class="accordion-body">
+                                                    {!! nl2br(e($faq->answer)) !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
-                            </div>
-                            </div>
-
-                            <div class="card accordion-item">
-                            <h6 class="accordion-header">
-                                <button
-                                class="accordion-button collapsed"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#faq-2"
-                                aria-expanded="false"
-                                aria-controls="faq-2"
-                                >
-                                How do you process payments?
-                                </button>
-                            </h6>
-                            <div id="faq-2" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">
-                                We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident
-                                that your credit card information will be kept safe and secure.
-                                </div>
-                            </div>
-                            </div>
-
-                            <div class="card accordion-item">
-                            <h6 class="accordion-header">
-                                <button
-                                class="accordion-button collapsed"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#faq-3"
-                                aria-expanded="false"
-                                aria-controls="faq-3"
-                                >
-                                What payment methods do you accept?
-                                </button>
-                            </h6>
-                            <div id="faq-3" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">2Checkout accepts all types of credit and debit cards.</div>
-                            </div>
-                            </div>
-
-                            <div class="card accordion-item">
-                            <h6 class="accordion-header">
-                                <button
-                                class="accordion-button collapsed"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#faq-4"
-                                aria-expanded="false"
-                                aria-controls="faq-4"
-                                >
-                                Do you have a money-back guarantee?
-                                </button>
-                            </h6>
-                            <div id="faq-4" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">
-                                Yes. You may request a refund within 30 days of your purchase without any additional
-                                explanations.
-                                </div>
-                            </div>
-                            </div>
-
-                            <div class="card accordion-item mb-0 mb-md-4">
-                            <h6 class="accordion-header">
-                                <button
-                                class="accordion-button collapsed"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#faq-5"
-                                aria-expanded="false"
-                                aria-controls="faq-5"
-                                >
-                                I have more questions. Where can I get help?
-                                </button>
-                            </h6>
-                            <div id="faq-5" class="accordion-collapse collapse" data-bs-parent="#faq">
-                                <div class="accordion-body">
-                                Please <a href="javascript:void(0);">contact</a> us if you have any other questions or
-                                concerns. We’re here to help!
-                                </div>
-                            </div>
-                            </div>
+                            @else
+                                <p class="text-center text-muted">No FAQs available at the moment.</p>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -42,12 +42,13 @@ class RouteServiceProvider extends ServiceProvider
         Route::as('back-office.')
             ->prefix('back-office')
             ->group(function () {
+                Route::as('auth.')->prefix('auth')->group(base_path('routes/back-office/auth.php'));
+                Route::as('roles.')->prefix('roles')->group(base_path('routes/back-office/role.php'));
                 Route::as('users.')->prefix('users')->group(base_path('routes/back-office/user.php'));
                 Route::as('campaigns.')->prefix('campaigns')->group(base_path('routes/back-office/campaign.php'));
                 Route::as('lead-captures.')->prefix('lead-captures')->group(base_path('routes/back-office/lead-capture.php'));
                 Route::as('leads.')->prefix('leads')->group(base_path('routes/back-office/lead.php'));
-                Route::as('roles.')->prefix('roles')->group(base_path('routes/back-office/role.php'));
-                Route::as('auth.')->prefix('auth')->group(base_path('routes/back-office/auth.php'));
+                Route::as('faqs.')->prefix('faqs')->group(base_path('routes/back-office/faq.php'));
             });
     }
 }

@@ -54,6 +54,17 @@
                 />
             @endcan
         @endif
+
+        {{-- Copy Shareable Link --}}
+        @if(!empty($model->shareable_link))
+            <x-action-button
+                type="button"
+                btn-class="dropdown-item"
+                title="Copy Shareable Link"
+                label="Copy Link"
+                onclick="navigator.clipboard.writeText('{{ $model->shareable_link }}').then(()=>{alert('Link copied!');})"
+            />
+        @endif
         @can($permissionPrefix.'-delete')
             <x-action-button
                 type="link"

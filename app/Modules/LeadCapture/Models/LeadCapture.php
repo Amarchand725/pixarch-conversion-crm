@@ -10,6 +10,7 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Traits\ModelTrait;
 use App\Models\User;
+use App\Modules\Campaign\Models\Campaign;
 
 class LeadCapture extends Model
 {
@@ -42,6 +43,11 @@ class LeadCapture extends Model
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {
         return \Database\Factories\LeadCaptureFactory::new();
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id');
     }
 
     public function status()

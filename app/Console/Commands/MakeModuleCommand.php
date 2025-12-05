@@ -105,10 +105,13 @@ class MakeModuleCommand extends Command
         use Illuminate\Database\Eloquent\SoftDeletes;
         use Spatie\Activitylog\Traits\LogsActivity;
         use Spatie\Activitylog\LogOptions;
+        use Illuminate\Database\Eloquent\Factories\HasFactory;
+        use App\Models\Status;
+        use App\Models\User;
 
         class {$module} extends Model
         {
-            use SoftDeletes, LogsActivity, ModelTrait;
+            use SoftDeletes, LogsActivity, ModelTrait, HasFactory;
 
             protected \$fillable = ['{$fillable}'];
 
@@ -121,6 +124,21 @@ class MakeModuleCommand extends Command
                     ->useLogName(strtolower('{$module}'))
                     ->logFillable()
                     ->logOnlyDirty();
+            }
+                
+            protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+            {
+                return \Database\Factories\{$module}Factory::new();
+            }
+
+            public function status()
+            {
+                return \$this->belongsTo(Status::class, 'status_id');
+            }
+
+            public function author()
+            {
+                return \$this->belongsTo(User::class, 'author_id');
             }
         }
         PHP;
@@ -220,6 +238,7 @@ class MakeModuleCommand extends Command
                 \$columns = [
                     'name'      => ['label' => 'name', 'searchable' => 'name'],
                     'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+                    'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
                     'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
                     'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
                 ];
