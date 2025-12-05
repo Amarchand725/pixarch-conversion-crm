@@ -7,6 +7,15 @@
             <!-- Pricing Plans -->
             <div class="pb-sm-5 pb-2 rounded-top">
                 <div class="container py-5">
+                    <!-- Application Logo -->
+                    <div class="app-brand justify-content-center mb-4 mt-2">
+                        <a href="{{ route('lead-capture.public') }}" class="app-brand-link">
+                            <span class="app-brand-logo demo">
+                                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                            </span>
+                            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', 'Laravel') }}</span>
+                        </a>
+                    </div>
                     <h2 class="text-center mb-2 mt-0 mt-md-4">{{ $model->name }}</h2>
                     <p class="text-center">
                         {{ $model->description ?? '' }}

@@ -9,7 +9,7 @@ class LeadCapturePublicController extends Controller
     public function show($uuid)
     {
         $model = ModelsLeadCapture::where('uuid', $uuid)->firstOrFail();
-        $title = $model->name.' - Form'; ;
-        return view('frontend.lead-form', get_defined_vars());
+        $title = $model->name.' - Form';
+        return view('frontend.landing-form', get_defined_vars());
     }
 }
