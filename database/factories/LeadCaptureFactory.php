@@ -29,6 +29,9 @@ class LeadCaptureFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (LeadCapture $capture) {
+            $capture->shareable_link = route('lead-capture.public', $capture->uuid);
+            $capture->save();
+
             CaptureFormField::factory()
                 ->count(2) // 🔥 create 5 fields per lead capture
                 ->create([

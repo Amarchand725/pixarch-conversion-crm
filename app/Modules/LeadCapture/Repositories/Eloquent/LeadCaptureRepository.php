@@ -22,6 +22,9 @@ class LeadCaptureRepository extends BaseRepository implements LeadCaptureContrac
         $model->toFill($payload, ['fields']);
         $model->save();
 
+        $model->shareable_link = route('lead-capture.public', $model->uuid);
+        $model->save();
+
         if (!empty($payload['fields'])) {
             // Save multiple fields
             foreach ($payload['fields'] as $field) {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeadCapturePublicController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,6 +9,8 @@ Route::get('/', function () {
     return redirect()->route('back-office.auth.dashboard');
 });
 
+Route::get('/lead-capture/form/{uuid}', [LeadCapturePublicController::class, 'show'])
+    ->name('lead-capture.public');
 
 // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
