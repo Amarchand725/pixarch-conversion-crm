@@ -85,7 +85,6 @@ class LeadRepository extends BaseRepository implements LeadContract
     {
         $model = $this->model;
         $model->toFill($payload, ['status_id', 'assignee_id']);
-
         $model->save();
 
         $logStatus['status_id'] = $payload['status_id'];
@@ -102,6 +101,7 @@ class LeadRepository extends BaseRepository implements LeadContract
 
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
+            
             if ($assignees && $assignees->count()) {
                 foreach ($assignees as $user) {
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;

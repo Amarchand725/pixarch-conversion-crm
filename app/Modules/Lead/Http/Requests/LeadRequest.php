@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
+use App\Modules\LeadCapture\Models\LeadCapture;
 
 class LeadRequest extends FormRequest
 {
@@ -47,7 +48,7 @@ class LeadRequest extends FormRequest
     }
 
     public function prepareForValidation()
-    {
+    {   
         if ($this->has('status_id')) {
             $this->merge([
                 'status_id' => Status::where('uuid', $this->input('status_id'))->value('id')

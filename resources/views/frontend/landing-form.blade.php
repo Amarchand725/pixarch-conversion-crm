@@ -70,6 +70,7 @@
                                             value="{{ $value }}"
                                             @if($fieldKey==='name') required @endif
                                         />
+                                        <span id="{{ $fieldKey }}_error" class="text-danger error">{{ $errors->first($fieldKey) }}</span>
                                     @else
                                         <input
                                             type="{{ $type }}"
@@ -80,6 +81,7 @@
                                             value="{{ $value }}"
                                             @if($fieldKey==='name') required @endif
                                         />
+                                        <span id="{{ $fieldKey }}_error" class="text-danger error">{{ $errors->first($fieldKey) }}</span>
                                     @endif
 
                                     <div class="invalid-feedback">
@@ -89,31 +91,73 @@
                             @endforeach
 
                             <!-- Dynamic Fields -->
-                            @foreach($model->fields as $key=>$field)
+                            @foreach($model->fields as $field)
                                 @php
-                                    $value = old($field->name, $field->value ?? '');
+                                    $value = old("fields.{$field->name}", $field->value ?? '');
                                 @endphp
                                 <div class="col-md-6">
-                                    <label for="{{ $field->name }}" class="form-label fw-semibold">{{ ucfirst($field->label) }} @if($field->required)<span class="text-danger">*</span>@endif</label>
+                                    <label for="{{ $field->name }}" class="form-label fw-semibold">
+                                        {{ ucfirst($field->label) }}
+                                        @if($field->required)<span class="text-danger">*</span>@endif
+                                    </label>
 
                                     @if(in_array($field->type, ['text','email','number']))
-                                        <input type="{{ $field->type }}" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" placeholder="{{ $field->placeholder ?? '' }}" value="{{ $value }}" @if($field->required) required @endif />
+                                        <input
+                                            type="{{ $field->type }}"
+                                            id="{{ $field->name }}"
+                                            name="fields[{{ $field->name }}]"
+                                            class="form-control shadow-sm"
+                                            placeholder="{{ $field->placeholder ?? '' }}"
+                                            value="{{ $value }}"
+                                            @if($field->required) required @endif
+                                        />
                                     @elseif($field->type==='tel')
-                                        <input type="tel" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control phoneNumber shadow-sm" value="{{ $value }}" placeholder="(999) - 12345678" @if($field->required) required @endif />
+                                        <input
+                                            type="tel"
+                                            id="{{ $field->name }}"
+                                            name="fields[{{ $field->name }}]"
+                                            class="form-control phoneNumber shadow-sm"
+                                            placeholder="(999) - 12345678"
+                                            value="{{ $value }}"
+                                            @if($field->required) required @endif
+                                        />
                                     @elseif($field->type==='textarea')
-                                        <textarea id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" placeholder="{{ $field->placeholder ?? '' }}" @if($field->required) required @endif>{{ $value }}</textarea>
+                                        <textarea
+                                            id="{{ $field->name }}"
+                                            name="fields[{{ $field->name }}]"
+                                            class="form-control shadow-sm"
+                                            placeholder="{{ $field->placeholder ?? '' }}"
+                                            @if($field->required) required @endif
+                                        >{{ $value }}</textarea>
                                     @elseif($field->type==='file')
-                                        <input type="file" id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-control shadow-sm" @if($field->required) required @endif />
+                                        <input
+                                            type="file"
+                                            id="{{ $field->name }}"
+                                            name="fields[{{ $field->name }}]"
+                                            class="form-control shadow-sm"
+                                            @if($field->required) required @endif
+                                        />
                                     @elseif($field->type==='select')
-                                        <select id="{{ $field->name }}" name="fields[{{ $key }}]" class="form-select form-select-lg shadow-sm select2" @if($field->required) required @endif>
+                                        <select
+                                            id="{{ $field->name }}"
+                                            name="fields[{{ $field->name }}]"
+                                            class="form-select form-select-lg shadow-sm select2"
+                                            @if($field->required) required @endif
+                                        >
                                             <option value="">Select {{ $field->label }}</option>
                                             @if(!empty($field->options))
                                                 @foreach(explode(',', $field->options) as $option)
-                                                    <option value="{{ trim($option) }}" {{ trim($option)==$value ? 'selected' : '' }}>{{ trim($option) }}</option>
+                                                    <option value="{{ trim($option) }}" {{ trim($option)==$value ? 'selected' : '' }}>
+                                                        {{ trim($option) }}
+                                                    </option>
                                                 @endforeach
                                             @endif
                                         </select>
                                     @endif
+
+                                    <span id="{{ $field->name }}_error" class="text-danger error">
+                                        {{ $errors->first("fields.{$field->name}") }}
+                                    </span>
 
                                     <div class="invalid-feedback">Please enter {{ strtolower($field->label) }}.</div>
                                 </div>
@@ -194,20 +238,4 @@
             });
         });
     </script>
-    <!-- Optional: Client-side Bootstrap validation -->
-    {{-- <script>
-        (function () {
-            'use strict'
-            const forms = document.querySelectorAll('.needs-validation')
-            Array.from(forms).forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })();
-    </script> --}}
 @endpush

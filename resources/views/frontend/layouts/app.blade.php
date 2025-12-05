@@ -49,6 +49,9 @@
     <!-- Page CSS -->
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/css/pages/page-pricing.css" />
     <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/select2/select2.css') }}" />
+
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/toastr/toastr.css') }}">
     <style>
       /* Remove left space when sidebar is hidden */
       .layout-wrapper.layout-content-navbar .layout-page {
@@ -135,7 +138,10 @@
     <script src="{{ asset('back-office') }}/assets/js/main.js"></script>
 
     <!-- Page JS -->
-    <script src="{{ asset('back-office') }}/assets//js/pages-pricing.js"></script>
+    {{-- <script src="{{ asset('back-office') }}/assets//js/pages-pricing.js"></script> --}}
+
+    <!-- Toastr JS -->
+    <script src="{{ asset('back-office/assets/vendor/libs/toastr/toastr.js') }}"></script>
 
     <script src="{{ asset('back-office/assets/js/select2.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -158,6 +164,42 @@
         }
         return phone;
       }
+
+      @if(Session::has('message'))
+        toastr.options =
+        {
+          "closeButton" : true,
+          "progressBar" : true
+        }
+        toastr.success("{{ session('message') }}");
+      @endif
+
+      @if(Session::has('error'))
+        toastr.options =
+        {
+          "closeButton" : true,
+          "progressBar" : true
+        }
+        toastr.error("{{ session('error') }}");
+      @endif
+
+      @if(Session::has('info'))
+        toastr.options =
+        {
+          "closeButton" : true,
+          "progressBar" : true
+        }
+        toastr.info("{{ session('info') }}");
+      @endif
+
+      @if(Session::has('warning'))
+        toastr.options =
+        {
+          "closeButton" : true,
+          "progressBar" : true
+        }
+        toastr.warning("{{ session('warning') }}");
+      @endif
     </script>
   </body>
 </html>

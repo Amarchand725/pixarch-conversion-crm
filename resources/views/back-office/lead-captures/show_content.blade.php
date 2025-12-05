@@ -11,20 +11,27 @@
         <td class="text-nowrap fw-semibold">Shareable Link</td>
         <td class="d-flex align-items-center">
             <input 
-                type="text" 
+                type="hidden" 
                 id="shareableLink" 
                 value="{{ $model->shareable_link ?? '' }}" 
                 class="form-control form-control-sm me-2" 
                 readonly
             />
-            <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyLink()">
-                Copy
+            <button type="button" class="btn btn-sm btn-primary" onclick="copyLink(this)">
+                Copy to share form link
             </button>
         </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Status</td>
-        <td>{{ ucfirst($model?->status?->name ?? '-') }}</td>
+        <td>
+            @php 
+                $status = $model?->status;
+            @endphp 
+            <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status->name)) ?? 'bg-light text-dark' }}">
+                {{ strtoupper($status->name) }}
+            </span>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>
@@ -53,14 +60,18 @@
 </table>
 
 <script>
-    function copyLink() {
+    function copyLink(button) {
         const copyText = document.getElementById('shareableLink');
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // for mobile devices
+
         navigator.clipboard.writeText(copyText.value).then(() => {
-            alert('Link copied to clipboard!');
-        }).catch(() => {
-            alert('Failed to copy link.');
+            // Change button text
+            const originalText = button.innerHTML;
+            button.innerHTML = "Copied!";
+
+            // Restore back after 2 seconds
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
         });
     }
 </script>

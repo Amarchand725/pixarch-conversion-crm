@@ -103,7 +103,7 @@
         </label>
         @php $assignee = $model->assignees->first() @endphp 
         <select name="assignee_id" id="assignee_id" class="select2 form-select">
-            <option value="">Select Status</option>
+            <option value="">Select assignee</option>
             @foreach($agents as $agent)
                 <option value="{{ $agent?->uuid }}" {{ $assignee->id==$agent->id ? 'selected' : '' }}>{{ $agent->name  }} ({{ $agent->email }})</option>
             @endforeach

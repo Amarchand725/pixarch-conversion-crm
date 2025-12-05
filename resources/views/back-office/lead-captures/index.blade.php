@@ -62,7 +62,7 @@
             const pageUrl = "{{ url()->current() }}";
             const columns = @json($dataTable->jsColumns());
 
-            initializeDataTable(pageUrl, columns);
+            initializeDataTable(pageUrl, columns);  
 
             $('#refresh-record').on('click', function(){
                 $('.table').DataTable().ajax.reload();

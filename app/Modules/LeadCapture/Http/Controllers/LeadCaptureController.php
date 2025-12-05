@@ -33,8 +33,8 @@ class LeadCaptureController extends BaseModuleController
         $singularLabel = $this->singularLabel;
 
         $columns = [
-            'campaign_id'      => ['label' => 'Campaign Name', 'searchable' => 'campaigns.name'],
-            'name'      => ['label' => 'Capture Form Name', 'searchable' => 'name'],
+            // 'campaign_id'      => ['label' => 'Campaign Name', 'html' => true, 'searchable' => false],
+            'name'      => ['label' => 'Form Name', 'searchable' => 'name'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
@@ -65,7 +65,7 @@ class LeadCaptureController extends BaseModuleController
                     'singularLabel'    => $singularLabel,
                 ])->render();
 
-                $row->campaign_id = $row->campaign?->name ?? '-';
+                // $row->campaign_id = $row->campaign?->name ?? '-';
                 return $row;
             }
         );
