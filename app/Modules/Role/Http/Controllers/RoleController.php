@@ -24,10 +24,6 @@ class RoleController extends BaseModuleController
 
     public function index(Request $request)
     {
-        $permissionPrefix = $this->permissionPrefix;
-        $routeInitialize = $this->routePrefix;
-        $singularLabel = $this->singularLabel;
-
         $columns = [
             'name'       => ['label' => 'Role Name', 'searchable' => 'name'],
             'guard_name'      => ['label' => 'Guard Name', 'searchable' => 'guard_name'],
@@ -41,18 +37,7 @@ class RoleController extends BaseModuleController
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
-            rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
-                // pass $row as 'model' for the partial
-                $row->action = view('back-office.partials.action-buttons', data: 
-                [
-                    'model' => $row,
-                    'permissionPrefix' => $permissionPrefix,
-                    'routeInitialize' => $routeInitialize,
-                    'singularLabel' => $singularLabel,
-                ])->render();   
-
-                return $row;
-            }
+            rowFormatter: [$this, 'formatRow']
         );
 
         if ($request->ajax() && $request->loaddata == "yes") {
@@ -60,6 +45,20 @@ class RoleController extends BaseModuleController
         }
 
         return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
+    }
+
+    public function formatRow($row)
+    {
+        // pass $row as 'model' for the partial
+        $row->action = view('back-office.partials.action-buttons', data: 
+        [
+            'model' => $row,
+            'permissionPrefix' => $this->permissionPrefix,
+            'routeInitialize'  => $this->routePrefix,
+            'singularLabel'    => $this->singularLabel,
+        ])->render(); 
+
+        return $row;
     }
 
     public function create()

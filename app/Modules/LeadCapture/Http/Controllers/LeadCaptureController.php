@@ -28,46 +28,21 @@ class LeadCaptureController extends BaseModuleController
 
     public function index(Request $request)
     {
-        $permissionPrefix = $this->permissionPrefix;
-        $routeInitialize = $this->routePrefix;
-        $singularLabel = $this->singularLabel;
-
         $columns = [
-            // 'campaign_id'      => ['label' => 'Campaign Name', 'html' => true, 'searchable' => false],
+            'campaign_id' => ['label' => 'Campaign Name', 'html' => true, 'searchable' => false],
             'name'      => ['label' => 'Form Name', 'searchable' => 'name'],
-            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'status_label'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        $query = $this->leadCaptureRepo->getAll();
+        $query = $this->leadCaptureRepo->getAll()->with(['campaign', 'status', 'author']);
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
-            rowFormatter: function ($row) use ($routeInitialize, $permissionPrefix, $singularLabel) {
-                $status = $row->status?->name ?? 'de-active';
-                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
-                            . strtoupper($status) .
-                            '</span>';
-
-                $author = $row->author ?? '-';
-                if($author != '-') {
-                    $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
-                }else{
-                    $row->author_id = $author;
-                }
-                $row->action = view('back-office.partials.action-buttons', [
-                    'model'            => $row,
-                    'permissionPrefix' => $permissionPrefix,
-                    'routeInitialize'  => $routeInitialize,
-                    'singularLabel'    => $singularLabel,
-                ])->render();
-
-                // $row->campaign_id = $row->campaign?->name ?? '-';
-                return $row;
-            }
+            rowFormatter: [$this, 'formatRow']
         );
 
         if ($request->ajax() && $request->loaddata == "yes") {
@@ -75,6 +50,28 @@ class LeadCaptureController extends BaseModuleController
         }
 
         return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
+    }
+
+    public function formatRow($row)
+    {
+        $row->campaign_id = $row->campaign?->name ?? '-';
+        $status = $row->status?->name ?? 'de-active';
+        $row->status_label = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                        . strtoupper($status) .
+                        '</span>';
+
+        $row->author_id = $row->author
+            ? view('back-office.partials.avatar', ['user' => $row->author])->render()
+            : '-';
+
+        $row->action = view('back-office.partials.action-buttons', [
+            'model'            => $row,
+            'permissionPrefix' => $this->permissionPrefix,
+            'routeInitialize'  => $this->routePrefix,
+            'singularLabel'    => $this->singularLabel,
+        ])->render();
+
+        return $row;
     }
 
     public function create()

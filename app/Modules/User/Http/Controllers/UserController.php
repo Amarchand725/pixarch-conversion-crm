@@ -27,16 +27,11 @@ class UserController extends BaseModuleController
 
     public function index(Request $request)
     {
-        $permissionPrefix = $this->permissionPrefix;
-        $routeInitialize = $this->routePrefix;
-        $singularLabel = $this->singularLabel;
-
         $columns = [
             'agent'     => ['label' => 'Agent', 'html' => true, 'searchable' => 'name'],
             'role'       => ['label' => 'Role', 'searchable' => 'roles.name'],
             'phone'      => ['label' => 'Phone', 'searchable' => 'phone'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
-            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -47,32 +42,7 @@ class UserController extends BaseModuleController
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
-            rowFormatter: function($row) use ($routeInitialize, $permissionPrefix, $singularLabel){
-                $status = $row->statusInfo?->name ?? 'de-active';
-                // pass $row as 'user' for the partial
-                $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
-                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
-                                    . strtoupper($status) .
-                                    '</span>';
-
-                $author = $row->author ?? '-';
-                if($author != '-') {
-                    $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
-                }else{
-                    $row->author_id = $author;
-                }
-                $row->action = view('back-office.partials.action-buttons', [
-                    'model' => $row,
-                    'permissionPrefix' => $permissionPrefix,
-                    'routeInitialize' => $routeInitialize,
-                    'singularLabel' => $singularLabel,
-                ])->render();
-
-                // Role - first role name from Spatie roles
-                $row->role = $row->getRoleNames()[0] ?? 'N/A';
-
-                return $row;
-            }
+            rowFormatter: [$this, 'formatRow']
         );
 
         if ($request->ajax() && $request->loaddata == "yes") {
@@ -80,6 +50,28 @@ class UserController extends BaseModuleController
         }
 
         return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
+    }
+
+    public function formatRow($row)
+    {
+        $status = $row->statusInfo?->name ?? 'de-active';
+        // pass $row as 'user' for the partial
+        $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();
+        $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                            . strtoupper($status) .
+                            '</span>';
+
+        $row->action = view('back-office.partials.action-buttons', [
+            'model' => $row,
+            'permissionPrefix' => $this->permissionPrefix,
+            'routeInitialize'  => $this->routePrefix,
+            'singularLabel'    => $this->singularLabel,
+        ])->render();
+
+        // Role - first role name from Spatie roles
+        $row->role = $row->getRoleNames()[0] ?? 'N/A';
+
+        return $row;
     }
 
     public function create()

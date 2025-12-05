@@ -4,7 +4,7 @@
         <td>{{ ucfirst($model?->campaign?->name ?? '-') }}</td>
     </tr>
     <tr>
-        <td class="text-nowrap fw-semibold">Lead Capture Form Name</td>
+        <td class="text-nowrap fw-semibold">Form Name</td>
         <td>{{ $model->name ?? '-' }}</td>
     </tr>
     <tr>
@@ -33,6 +33,25 @@
             </span>
         </td>
     </tr>
+    @if($author = $model->author)
+    <tr>
+        <td class="text-nowrap fw-semibold">Author</td>
+        <td>
+            @php
+                $avatarPath = optional($author->avatar)->path
+                        ? asset('storage/' . $author->avatar->path)
+                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+            @endphp
+            <div class="d-flex align-items-center gap-2">
+                <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">
+                <div class="d-flex flex-column">
+                    <span class="fw-bold">{{ $author->name ?? '-' }}</span>
+                    <small class="text-muted">{{ $author->email ?? '-' }}</small>
+                </div>
+            </div>
+        </td>
+    </tr>
+    @endif
     <tr>
         <td class="text-nowrap fw-semibold">Created At</td>
         <td>{{ $model->created_at ? $model->created_at->format('d, M Y | h:i A') : '-' }}</td>
