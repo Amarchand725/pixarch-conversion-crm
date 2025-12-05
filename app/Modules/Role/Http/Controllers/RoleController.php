@@ -49,7 +49,7 @@ class RoleController extends BaseModuleController
                     'permissionPrefix' => $permissionPrefix,
                     'routeInitialize' => $routeInitialize,
                     'singularLabel' => $singularLabel,
-                ])->render();
+                ])->render();   
 
                 return $row;
             }

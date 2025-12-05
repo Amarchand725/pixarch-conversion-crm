@@ -9,6 +9,6 @@ class CaptureFormFieldSeeder extends Seeder
 {
     public function run(): void
     {
-        CaptureFormField::factory()->count(5)->create();
+        CaptureFormField::factory()->count(2)->create();
     }
 }

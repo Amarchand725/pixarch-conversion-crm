@@ -55,8 +55,12 @@ class UserController extends BaseModuleController
                                     . strtoupper($status) .
                                     '</span>';
 
-                $author = $row->author ?? '';
-                $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
+                $author = $row->author ?? '-';
+                if($author != '-') {
+                    $row->author_id = view('back-office.partials.avatar', ['user' => $author])->render();
+                }else{
+                    $row->author_id = $author;
+                }
                 $row->action = view('back-office.partials.action-buttons', [
                     'model' => $row,
                     'permissionPrefix' => $permissionPrefix,

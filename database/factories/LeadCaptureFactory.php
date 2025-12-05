@@ -30,7 +30,7 @@ class LeadCaptureFactory extends Factory
     {
         return $this->afterCreating(function (LeadCapture $capture) {
             CaptureFormField::factory()
-                ->count(5) // 🔥 create 5 fields per lead capture
+                ->count(2) // 🔥 create 5 fields per lead capture
                 ->create([
                     'lead_capture_id' => $capture->id,
                 ]);
