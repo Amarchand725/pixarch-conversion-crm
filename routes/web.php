@@ -11,6 +11,8 @@ Route::get('/', function () {
 
 Route::get('/lead-capture/form/{uuid}', [LeadCapturePublicController::class, 'show'])
     ->name('lead-capture.public');
+Route::post('/lead-capture/form/{uuid}', [LeadCapturePublicController::class, 'store'])
+    ->name('lead-capture.store');
 
 // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 

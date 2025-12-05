@@ -166,7 +166,7 @@
             $('#loading-gif').hide();
         }
 
-         $(document).on('keyup', '.phoneNumber', function() {
+        $(document).on('keyup', '.phoneNumber', function() {
             var phone = $(this).val();
             var formattedPhone = formatPhoneNumber(phone);
             $(this).val(formattedPhone);

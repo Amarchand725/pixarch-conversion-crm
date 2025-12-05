@@ -7,64 +7,94 @@
             <!-- Pricing Plans -->
             <div class="pb-sm-5 pb-2 rounded-top">
                 <div class="container py-5">
-                    <!-- Application Logo -->
-                    <div class="app-brand justify-content-center mb-4 mt-2">
-                        <a href="{{ route('lead-capture.public') }}" class="app-brand-link">
-                            <span class="app-brand-logo demo">
-                                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <!-- Application Logo & Name -->
+                    <div class="app-brand text-center mb-4 mt-2">
+                        <a href="{{ route('lead-capture.public', $model->uuid) }}" class="d-inline-flex flex-column align-items-center text-decoration-none">
+                            <!-- Logo with subtle animation -->
+                            <span class="app-brand-logo mb-2 animate-bounce">
+                                <x-application-logo class="w-24 h-24 fill-current text-primary" />
                             </span>
-                            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', 'Laravel') }}</span>
+
+                            <!-- App Name -->
+                            <span class="app-brand-text fw-bold fs-4 text-dark">
+                                {{ config('app.name', 'Laravel') }}
+                            </span>
                         </a>
                     </div>
-                    <h2 class="text-center mb-2 mt-0 mt-md-4">{{ $model->name }}</h2>
+
+                    <h2 class="text-center mb-3 mt-0 mt-md-4 fw-semibold">
+                        {{ $model->name }}
+                    </h2>
                     <p class="text-center">
                         {{ $model->description ?? '' }}
                     </p>
                     <div class="row mx-0 gy-3 px-lg-5">
-                        <form method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework submitBtnWithFileUpload" id="create-form" data-modal-id="create-pop-up-modal-for-file" enctype="multipart/form-data">
+                        <form action="{{ route('lead-capture.store', $model->uuid) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form" data-modal-id="create-pop-up-modal-for-file" enctype="multipart/form-data">
                             @csrf
-        
+
                             @foreach($model->fields as $field)
                                 <div class="col-12 mb-3">
-                                    <label class="form-label" for="basic-default-{{ $field->id }}">
-                                        {{ ucfirst($field->label) }} 
+                                    <label class="form-label fw-semibold" for="{{ $field->name }}">
+                                        {{ ucfirst($field->label) }}
                                         @if($field->required)
                                             <span class="text-danger">*</span>
                                         @endif
                                     </label>
-                                    @if($field->type === 'text')    
+
+                                    @php
+                                        $value = old($field->name, $field->value ?? '');
+                                    @endphp
+
+                                    @if(in_array($field->type, ['text', 'email', 'number']))
                                         <input
-                                            type="text"
+                                            type="{{ $field->type }}"
                                             class="form-control"
-                                            id="basic-default-{{ $field->id }}"
-                                            name="field_{{ $field->id }}"
+                                            id="{{ $field->name }}"
+                                            name="{{ $field->name }}"
                                             placeholder="{{ $field->placeholder ?? '' }}"
-                                        /> 
-                                    @elseif($field->type === 'email')
+                                            value="{{ $value }}"
+                                        />
+                                    @elseif($field->type === 'tel')
                                         <input
-                                            type="email"
-                                            class="form-control"
-                                            id="basic-default-{{ $field->id }}"
-                                            name="field_{{ $field->id }}"
-                                            placeholder="{{ $field->placeholder ?? '' }}"
+                                            type="{{ $field->type }}"
+                                            class="form-control phoneNumber"
+                                            id="{{ $field->name }}"
+                                            name="{{ $field->name }}"
+                                            value="{{ $value }}"
+                                            placeholder="(999) - 12345678"
                                         />
                                     @elseif($field->type === 'textarea')
                                         <textarea
                                             class="form-control"
-                                            id="basic-default-{{ $field->id }}"
-                                            name="field_{{ $field->id }}"
+                                            id="{{ $field->name }}"
+                                            name="{{ $field->name }}"
                                             placeholder="{{ $field->placeholder ?? '' }}"
-                                        ></textarea>
+                                        >{{ $value }}</textarea>
                                     @elseif($field->type === 'file')
                                         <input
                                             type="file"
                                             class="form-control"
-                                            id="basic-default-{{ $field->id }}"
-                                            name="field_{{ $field->id }}"
+                                            id="{{ $field->name }}"
+                                            name="{{ $field->name }}"
                                         />
+                                    @elseif($field->type === 'select')
+                                        <select
+                                            name="{{ $field->name }}"
+                                            id="{{ $field->name }}"
+                                            class="form-select select2"
+                                        >
+                                            <option value="">Select {{ $field->label }}</option>
+                                            @if(!empty($field->options))
+                                                @foreach(explode(',', $field->options) as $option)
+                                                    <option value="{{ trim($option) }}" {{ trim($option) == $value ? 'selected' : '' }}>
+                                                        {{ trim($option) }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                     @endif
                                 </div>
-                            @endforeach 
+                            @endforeach
 
                             <div class="col-12 mt-3 action-btn">
                                 <div class="demo-inline-spacing sub-btn">
@@ -89,7 +119,7 @@
             </div>
             <!--/ Pricing Plans -->
             <!-- FAQS -->
-            {{-- <div class="pricing-faqs bg-alt-pricing rounded-bottom">
+            <div class="pricing-faqs bg-alt-pricing rounded-bottom">
                 <div class="container py-5 px-lg-5">
                 <div class="row mt-0 mt-md-4">
                     <div class="col-12 text-center mb-4">
@@ -99,112 +129,121 @@
                 </div>
                 <div class="row mx-4">
                     <div class="col-12">
-                    <div id="faq" class="accordion accordion-without-arrow">
-                        <div class="card accordion-item">
-                        <h6 class="accordion-header">
-                            <button
-                            class="accordion-button"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            aria-expanded="true"
-                            data-bs-target="#faq-1"
-                            aria-controls="faq-1"
-                            >
-                            What counts towards the 100 responses limit?
-                            </button>
-                        </h6>
+                        <div id="faq" class="accordion accordion-without-arrow">
+                            <div class="card accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                class="accordion-button"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                aria-expanded="true"
+                                data-bs-target="#faq-1"
+                                aria-controls="faq-1"
+                                >
+                                What counts towards the 100 responses limit?
+                                </button>
+                            </h6>
 
-                        <div id="faq-1" class="accordion-collapse collapse show" data-bs-parent="#faq">
-                            <div class="accordion-body">
-                            We count all responses submitted through all your forms in a month. If you already
-                            received 100 responses this month, you won’t be able to receive any more of them until
-                            next month when the counter resets.
+                            <div id="faq-1" class="accordion-collapse collapse show" data-bs-parent="#faq">
+                                <div class="accordion-body">
+                                We count all responses submitted through all your forms in a month. If you already
+                                received 100 responses this month, you won’t be able to receive any more of them until
+                                next month when the counter resets.
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="card accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                class="accordion-button collapsed"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#faq-2"
+                                aria-expanded="false"
+                                aria-controls="faq-2"
+                                >
+                                How do you process payments?
+                                </button>
+                            </h6>
+                            <div id="faq-2" class="accordion-collapse collapse" data-bs-parent="#faq">
+                                <div class="accordion-body">
+                                We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident
+                                that your credit card information will be kept safe and secure.
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="card accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                class="accordion-button collapsed"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#faq-3"
+                                aria-expanded="false"
+                                aria-controls="faq-3"
+                                >
+                                What payment methods do you accept?
+                                </button>
+                            </h6>
+                            <div id="faq-3" class="accordion-collapse collapse" data-bs-parent="#faq">
+                                <div class="accordion-body">2Checkout accepts all types of credit and debit cards.</div>
+                            </div>
+                            </div>
+
+                            <div class="card accordion-item">
+                            <h6 class="accordion-header">
+                                <button
+                                class="accordion-button collapsed"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#faq-4"
+                                aria-expanded="false"
+                                aria-controls="faq-4"
+                                >
+                                Do you have a money-back guarantee?
+                                </button>
+                            </h6>
+                            <div id="faq-4" class="accordion-collapse collapse" data-bs-parent="#faq">
+                                <div class="accordion-body">
+                                Yes. You may request a refund within 30 days of your purchase without any additional
+                                explanations.
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="card accordion-item mb-0 mb-md-4">
+                            <h6 class="accordion-header">
+                                <button
+                                class="accordion-button collapsed"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#faq-5"
+                                aria-expanded="false"
+                                aria-controls="faq-5"
+                                >
+                                I have more questions. Where can I get help?
+                                </button>
+                            </h6>
+                            <div id="faq-5" class="accordion-collapse collapse" data-bs-parent="#faq">
+                                <div class="accordion-body">
+                                Please <a href="javascript:void(0);">contact</a> us if you have any other questions or
+                                concerns. We’re here to help!
+                                </div>
+                            </div>
                             </div>
                         </div>
-                        </div>
-
-                        <div class="card accordion-item">
-                        <h6 class="accordion-header">
-                            <button
-                            class="accordion-button collapsed"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#faq-2"
-                            aria-expanded="false"
-                            aria-controls="faq-2"
-                            >
-                            How do you process payments?
-                            </button>
-                        </h6>
-                        <div id="faq-2" class="accordion-collapse collapse" data-bs-parent="#faq">
-                            <div class="accordion-body">
-                            We accept Visa®, MasterCard®, American Express®, and PayPal®. So you can be confident
-                            that your credit card information will be kept safe and secure.
-                            </div>
-                        </div>
-                        </div>
-
-                        <div class="card accordion-item">
-                        <h6 class="accordion-header">
-                            <button
-                            class="accordion-button collapsed"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#faq-3"
-                            aria-expanded="false"
-                            aria-controls="faq-3"
-                            >
-                            What payment methods do you accept?
-                            </button>
-                        </h6>
-                        <div id="faq-3" class="accordion-collapse collapse" data-bs-parent="#faq">
-                            <div class="accordion-body">2Checkout accepts all types of credit and debit cards.</div>
-                        </div>
-                        </div>
-
-                        <div class="card accordion-item">
-                        <h6 class="accordion-header">
-                            <button
-                            class="accordion-button collapsed"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#faq-4"
-                            aria-expanded="false"
-                            aria-controls="faq-4"
-                            >
-                            Do you have a money-back guarantee?
-                            </button>
-                        </h6>
-                        <div id="faq-4" class="accordion-collapse collapse" data-bs-parent="#faq">
-                            <div class="accordion-body">
-                            Yes. You may request a refund within 30 days of your purchase without any additional
-                            explanations.
-                            </div>
-                        </div>
-                        </div>
-
-                        <div class="card accordion-item mb-0 mb-md-4">
-                        <h6 class="accordion-header">
-                            <button
-                            class="accordion-button collapsed"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#faq-5"
-                            aria-expanded="false"
-                            aria-controls="faq-5"
-                            >
-                            I have more questions. Where can I get help?
-                            </button>
-                        </h6>
-                        <div id="faq-5" class="accordion-collapse collapse" data-bs-parent="#faq">
-                            <div class="accordion-body">
-                            Please <a href="javascript:void(0);">contact</a> us if you have any other questions or
-                            concerns. We’re here to help!
-                            </div>
-                        </div>
-                        </div>
-                    </div>
                     </div>
                 </div>
                 </div>
-            </div> --}}
+            </div>
             <!--/ FAQS -->
         </div>
     </div>
 @endsection
+@push('js')
+    <script>
+        $('select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent(),
+            });
+        });
+    </script>
+@endpush

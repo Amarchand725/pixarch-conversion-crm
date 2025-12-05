@@ -48,25 +48,29 @@
 
     <!-- Page CSS -->
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/css/pages/page-pricing.css" />
+    <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/select2/select2.css') }}" />
     <style>
-        /* Remove left space when sidebar is hidden */
-        .layout-wrapper.layout-content-navbar .layout-page {
-            padding-left: 0 !important;
-        }
+      /* Remove left space when sidebar is hidden */
+      .layout-wrapper.layout-content-navbar .layout-page {
+        padding-left: 0 !important;
+      }
 
-        /* Optional: remove extra margin on navbar */
-        .layout-navbar {
-            margin-left: 0 !important;
-        }
+      /* Optional: remove extra margin on navbar */
+      .layout-navbar {
+        margin-left: 0 !important;
+      }
 
-        .layout-navbar-fixed .layout-wrapper:not(.layout-horizontal):not(.layout-without-menu) .layout-page {
-            padding-top: 0px !important;
-        }
+      .layout-navbar-fixed .layout-wrapper:not(.layout-horizontal):not(.layout-without-menu) .layout-page {
+        padding-top: 0px !important;
+      }
 
-        .layout-navbar-fixed .layout-wrapper:not(.layout-without-menu) .layout-page {
-            padding-top: 0px !important;
-        }
+      .layout-navbar-fixed .layout-wrapper:not(.layout-without-menu) .layout-page {
+        padding-top: 0px !important;
+      }
     </style>
+
+    @stack('css')
+
     <!-- Helpers -->
     <script src="{{ asset('back-office') }}/assets/vendor/js/helpers.js"></script>
 
@@ -132,5 +136,28 @@
 
     <!-- Page JS -->
     <script src="{{ asset('back-office') }}/assets//js/pages-pricing.js"></script>
+
+    <script src="{{ asset('back-office/assets/js/select2.min.js') }}"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @stack('js')
+
+    <script>
+      $(document).on('keyup', '.phoneNumber', function() {
+        var phone = $(this).val();
+        var formattedPhone = formatPhoneNumber(phone);
+        $(this).val(formattedPhone);
+      });
+
+      function formatPhoneNumber(phone) {
+        phone = phone.replace(/\D/g, '');
+        if (phone.length > 3) {
+          var areaCode = phone.substring(0, 3);
+          var telephoneNumber = phone.substring(3, 11);
+          phone = "(" + areaCode + ") - " + telephoneNumber;
+        }
+        return phone;
+      }
+    </script>
   </body>
 </html>

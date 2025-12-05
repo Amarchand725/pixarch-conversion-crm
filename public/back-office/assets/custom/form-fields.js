@@ -24,6 +24,7 @@ function renderField(field = {}) {
           <select name="fields[${index}][type]" class="form-select field-type" data-index="${index}">
             <option value="text" ${type=='text' ? 'selected' : ''}>Text</option>
             <option value="email" ${type=='email' ? 'selected' : ''}>Email</option>
+            <option value="tel" ${type=='tel' ? 'selected' : ''}>Tel</option>
             <option value="number" ${type=='number' ? 'selected' : ''}>Number</option>
             <option value="textarea" ${type=='textarea' ? 'selected' : ''}>Textarea</option>
             <option value="select" ${type=='select' ? 'selected' : ''}>Select</option>
@@ -40,6 +41,10 @@ function renderField(field = {}) {
             <option value="0" ${required==0 ? 'selected' : ''}>No</option>
             <option value="1" ${required==1 ? 'selected' : ''}>Yes</option>
           </select>
+        </div>
+        <div class="col-12 mt-2 select-options ${type !== 'select' ? 'd-none' : ''}" id="options-${index}">
+          <label class="form-label fw-bold">Select Options (comma separated)</label>
+          <input type="text" name="fields[${index}][options]" class="form-control" placeholder="Male, Female, Other" value="${options}">
         </div>
         <div class="col-md-1 d-flex align-items-end">
           <button type="button" class="btn btn-icon btn-outline-danger btn-sm remove-field">

@@ -187,6 +187,9 @@ $(document).on('submit', '.ajax-form', function(e) {
     form.find('.error').text('');
     form.find('.is-invalid').removeClass('is-invalid');
 
+    form.find('.sub-btn').hide();
+    form.find('.loading-btn').show();
+
     $.ajax({
         url: action,
         method: method,
@@ -197,6 +200,8 @@ $(document).on('submit', '.ajax-form', function(e) {
             form.find('button[type="submit"]').prop('disabled', true);
         },
         success: (res) => {
+            thi.find('.sub-btn').show();
+            thi.find('.loading-btn').hide();
             form.find('button[type="submit"]').prop('disabled', false);
 
             // Show success message
@@ -206,6 +211,8 @@ $(document).on('submit', '.ajax-form', function(e) {
             // form.trigger('reset');
         },
         error: (xhr) => {
+            thi.find('.sub-btn').show();
+            thi.find('.loading-btn').hide();
             form.find('button[type="submit"]').prop('disabled', false);
 
             // Check if it's a validation error

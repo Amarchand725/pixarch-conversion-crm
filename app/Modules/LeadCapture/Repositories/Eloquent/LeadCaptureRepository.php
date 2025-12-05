@@ -28,6 +28,11 @@ class LeadCaptureRepository extends BaseRepository implements LeadCaptureContrac
         if (!empty($payload['fields'])) {
             // Save multiple fields
             foreach ($payload['fields'] as $field) {
+                if ($field['type'] === 'select' && !empty($field['options'])) {
+                    $field['options'] = array_map('trim', explode(',', $field['options']));
+                } else {
+                    $field['options'] = null;
+                }
                 $model->fields()->create([
                     'label' => $field['label'],
                     'name' => Str::snake($field['label']),
