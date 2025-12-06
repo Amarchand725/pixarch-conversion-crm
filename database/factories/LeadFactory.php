@@ -25,6 +25,7 @@ class LeadFactory extends Factory
             'email'           => $this->faker->safeEmail(),
             'phone'           => $this->faker->phoneNumber(),
             'value' => $this->faker->numberBetween(0, 100),
+            'pipeline' => $this->faker->randomElement(['paid social - leads', 'sales pipeline']),
             'status' => $this->faker->randomElement(['open', 'lost', 'won', 'abandoned']),
             'fields'          => [
                 'message' => $this->faker->sentence(10) 

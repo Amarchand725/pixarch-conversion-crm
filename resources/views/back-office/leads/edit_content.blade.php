@@ -86,6 +86,18 @@
         <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
     </div>
     <div class="col-12 col-md-6">
+        <label for="pipeline" class="form-label fw-semibold">
+            Pipeline
+        </label>
+        <select name="pipeline" id="pipeline" class="select2 form-select">
+            <option value="">Select Pipeline</option>
+            @foreach(pipelines() as $pipeline)
+                <option value="{{$pipeline}}" {{ $model->pipeline==$pipeline ? 'selected' : '' }}>{{ ucfirst($pipeline)  }}</option>
+            @endforeach
+        </select>
+        <span id="pipeline_error" class="text-danger error">{{ $errors->first('pipeline') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
         <label for="status" class="form-label fw-semibold">
             Statuses
         </label>

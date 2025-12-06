@@ -155,6 +155,13 @@ function statuses(){
     ];
 }
 
+function pipelines(){
+    return [
+        'paid social - leads',
+        'sales pipeline',
+    ];
+}
+
 function campaignTypes(): array
 {
     return [

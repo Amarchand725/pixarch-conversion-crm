@@ -29,6 +29,10 @@
     <tr>
         <td class="text-nowrap fw-semibold">Phone</td>
         <td>{{ $model->phone??'-' }}</td>
+    </tr> 
+    <tr>
+        <td class="text-nowrap fw-semibold">Pipeline</td>
+        <td>{{ $model->pipeline??'-' }}</td>
     </tr>    
     <tr>
         <td class="text-nowrap fw-semibold">Value</td>
