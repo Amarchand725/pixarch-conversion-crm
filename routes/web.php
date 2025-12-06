@@ -4,6 +4,10 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\LeadCapturePublicController;
 use Illuminate\Support\Facades\Route;
 
+Route::fallback(function () {
+    abort(404);
+});
+
 Route::get('/', function () {
     return redirect()->route('back-office.auth.dashboard');
 });
