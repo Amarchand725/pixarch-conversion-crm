@@ -28,10 +28,10 @@ class CampaignController extends BaseModuleController
         $columns = [
             'name'      => ['label' => 'Name', 'searchable' => 'name'],
             'type'      => ['label' => 'Type', 'searchable' => 'type'],
-            'budget'      => ['label' => 'Budget', 'searchable' => 'budget'],
+            'budget_value'      => ['label' => 'Budget', 'html' => true, 'searchable' => 'budget'],
             'start_date'      => ['label' => 'Start Date', 'searchable' => 'start_date'],
             'end_date'      => ['label' => 'End Date', 'searchable' => 'end_date'],
-            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'status_label'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -53,8 +53,14 @@ class CampaignController extends BaseModuleController
 
     public function formatRow($row)
     {
+        // Keep numeric value untouched for DataTables
+        $amount = floatval($row->budget ?? 0);
+        $symbol = config('app.currency_symbol');
+        // New property for display
+        $row->budget_value = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
+
         $status = $row->status?->name ?? 'de-active';
-        $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+        $row->status_label = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                     . strtoupper($status) .
                     '</span>';
         $row->action = view('back-office.partials.action-buttons', [

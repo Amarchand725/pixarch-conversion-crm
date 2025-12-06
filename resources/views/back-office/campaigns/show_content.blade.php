@@ -9,7 +9,11 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Budget</td>
-        <td>{{ $model->budget??'-' }}</td>
+        <td>
+            <span class="text-success">
+                {{ config('app.currency_symbol') }}{{ number_format($model->budget, 2) }}
+            </span>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Start Date</td>

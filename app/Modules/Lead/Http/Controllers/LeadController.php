@@ -40,7 +40,7 @@ class LeadController extends BaseModuleController
             'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
             'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
-            'value' => ['label' => 'Value', 'searchable' => 'value'],
+            'value_label' => ['label' => 'Value', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -63,10 +63,12 @@ class LeadController extends BaseModuleController
     }
 
     public function formatRow($row)
-    {
-        $value = $row->value > 0 ? number_format($row->value, 2) : '0.00';
-        $row->value = $value;
-        
+    {   
+        // Keep numeric value untouched for DataTables
+        $amount = floatval($row->value ?? 0);
+        $symbol = config('app.currency_symbol');
+        // New property for display
+        $row->value_label = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
         $row->assigned_to = view('back-office.partials.avatar', ['user' => $row->assignees->first()])->render();
         
         $status = strtolower($row->lastStatusLog?->status?->name ?? '');

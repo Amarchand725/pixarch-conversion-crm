@@ -32,7 +32,11 @@
     </tr>    
     <tr>
         <td class="text-nowrap fw-semibold">Value</td>
-        <td>${{ number_format($model->value, 2) }}</td>
+        <td>
+            <span class="text-success">
+                {{ config('app.currency_symbol') }}{{ number_format($model->value, 2) }}
+            </span>
+        </td>
     </tr>   
     <tr>
         <td class="text-nowrap fw-semibold">Stage</td>
