@@ -54,6 +54,7 @@ class LeadCapturePublicController extends BaseModuleController
                 $payload['source_id'] = $this->source->where('name', 'website')->value('id');
                 $payload['lead_capture_id'] = $lead_capture_id;
                 $payload['status'] = 'open'; //default
+                $payload['pipeline'] = 'paid social - leads'; //default
                 $payload['fields'] = json_encode($payload['fields']);
                 
                 $this->leadRepo->storeModel($payload);
