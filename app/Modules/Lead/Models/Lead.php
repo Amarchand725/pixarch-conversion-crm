@@ -59,7 +59,7 @@ class Lead extends Model
 
     public function statusLogs()
     {
-        return $this->morphMany(LogEntityStatus::class, 'model');
+        return $this->morphMany(LogEntityStatus::class, 'model')->orderby('id', 'desc');
     }
 
     public function lastStatusLog()
@@ -84,7 +84,7 @@ class Lead extends Model
 
     public function meetings()
     {
-        return $this->hasMany(Meeting::class);
+        return $this->hasMany(Meeting::class)->orderby('id', 'desc');
     }
 
     public function author()

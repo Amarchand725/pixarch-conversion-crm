@@ -4,19 +4,21 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-end">
-        <x-action-button
-            type="button"
-            id="assign-btn"
-            btn-class="dropdown-item edit-btn"
-            title="{{ $singularLabel }} Status"
-            label="{{ $singularLabel }} Status"
-            data-bs-toggle="modal"
-            data-bs-target="#create-pop-up-modal-for-file"
-            :data-attributes="[
-                'data-url' => route($routeInitialize.'.update-status', $model->uuid),
-                'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'assign', 'lead' => $model->uuid])
-            ]"
-        />
+        @can($permissionPrefix.'-status')
+            <x-action-button
+                type="button"
+                id="assign-btn"
+                btn-class="dropdown-item edit-btn"
+                title="{{ $singularLabel }} Status"
+                label="{{ $singularLabel }} Status"
+                data-bs-toggle="modal"
+                data-bs-target="#create-pop-up-modal-for-file"
+                :data-attributes="[
+                    'data-url' => route($routeInitialize.'.update-status', $model->uuid),
+                    'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'assign', 'lead' => $model->uuid])
+                ]"
+            />
+        @endcan
         @can($permissionPrefix.'-view')
             <x-action-button
                 type="link"
@@ -25,7 +27,7 @@
                 title="{{ $singularLabel }} Details"
                 label="{{ $singularLabel }} Details"
                 data-bs-toggle="modal"
-                data-bs-target="#details-modal"
+                data-bs-target="#show-xl-modal"
                 :data-attributes="[
                     'data-show-url' => route($routeInitialize.'.show', $model->uuid)
                 ]"

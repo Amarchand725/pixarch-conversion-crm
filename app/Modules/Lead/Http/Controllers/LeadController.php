@@ -146,7 +146,9 @@ class LeadController extends BaseModuleController
 
     public function show(Lead $lead)
     {
-        $model = $this->leadRepo->showModel($lead);
+        $model = $this->leadRepo->showModel($lead, [
+            'assignees', 'statusLogs', 'lastStatusLog', 'source', 'currentAssignee', 'meeting', 'author', 'meetings'
+        ]);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 
