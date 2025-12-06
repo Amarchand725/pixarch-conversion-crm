@@ -592,23 +592,20 @@ class MakeModuleCommand extends Command
         use App\Modules\\{$module}\Http\Controllers\\{$controller};
 
         // 🧩 {$module} Module Routes
-        Route::middleware(['web', 'auth'])
-            ->prefix('{$plural}')
-            ->name('{$plural}.')
-            ->group(function () {
-
-                // 🧱 Resource CRUD
-                Route::resource('/', {$controller}::class)
-                    ->parameters(['' => '{$singular}']);
-
-                // 🧩 Extra Actions (Grouped by Controller)
-                Route::controller({$controller}::class)->group(function () {
-                    Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
-                    Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-                    Route::post('{id}/restore', 'restore')->name('restore');
-                    Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
-                });
+        Route::group([
+            'middleware' => ['web', 'auth']
+        ], function () {
+            Route::controller({$controller}::class)->group(function () {
+                Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
+                Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
+                Route::post('{id}/restore', 'restore')->name('restore');
+                Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
             });
+
+            // 🧱 Resource CRUD
+            Route::resource('/', {$controller}::class)
+                    ->parameters(['' => '{$module}']);
+        });
         PHP;
 
         File::put($routeFile, $content);

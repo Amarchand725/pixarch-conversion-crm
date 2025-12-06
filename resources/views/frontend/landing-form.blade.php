@@ -135,8 +135,18 @@
                                             id="{{ $field->name }}"
                                             name="fields[{{ $field->name }}]"
                                             class="form-control shadow-sm"
-                                            @if($field->required) required @endif
+                                            onchange="imagePreview(event)"
                                         />
+
+                                        <!-- Preview wrapper -->
+                                        <div class="mb-3">
+                                            <img id="image-preview" 
+                                                alt="Image Preview" 
+                                                class="img-thumbnail rounded-circle" 
+                                                style="width: 80px; height: 80px; object-fit: cover; display: none;"
+
+                                            >
+                                        </div>
                                     @elseif($field->type==='select')
                                         <select
                                             id="{{ $field->name }}"
@@ -237,5 +247,23 @@
                 dropdownParent: $(this).parent(),
             });
         });
+
+        function imagePreview(event) {
+            const input = event.target;
+            const preview = document.getElementById('image-preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block'; // show preview
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                // Reset preview if no file selected
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+        }
     </script>
 @endpush
