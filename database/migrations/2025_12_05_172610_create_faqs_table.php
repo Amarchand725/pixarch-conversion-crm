@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->uuid('uuid')->unique();
             $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
-            $table->string('question');
+            $table->text('question');
             $table->text('answer');
             $table->integer('order')->default(0); // for custom ordering
             $table->softDeletes();

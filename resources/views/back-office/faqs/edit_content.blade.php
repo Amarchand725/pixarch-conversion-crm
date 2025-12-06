@@ -1,46 +1,30 @@
-
+@method('PUT')
 <div class="row g-3 mb-4">
-    <!-- Name Input -->
-    <div class="col-12 col-md-6">
-        <label for="name" class="form-label fw-semibold">
-            Name <span class="text-danger">*</span>
+    <div class="col-12 col-md-12">
+        <label for="question" class="form-label fw-semibold">
+            Question <span class="text-danger">*</span>
         </label>
-        <input 
-            type="text" 
-            id="name" 
-            name="name" 
-            class="form-control form-control-lg" 
-            placeholder="Enter name" 
-            value="{{ old('name', $model->name) }}"
-        />
-        <span id="name_error" class="text-danger error">{{ $errors->first('name') }}</span>
+        <textarea name="question" rows="5" placeholder="Enter short question" id="question" class="form-control" >{{ old('question', $model->question) }}</textarea>
+        <span id="question_error" class="text-danger error">{{ $errors->first('question') }}</span>
     </div>
-    <!-- Name Input -->
-    <div class="col-12 col-md-6">
-        <label for="phone" class="form-label fw-semibold">
-            Phone
+    <div class="col-12 col-md-12">
+        <label for="answer" class="form-label fw-semibold">
+            Answer <span class="text-danger">*</span>
         </label>
-        <input 
-            type="text" 
-            id="phone" 
-            name="phone" 
-            class="form-control form-control-lg" 
-            placeholder="Enter phone" 
-            value="{{ old('phone', $model->phone) }}"
-        />
-        <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
+        <textarea name="answer" rows="5" placeholder="Enter short answer" id="answer" class="form-control" >{{ old('answer', $model->answer) }}</textarea>
+        <span id="answer_error" class="text-danger error">{{ $errors->first('answer') }}</span>
     </div>
-    <!-- Name Input -->
-    <div class="col-12 col-md-6">
-        <label for="status" class="form-label fw-semibold">
-            Status <span class="text-danger">*</span>
+    <div class="col-12 col-md-12">
+        <label for="status_id" class="form-label fw-semibold">
+          Status
         </label>
-        <select id="status" name="status" class="form-select form-select-lg">
-            <option value="">Select status</option>
-            <option value="1" {{ $model->status==1 ? 'selected' :'' }}>Active</option>
-            <option value="0" {{ $model->status==0 ? 'selected' :'' }}>De-Active</option>
+        <select id="status_id" name="status_id" class="form-select">
+          <option value="">Select status</option>
+          @foreach ($statuses as $status)
+            <option value="{{ $status->uuid }}" {{ $model->status_id == $status->id ? 'selected' : '' }}>{{ ucfirst($status->name) }}</option>
+          @endforeach
         </select>
-        <span id="status_error" class="text-danger error">{{ $errors->first('status') }}</span>
+        <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
     </div>
 </div>
 

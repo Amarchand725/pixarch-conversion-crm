@@ -3,6 +3,7 @@
 namespace App\Modules\Faq\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Models\Status;
 use App\Modules\Faq\Repositories\Contracts\FaqContract;
 use App\Modules\Faq\Http\Requests\FaqRequest;
 use App\Modules\Faq\Models\Faq;
@@ -12,9 +13,11 @@ use Illuminate\Http\Request;
 
 class FaqController extends BaseModuleController
 {
+    protected $status;
     public function __construct(
         protected FaqContract $faqRepo
     ){
+        $this->status = new Status();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -27,7 +30,6 @@ class FaqController extends BaseModuleController
 
         $columns = [
             'question'      => ['label' => 'Question', 'searchable' => 'question'],
-            'answer'     => ['label' => 'Answer', 'searchable' => 'answer'],
             'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
@@ -44,6 +46,10 @@ class FaqController extends BaseModuleController
                 $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                             . strtoupper($status) .
                             '</span>';
+                
+                $row->author_id = $row->author
+                    ? view('back-office.partials.avatar', ['user' => $row->author])->render()
+                    : '-';
 
                 $row->action = view('back-office.partials.action-buttons', [
                     'model'            => $row,
@@ -88,6 +94,7 @@ class FaqController extends BaseModuleController
 
     public function edit(Faq $faq)
     {
+        $statuses = $this->status->where('model', 'Faq')->get();
         $model = $this->faqRepo->showModel($faq);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }

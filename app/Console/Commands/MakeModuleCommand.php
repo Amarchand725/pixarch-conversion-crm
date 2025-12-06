@@ -57,12 +57,12 @@ class MakeModuleCommand extends Command
         $base = ['id:increments', 'uuid:uuid'];
 
         if (empty($raw)) {
-            $dynamic = ['name:string', 'status:boolean'];
+            $dynamic = ['author_id:integer', 'status_id:integer', 'name:string'];
         } else {
             $dynamic = $raw;
             $hasStatus = collect($dynamic)->contains(fn($f) => Str::startsWith($f, 'status:'));
             if (! $hasStatus) {
-                $dynamic[] = 'status:boolean';
+                $dynamic[] = ['author_id:integer', 'status_id:integer'];
             }
         }
 
@@ -93,7 +93,7 @@ class MakeModuleCommand extends Command
     protected function createModel($module, $fields)
     {
         $path = "{$this->basePath}/{$module}/Models/{$module}.php";
-        $fillable = implode("', '", ['name', 'status']);
+        $fillable = implode("', '", ['name', 'status_id']);
 
         $stub = <<<PHP
         <?php
@@ -114,6 +114,17 @@ class MakeModuleCommand extends Command
             use SoftDeletes, LogsActivity, ModelTrait, HasFactory;
 
             protected \$fillable = ['{$fillable}'];
+
+            protected static function booted()
+            {
+                static::creating(function (\$model) {
+                    if (empty(\$model->status_id)) {
+                        \$model->status_id = Status::where('model', '{$module}')
+                            ->where('name', 'active')
+                            ->value('id');
+                    }
+                });
+            }
 
             /**
              * Configure Spatie Activity Log options.
@@ -166,7 +177,8 @@ class MakeModuleCommand extends Command
                 [$name, $type] = explode(':', $field);
                 if ($name === 'id') return "\$table->id();";
                 if ($name === 'uuid') return "\$table->uuid('uuid')->unique();";
-                if ($name === 'status') return "\$table->boolean('status')->default(true);";
+                if ($name === 'status_id') return "\$table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();";
+                if ($name === 'author_id_id') return "\$table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();";
                 return "\$table->{$type}('{$name}')->nullable();";
             })
             ->implode("\n            ");
@@ -219,12 +231,16 @@ class MakeModuleCommand extends Command
         use Illuminate\Support\Str;
         use Illuminate\Support\Facades\DB;
         use Illuminate\Http\Request;
+        use App\Models\Status;
 
         class {$module}Controller extends BaseModuleController
         {
+            protected \$status;
+            
             public function __construct(
                 protected {$module}Contract \${$variable}Repo
             ){
+                \$this->status = new Status();
                 // Initialize common module variables automatically
                 \$this->autoInit();
             }
@@ -303,6 +319,7 @@ class MakeModuleCommand extends Command
 
             public function edit({$module} \${$variable})
             {
+                \$statuses = \$this->status->where('model', '{$module}')->get();
                 \$model = \$this->{$variable}Repo->showModel(\${$variable});
                 return (string) view(\$this->pathInitialize.'.edit_content', get_defined_vars());
             }
@@ -435,36 +452,36 @@ class MakeModuleCommand extends Command
             switch ($type) {
                 case 'string':
                 case 'varchar':
-                    $rule = "required|string|max:255";
+                    $rule = ['required', 'string', 'max:255'];
                     break;
                 case 'text':
-                    $rule = "nullable|string";
+                    $rule = ['nullable', 'string', 'max:255'];
                     break;
                 case 'integer':
                 case 'int':
-                    $rule = "nullable|integer";
+                    $rule = ['nullable', 'integer'];
                     break;
                 case 'boolean':
                 case 'bool':
-                    $rule = "nullable|boolean";
+                    $rule = ["nullable", "boolean"];
                     break;
                 case 'decimal':
                 case 'float':
                 case 'double':
                 case 'numeric':
-                    $rule = "nullable|numeric";
+                    $rule = ["nullable", "numeric"];
                     break;
                 case 'date':
                 case 'datetime':
                 case 'timestamp':
-                    $rule = "nullable|date";
+                    $rule = ["nullable", "date"];
                     break;
                 case 'uuid':
-                    $rule = "nullable|uuid";
+                    $rule = ["nullable", "uuid"];
                     break;
                 default:
                     // fallback to string
-                    $rule = "nullable|string|max:255";
+                    $rule = ["nullable", "string", 'max:255'];
                     break;
             }
 
@@ -480,6 +497,7 @@ class MakeModuleCommand extends Command
 
     namespace App\Modules\\{$module}\Http\Requests;
 
+    use App\Models\Status;
     use Illuminate\Foundation\Http\FormRequest;
 
     class {$module}Request extends FormRequest
@@ -492,8 +510,18 @@ class MakeModuleCommand extends Command
         public function rules(): array
         {
             return [
-    {$rulesBlock}
+                'status_id' => ['nullable', 'exists:statuses,id'],
+                {$rulesBlock}
             ];
+        }
+
+        public function prepareForValidation()
+        {   
+            if (\$this->has('status_id')) {
+                \$this->merge([
+                    'status_id' => Status::where('uuid', \$this->input('status_id'))->value('id')
+                ]);
+            }
         }
     }
     PHP;

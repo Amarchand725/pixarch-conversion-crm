@@ -46,7 +46,6 @@ class LeadRequest extends FormRequest
             'fields.*' => ['nullable'],
         ];
     }
-
     public function prepareForValidation()
     {   
         if ($this->has('status_id')) {
