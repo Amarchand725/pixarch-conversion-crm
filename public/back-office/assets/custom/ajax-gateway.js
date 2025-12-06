@@ -271,20 +271,8 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
             $(targeted_modal).find('#edit-content').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading...</div>');
         },
         success: function (response) {
-            // $(targeted_modal).find('#edit-content').html(response);
             const $modal = $(targeted_modal);
             $modal.find('#edit-content').html(response);
-
-            // ✅ Check what kind of form was just loaded
-            const $initTarget = $modal.find('[data-init]');
-            const initType = $initTarget.data('init');
-
-            // ✅ Run specific JS logic
-            if (initType === 'dynamic-fields') {
-                if (typeof initDynamicFormFeatures === 'function') {
-                    initDynamicFormFeatures();
-                }
-            }
         },
         error: function (xhr) {
             if (xhr.status === 403) {

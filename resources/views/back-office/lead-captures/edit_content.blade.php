@@ -63,13 +63,13 @@
     </div>
 </div>
 
-<script src="{{ asset('back-office/assets/custom/form-fields.js') }}"></script>
 <script>
-    $('select').each(function () {
-      $(this).select2({
-        dropdownParent: $(this).parent(),
-      });
+  $('select').each(function () {
+    $(this).select2({
+      dropdownParent: $(this).parent(),
     });
+  });
 
-    let existingFields = @json($model->fields ?? []);
+  let existingFields = @json($model->fields ?? []);
 </script>
+<script src="{{ asset('back-office/assets/custom/form-fields.js') }}"></script>
