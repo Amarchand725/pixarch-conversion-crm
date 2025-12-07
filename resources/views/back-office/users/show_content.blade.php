@@ -5,7 +5,7 @@
             @php
                 $avatarPath = optional($model->avatar)->path
                         ? asset('storage/' . $model->avatar->path)
-                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+                        : asset('back-office/assets/img/avatars/default-avatar.png');
             @endphp
             <img src="{{ $avatarPath }}" width="50" height="50" class="rounded-circle" alt="Avatar">
         </td>
@@ -57,7 +57,7 @@
             @php
                 $avatarPath = optional($author->avatar)->path
                         ? asset('storage/' . $author->avatar->path)
-                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+                        : asset('back-office/assets/img/avatars/default-avatar.png');
             @endphp
             <div class="d-flex align-items-center gap-2">
                 <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">

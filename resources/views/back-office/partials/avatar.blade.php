@@ -1,7 +1,7 @@
 @php
 $avatarPath = optional($user->avatar)->path
         ? asset('storage/' . $user->avatar->path)
-        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+        : asset('back-office/assets/img/avatars/default-avatar.png');
 @endphp
 
 <div class="d-flex align-items-center gap-2">

@@ -52,7 +52,7 @@
                                 @php
                                 $avatarPath = optional($agent->avatar)->path
                                         ? asset('storage/' . $agent->avatar->path)
-                                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                                 @endphp
                                 <!-- Agent Avatar + Name -->
                                 <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">

@@ -42,7 +42,7 @@
             @php
                 $avatarPath = optional($author->avatar)->path
                         ? asset('storage/' . $author->avatar->path)
-                        : asset('back-office/assets/img/avatars/' . rand(1,10) . '.png');
+                        : asset('back-office/assets/img/avatars/default-avatar.png');
             @endphp
             <div class="d-flex align-items-center gap-2">
                 <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">
