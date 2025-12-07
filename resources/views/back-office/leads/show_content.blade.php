@@ -90,6 +90,7 @@
     </tr>
 </table>
 
+@if(auth()->user()->hasRole('Admin'))
 <h3 class="mt-4">Lead History</h3>
 <table class="table table-flush-spacing">
     <tr>
@@ -186,3 +187,4 @@
         </tr>
     @endforeach
 </table>
+@endif

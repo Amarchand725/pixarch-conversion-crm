@@ -4,6 +4,7 @@ namespace App\Modules\Lead\Repositories\Eloquent;
 
 use App\Models\Meeting;
 use App\Models\Status;
+use App\Models\User;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Modules\Lead\Models\Lead;
@@ -106,16 +107,24 @@ class LeadRepository extends BaseRepository implements LeadContract
 
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
-            
+            $assigner = null;
+            if(auth()->user()){
+                $assigner = auth()->user();
+            }else{
+                $assigner = User::role('Admin')->value('id');
+            }
+
             if ($assignees && $assignees->count()) {
                 foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
-                    
-                    $leadName = $model->name ?? 'N/A';
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
-                        'New Lead Assigned',
-                        "Lead '{$leadName}' has been assigned to you.",
+                        $assigner_avatar,
+                        $title,
+                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
                         $link,
                         'lead_assigned'
                     );
@@ -149,12 +158,16 @@ class LeadRepository extends BaseRepository implements LeadContract
             $assignees = $model->assignees; // belongsTo
             if ($assignees && $assignees->count()) {
                 foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
-                    $leadName = $model->name ?? 'N/A';
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner = auth()->user();
+                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
-                        'New Lead Assigned',
-                        "Lead '{$leadName}' has been assigned to you.",
+                        $assigner_avatar,
+                        $title,
+                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
                         $link,
                         'lead_assigned'
                     );
@@ -228,14 +241,19 @@ class LeadRepository extends BaseRepository implements LeadContract
 
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $attendees = $meeting->attendees; // belongsTo
+
             if ($attendees && $attendees->count()) {
                 foreach ($attendees as $attendee) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/meetings/' . $meeting->uuid;
-                    $leadName = $model->name ?? 'N/A';
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner = auth()->user();
+                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has scheduled a meeting for you';
                     $model->notifyUser(
                         $attendee,
-                        'Meeting Scheduled',
-                        "Your meeting for '{$leadName}' lead has been scheduled.",
+                        $assigner_avatar,
+                        $title,
+                        "Your meeting for '{$lead->name}' lead on {$meeting->start_date_time}",
                         $link,
                         'meeting_scheduled'
                     );
@@ -259,14 +277,19 @@ class LeadRepository extends BaseRepository implements LeadContract
 
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
+
             if ($assignees && $assignees->count()) {
                 foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;
-                    $leadName = $model->name ?? 'N/A';
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner = auth()->user();
+                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has updated status of your lead';
                     $model->notifyUser(
                         $user,
-                        'Lead Status Updated',
-                        "Assigned Lead '{$leadName}' status has been updated.",
+                        $assigner_avatar,
+                        $title,
+                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
                         $link,
                         'lead_status_updated'
                     );

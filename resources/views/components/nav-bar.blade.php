@@ -53,17 +53,7 @@
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar">
-                                                    @if(Auth::check())
-                                                        @php
-                                                        $user = auth()->user();
-                                                        $avatarPath = optional($user->avatar)->path
-                                                                ? asset('storage/' . $user->avatar->path)
-                                                                : asset('back-office/assets/img/avatars/default-avatar.png');
-                                                        @endphp
-                                                        <img src="{{ asset('back-office') }}/assets/img/avatars/{{ $avatarPath }}" alt class="h-auto rounded-circle" />
-                                                    @else
-                                                        <img src="{{ asset('back-office') }}/assets/img/avatars/default-avatar.png" alt class="h-auto rounded-circle" />
-                                                    @endif
+                                                    <img src="{{ $notification->data['assigner_avatar'] }}" alt class="h-auto rounded-circle" />
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
@@ -78,7 +68,18 @@
                                                     </a>
                                                 </h6>
                                                 <p class="mb-0">{{ $notification->data['message'] }}</p>
-                                                <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                                @php
+                                                $created = $notification->created_at;
+
+                                                if ($created->isToday()) {
+                                                    $humanTime = $created->diffForHumans();
+                                                } elseif ($created->isYesterday()) {
+                                                    $humanTime = 'Yesterday at ' . $created->format('h:i A');
+                                                } else {
+                                                    $humanTime = $created->format('M d \a\t h:i A');
+                                                }
+                                                @endphp
+                                                <small class="text-muted">{{ $humanTime }}</small>
                                             </div>
                                             <div class="flex-shrink-0 dropdown-notifications-actions">
                                                 <a href="javascript:void(0)" class="dropdown-notifications-read">

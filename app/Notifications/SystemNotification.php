@@ -12,14 +12,16 @@ class SystemNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public $assigner_avatar;
     public $title;
     public $message;
     public $url;
     public $type;
     public $extra;
 
-    public function __construct($title, $message, $url = null, $type = 'info', $extra = [])
+    public function __construct($assigner_avatar, $title, $message, $url = null, $type = 'info', $extra = [])
     {
+        $this->assigner_avatar = $assigner_avatar;
         $this->title = $title;
         $this->message = $message;
         $this->url = $url;
@@ -37,6 +39,7 @@ class SystemNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject($this->title)
             ->view('emails.system_notification', [
+                'assigner_avatar' => $this->assigner_avatar,
                 'title' => $this->title,
                 'message' => $this->message,
                 'url' => $this->url,
@@ -48,6 +51,7 @@ class SystemNotification extends Notification implements ShouldQueue
     public function toDatabase($notifiable)
     {
         return [
+            'assigner_avatar' => $this->assigner_avatar,
             'title' => $this->title,
             'message' => $this->message,
             'url' => $this->url,
@@ -59,6 +63,7 @@ class SystemNotification extends Notification implements ShouldQueue
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
+            'assigner_avatar' => $this->assigner_avatar,
             'title' => $this->title,
             'message' => $this->message,
             'url' => $this->url,

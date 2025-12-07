@@ -10,10 +10,10 @@ trait NotifiesUsers
     /**
      * Notify multiple users.
      */
-    public function notifyUsers($users, $title, $message, $url = null, $type = 'info', $extra = [])
+    public function notifyUsers($users, $assigner_avatar = null, $title, $message, $url = null, $type = 'info', $extra = [])
     {
         $users = is_array($users) ? collect($users) : collect([$users]);
-        Notification::send($users, new SystemNotification($title, $message, $url, $type, $extra));
+        Notification::send($users, new SystemNotification($assigner_avatar, $title, $message, $url, $type, $extra));
     }
 
     /**
