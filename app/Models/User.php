@@ -117,7 +117,7 @@ class User extends Authenticatable
             'entity_relationships', // Pivot table name
             'user_id',           // Foreign key on pivot pointing to user
             'model_id'           // Foreign key on pivot pointing to lead
-        );
+        )->withTimestamps();
     }
 
     // Lead activities for this user

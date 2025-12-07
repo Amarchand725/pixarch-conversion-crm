@@ -7,6 +7,7 @@ use App\Models\Status;
 use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Modules\Lead\Models\Lead;
+use App\Services\LeadAssigner;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -95,6 +96,10 @@ class LeadRepository extends BaseRepository implements LeadContract
         $log = $model->statusLogs()->firstOrNew();
         $log->toFill($logStatus);
         $log->save();
+
+        if(empty($payload['assignee_id'])){
+            $payload['assignee_id'] = LeadAssigner::getNextAgent(); //assignee rol-robbin agent id
+        }
 
         if (!empty($payload['assignee_id'])) {
             $model->assignees()->sync([$payload['assignee_id']]);

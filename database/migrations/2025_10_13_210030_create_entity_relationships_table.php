@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('entity_relationships', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->morphs('model');  
+            $table->timestamps();
         });
     }
 

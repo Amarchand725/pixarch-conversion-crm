@@ -88,6 +88,9 @@
             {{ $slot }}
             <!-- / Content -->
 
+            <!-- Include modals at the bottom of the body -->
+            <x-modals />
+
             <!-- Footer -->
             <x-footer />
             <!-- / Footer -->

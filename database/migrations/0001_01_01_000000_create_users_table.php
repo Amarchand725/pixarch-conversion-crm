@@ -20,11 +20,13 @@ return new class extends Migration
             $table->unsignedBigInteger('status_id')->nullable()->constrained('statuses')->cascadeOnUpdate()->nullOnDelete();
             $table->string('username')->unique()->nullable();
             $table->string('name');
+            $table->string('phone', 20)->nullable();
             $table->string('email')->unique();
+            $table->integer('daily_capacity')->default(10); // max leads per day
+            $table->integer('weight')->default(1); // weighted round-robin
             $table->unsignedBigInteger('avatar_id')->nullable()->constrained('attachments')->cascadeOnUpdate()->nullOnDelete();
             $table->enum('gender', array_column(GenderEnum::cases(), 'value'))->nullable();
             $table->date('doj')->nullable()->comment('date of joining');
-            $table->string('phone', 20)->nullable();
             $table->enum('two_factor', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();
             $table->enum('notification', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();
             $table->timestamp('email_verified_at')->nullable();

@@ -49,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
                 Route::as('lead-captures.')->prefix('lead-captures')->group(base_path('routes/back-office/lead-capture.php'));
                 Route::as('leads.')->prefix('leads')->group(base_path('routes/back-office/lead.php'));
                 Route::as('faqs.')->prefix('faqs')->group(base_path('routes/back-office/faq.php'));
+                Route::as('notifications.')->prefix('notifications')->group(base_path('routes/back-office/notification.php'));
             });
     }
 }

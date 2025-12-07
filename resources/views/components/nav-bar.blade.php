@@ -57,7 +57,16 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6 class="mb-1">{{ $notification->data['title'] }}🎉</h6>
+                                                <h6 class="mb-1">
+                                                    <a href="javascript:void(0);"
+                                                        class="notification-title show"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#show-xl-modal"
+                                                        data-show-url="{{ $notification->data['url'] }}"
+                                                        data-id="{{ $notification->id }}">
+                                                        {{ $notification->data['title'] }} 🎉
+                                                    </a>
+                                                </h6>
                                                 <p class="mb-0">{{ $notification->data['message'] }}</p>
                                                 <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
                                             </div>

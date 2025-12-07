@@ -10,6 +10,7 @@ use App\Modules\Faq\Models\Faq;
 use App\Modules\LeadCapture\Models\LeadCapture;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
+use App\Services\LeadAssigner;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -45,11 +46,12 @@ class LeadCapturePublicController extends BaseModuleController
         $payload = $request->validated();
         $lead_capture_id = $this->lead_capture->where('uuid', $lead_capture_uuid)->value('id');
         $status_id = $this->status->where('model', 'Lead')->where('name', 'created')->value('id');
+        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload, $lead_capture_id, $status_id) {
                 $payload['status_id'] = $status_id; //default
-                $payload['assignee_id'] = $this->user->role('Admin')->value('id'); //default
+                $payload['assignee_id'] = LeadAssigner::getNextAgent(); //rol-robbin agent id
                 $payload['author'] = null; //default
                 $payload['source_id'] = $this->source->where('name', 'website')->value('id');
                 $payload['lead_capture_id'] = $lead_capture_id;

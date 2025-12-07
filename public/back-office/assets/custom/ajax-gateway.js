@@ -285,3 +285,27 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
         }    
     });
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Open modal & load content
+    document.querySelectorAll('.notification-title').forEach(function(el) {
+        el.addEventListener('click', function() {
+            let url = this.dataset.showUrl;
+            let id = this.dataset.id;
+
+            // Mark as read
+            fetch(`/notifications/${id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
+        });
+    });
+
+    // Mark all notifications as read
+    document.querySelector('.dropdown-notifications-all')?.addEventListener('click', function() {
+        fetch('/notifications/mark-all-read', { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} })
+            .then(() => location.reload());
+    });
+
+    // Go to all notifications page
+    document.querySelector('.dropdown-menu-footer a')?.addEventListener('click', function() {
+        window.location.href = "{{ route('notifications.index') }}";
+    });
+});
