@@ -7,10 +7,11 @@ use App\Models\Traits\ModelTrait;
 use App\Modules\Lead\Models\Lead;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\NotifiesUsers;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meeting extends Model
 {
-    use LogsModelActivity, ModelTrait, NotifiesUsers;
+    use LogsModelActivity, ModelTrait, NotifiesUsers, SoftDeletes;
 
     protected $fillable = [
         'lead_id',

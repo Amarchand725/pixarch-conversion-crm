@@ -50,6 +50,7 @@ class RouteServiceProvider extends ServiceProvider
                 Route::as('leads.')->prefix('leads')->group(base_path('routes/back-office/lead.php'));
                 Route::as('faqs.')->prefix('faqs')->group(base_path('routes/back-office/faq.php'));
                 Route::as('notifications.')->prefix('notifications')->group(base_path('routes/back-office/notification.php'));
+                Route::as('meetings.')->prefix('meetings')->group(base_path('routes/back-office/meeting.php'));
             });
     }
 }

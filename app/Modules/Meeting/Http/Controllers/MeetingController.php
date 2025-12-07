@@ -1,0 +1,203 @@
+<?php
+
+namespace App\Modules\Meeting\Http\Controllers;
+
+use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Modules\Meeting\Repositories\Contracts\MeetingContract;
+use App\Modules\Meeting\Http\Requests\MeetingRequest;
+use App\Modules\Meeting\Models\Meeting;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use App\Models\Status;
+
+class MeetingController extends BaseModuleController
+{
+    protected $status;
+    
+    public function __construct(
+        protected MeetingContract $meetingRepo
+    ){
+        $this->status = new Status();
+        // Initialize common module variables automatically
+        $this->autoInit();
+    }
+
+    public function index(Request $request)
+    {
+        $columns = [
+            'name'      => ['label' => 'name', 'searchable' => 'name'],
+            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
+            'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
+            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
+        ];
+
+        $query = $this->meetingRepo->getAll();
+
+        $dataTable = new \App\Services\DataTableService(
+            model: $query,
+            columns: $columns,
+            rowFormatter: [$this, 'formatRow']
+        );
+
+        if ($request->ajax() && $request->loaddata == "yes") {
+            return $dataTable->ajax();
+        }
+
+        return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
+    }
+
+    public function formatRow($row)
+    {
+        $status = $row->status?->name ?? 'de-active';
+        $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                    . strtoupper($status) .
+                    '</span>';
+        
+        $row->author_id = $row->author
+                ? view('back-office.partials.avatar', ['user' => $row->author])->render()
+                : '-';
+
+        $row->action = view('back-office.partials.action-buttons', [
+            'model'            => $row,
+            'permissionPrefix' => $this->permissionPrefix,
+            'routeInitialize'  => $this->routePrefix,
+            'singularLabel'    => $this->singularLabel,
+        ])->render();
+
+        return $row;
+    }
+
+    public function create()
+    {
+        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
+    }
+
+    public function store(MeetingRequest $request)
+    {
+        $payload = $request->validated();
+        try {
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $this->meetingRepo->storeModel($payload);
+            });
+            return successResponse($response, $this->singularLabel. ' registered successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function edit(Meeting $meeting)
+    {
+        $statuses = $this->status->where('model', 'Meeting')->get();
+        $model = $this->meetingRepo->showModel($meeting);
+        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
+    }
+
+    public function update(MeetingRequest $request, Meeting $meeting)
+    {
+        $payload = $request->validated();
+        try {
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $meeting) {
+                $this->meetingRepo->updateModel($meeting, $payload);
+            });
+            return successResponse([], $this->singularLabel. ' updated successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function show(Meeting $meeting)
+    {
+        $model = $this->meetingRepo->showModel($meeting);
+        return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
+    }
+
+    public function destroy(Meeting $meeting)
+    {
+        try {
+            if($this->meetingRepo->softDeleteModel($meeting)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => false,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function restore(Meeting $meeting)
+    {
+        try {
+            if($this->meetingRepo->restoreModel($meeting)) {
+                return redirect()->back()->with('message', 'Record Restored Successfully.');
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function forceDelete(Meeting $meeting)
+    {
+        try {
+            if ($this->meetingRepo->permanentlyDeleteModel($meeting)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => $this->singularLabel.' Deleted Successfully'
+                ]);
+            } else{
+                return response()->json([
+                    'status' => true,
+                    'error' => $this->singularLabel.' not deleted try again.'
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function bulkDelete()
+    {
+        try {
+            $this->meetingRepo->bulkDelete();
+            return redirect()->route(strtolower('meetings.index'))->with('success', 'Bulk delete successful.');
+        } catch (Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function bulkRestore()
+    {
+        try {
+            $this->meetingRepo->bulkRestore();
+            return redirect()->route(strtolower('meetings.index'))->with('success', 'Bulk restore successful.');
+        } catch (Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+}

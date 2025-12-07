@@ -137,10 +137,10 @@ class MakeModuleCommand extends Command
                     ->logOnlyDirty();
             }
                 
-            protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
-            {
-                return \Database\Factories\{$module}Factory::new();
-            }
+            // protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
+            // {
+            //     return \Database\Factories\{$module}Factory::new();
+            // }
 
             public function status()
             {
@@ -228,7 +228,6 @@ class MakeModuleCommand extends Command
         use App\Modules\\{$module}\Http\Requests\\{$module}Request;
         use App\Modules\\{$module}\Models\\{$module};
         use Exception;
-        use Illuminate\Support\Str;
         use Illuminate\Support\Facades\DB;
         use Illuminate\Http\Request;
         use App\Models\Status;
@@ -247,10 +246,6 @@ class MakeModuleCommand extends Command
 
             public function index(Request \$request)
             {
-                \$permissionPrefix = \$this->permissionPrefix;
-                \$routeInitialize  = \$this->routePrefix;
-                \$singularLabel    = \$this->singularLabel;
-
                 \$columns = [
                     'name'      => ['label' => 'name', 'searchable' => 'name'],
                     'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
@@ -485,7 +480,7 @@ class MakeModuleCommand extends Command
                     break;
             }
 
-            $rulesLines[] = "            '{$name}' => '{$rule}',";
+            $rulesLines[] = "'{$name}' => [" . implode(', ', array_map(fn($r) => "'$r'", $rule)) . "],";
         }
 
         $rulesBlock = implode("\n", $rulesLines);

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('start_date_time')->nullable();
             $table->timestamp('end_date_time')->nullable();
             $table->text('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

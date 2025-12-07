@@ -81,5 +81,12 @@
             </a>
         </li>
         @endcan
+
+        <li class="menu-item {{ request()->is('back-office/meetings') || request()->is('back-office/roles/*')?'active open':'' }}">
+            <a href="{{ route('back-office.meetings.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-calendar"></i>   
+                <div data-i18n="Meetings List">Meetings List</div>
+            </a>
+        </li>
     </ul>
 </aside>
