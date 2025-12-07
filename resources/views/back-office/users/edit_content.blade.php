@@ -93,8 +93,8 @@
             <img id="avatar_preview" 
                 alt="Avatar Preview" 
                 class="img-thumbnail rounded-circle" 
-                style="width: 80px; height: 80px; object-fit: cover; {{ $model->avatar ? '' : 'display: none;' }}"
-                src="{{ $model->avatar ? asset('storage/'.$model->avatar) : '' }}"
+                style="width: 80px; height: 80px; object-fit: cover; {{ $model?->avatar?->path ? '' : 'display: none;' }}"
+                src="{{ $model?->avatar?->path ? asset('storage/'.$model?->avatar?->path) : '' }}"
             >
         </div>
     </div>

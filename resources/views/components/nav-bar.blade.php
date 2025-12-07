@@ -53,7 +53,17 @@
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar">
-                                                    <img src="{{ asset('back-office') }}/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                                                    @if(Auth::check())
+                                                        @php
+                                                        $user = auth()->user();
+                                                        $avatarPath = optional($user->avatar)->path
+                                                                ? asset('storage/' . $user->avatar->path)
+                                                                : asset('back-office/assets/img/avatars/default-avatar.png');
+                                                        @endphp
+                                                        <img src="{{ asset('back-office') }}/assets/img/avatars/{{ $avatarPath }}" alt class="h-auto rounded-circle" />
+                                                    @else
+                                                        <img src="{{ asset('back-office') }}/assets/img/avatars/default-avatar.png" alt class="h-auto rounded-circle" />
+                                                    @endif
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
@@ -100,7 +110,7 @@
                         <img class="rounded-circle"
                             src="{{ optional(Auth::user()?->avatar)->path
                                     ? asset('storage/' . Auth::user()?->avatar->path)
-                                    : asset('back-office/assets/img/avatars/1' . '.png') }}"
+                                    : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                             width="36" height="36" alt="Avatar">
                     </div>
                 </a>
@@ -113,7 +123,7 @@
                                         <img class="rounded-circle"
                                             src="{{ optional(Auth::user()?->avatar)->path
                                                     ? asset('storage/' . Auth::user()?->avatar->path)
-                                                    : asset('back-office/assets/img/avatars/1' . '.png') }}"
+                                                    : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                             width="36" height="36" alt="Avatar">
                                     </div>
                                 </div>

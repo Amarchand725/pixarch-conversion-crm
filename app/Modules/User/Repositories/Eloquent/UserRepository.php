@@ -36,4 +36,34 @@ class UserRepository extends BaseRepository implements UserContract
         
         return $model;
     }
+
+    public function updateModel(Model $model, array $payload): Model
+    {
+        $model->toFill($payload, ['avatar', 'role']);
+
+        // Handle avatar upload
+        if (!empty($payload['avatar']) && $payload['avatar'] instanceof \Illuminate\Http\UploadedFile) {
+            // Delete existing avatar if exists
+            if ($model?->avatar?->path) {
+                FileUploader::deleteFile($model?->avatar?->path);
+            }
+
+            // Upload new avatar
+            $model->avatar_id = FileUploader::uploadFile(
+                $payload['avatar'], 
+                $model, 
+                'avatars', 
+                size: 64
+            )?->id;
+        }
+
+        $model->save();
+
+        if (!empty($payload['role'])) {
+            // You can pass role name or role ID, depending on how you send it
+            $model->syncRoles([$payload['role']]); 
+        }
+        
+        return $model;
+    }
 }

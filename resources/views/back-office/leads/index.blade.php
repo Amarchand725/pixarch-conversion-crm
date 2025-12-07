@@ -127,7 +127,7 @@
                                                 <img class="rounded-circle"
                                                     src="{{ optional($lead->assignees->first()?->avatar)->path
                                                             ? asset('back-office/assets/' . $lead->assignees->first()->avatar->path)
-                                                            : asset('back-office/assets/img/avatars/' . rand(1, 10) . '.png') }}"
+                                                            : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                                     width="36" height="36" alt="Avatar" title="{{ $lead?->assignees->first()->name ?? '' }}">
                                                 <span class="fw-semibold">{{ $lead->name }}</span>
                                             </div>
@@ -210,6 +210,7 @@
                                         <div class="more-info mt-2 p-2 border rounded bg-light text-wrap text-break" style="display:none;">
                                             <p><strong>Email:</strong> {{ $lead->email ?? 'N/A' }}</p>
                                             <p><strong>Phone:</strong> {{ $lead->phone ?? 'N/A' }}</p>
+                                            <p><strong>Pipeline:</strong> {{ ucfirst($lead->pipeline) ?? 'N/A' }}</p>
                                             <p>
                                                 <strong>Status:</strong> 
                                                 {{ strtoupper($lead->status) }}
