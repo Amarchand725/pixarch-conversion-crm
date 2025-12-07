@@ -18,28 +18,63 @@ function initializeDataTable(pageUrl, columns) {
 }
 
 $(document).on('click', '.show', function () {
+    //used for read notification after success
     var targeted_modal = $(this).attr('data-bs-target');
-    var modal_label = $(this).attr('title');
+    let clicked = $(this);
+    // Declare dropdown outside so it's accessible later
+    let dropdown = null;
+    if(targeted_modal=='#'){
+        dropdown = clicked.closest('.dropdown-menu');
+    }else{
+        var modal_label = $(this).attr('title');
 
-    $(targeted_modal).find('#modal-label').html(modal_label);
-    var html = '<div class="d-block w-100">' +
-        '<div class="d-block w-100">' +
-        '<div class="d-flex justify-content-center align-items-center" style="height: 20vw;>' +
-        '<div class="demo-inline-spacing">' +
-        '<div class="spinner-border spinner-border-lg text-primary" role="status">' +
-        '<span class="visually-hidden">Loading...</span>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-    $(targeted_modal).find('#show-content').html(html);
+        $(targeted_modal).find('#modal-label').html(modal_label);
+        var html = '<div class="d-block w-100">' +
+            '<div class="d-block w-100">' +
+            '<div class="d-flex justify-content-center align-items-center" style="height: 20vw;>' +
+            '<div class="demo-inline-spacing">' +
+            '<div class="spinner-border spinner-border-lg text-primary" role="status">' +
+            '<span class="visually-hidden">Loading...</span>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+        $(targeted_modal).find('#show-content').html(html);
+    }
+
     var show_url = $(this).attr('data-show-url');
     $.ajax({
         url: show_url,
         method: 'GET',
         success: function (response) {
-            $(targeted_modal).find('#show-content').html(response);
+            if(response.flag){ //used for read single notification
+                if(response.status && response.show){ 
+                    // Remove notification from dropdown
+                    clicked.closest('.dropdown-notifications-item').remove();
+
+                    // Decrease unread count
+                    let badge = $('.badge-notifications');
+                    let count = parseInt(badge.text());
+
+                    if (count > 0) {
+                        count--;
+                        badge.text(count);
+                    }
+                }else if(response.status && response.index){ 
+                    // Remove all notification items
+                    if (!dropdown) {
+                        // fallback in case dropdown wasn't set
+                        dropdown = clicked.closest('.dropdown-menu');
+                    }
+                    dropdown.find('.dropdown-notifications-item').remove();
+
+                    // Update badge
+                    $('.badge-notifications').text(0);
+                }
+            }else{
+                $(targeted_modal).find('#show-content').html(response);
+            }
         }
     });
 });
@@ -285,27 +320,3 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
         }    
     });
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Open modal & load content
-    document.querySelectorAll('.notification-title').forEach(function(el) {
-        el.addEventListener('click', function() {
-            let url = this.dataset.showUrl;
-            let id = this.dataset.id;
-
-            // Mark as read
-            fetch(`/notifications/${id}/read`, { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} });
-        });
-    });
-
-    // Mark all notifications as read
-    document.querySelector('.dropdown-notifications-all')?.addEventListener('click', function() {
-        fetch('/notifications/mark-all-read', { method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'} })
-            .then(() => location.reload());
-    });
-
-    // Go to all notifications page
-    document.querySelector('.dropdown-menu-footer a')?.addEventListener('click', function() {
-        window.location.href = "{{ route('notifications.index') }}";
-    });
-});

@@ -171,6 +171,11 @@ class RolePermissionSeeder extends Seeder
             'faq-delete',
             'faq-restore',
             'faq-status',
+
+            //Faq management
+            'notification-list',
+            'notification-view',
+            'notification-delete',
         ];
 
         return $generalPermissions;

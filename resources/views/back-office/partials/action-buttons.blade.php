@@ -5,18 +5,33 @@
 
     <div class="dropdown-menu dropdown-menu-end">
         @can($permissionPrefix.'-view')
-            <x-action-button
-                type="link"
-                href="#"
-                btn-class="dropdown-item show"
-                title="{{ $singularLabel }} Details"
-                label="{{ $singularLabel }} Details"
-                data-bs-toggle="modal"
-                data-bs-target="#details-modal"
-                :data-attributes="[
-                    'data-show-url' => route($routeInitialize.'.show', $model->uuid)
-                ]"
-            />
+            @if($permissionPrefix=='notification')
+                <x-action-button
+                    type="link"
+                    href="#"
+                    btn-class="dropdown-item show"
+                    title="{{ $singularLabel }} Details"
+                    label="{{ $singularLabel }} Details"
+                    data-bs-toggle="modal"
+                    data-bs-target="#details-modal"
+                    :data-attributes="[
+                        'data-show-url' => $model->data['url']
+                    ]"
+                />
+            @else
+                <x-action-button
+                    type="link"
+                    href="#"
+                    btn-class="dropdown-item show"
+                    title="{{ $singularLabel }} Details"
+                    label="{{ $singularLabel }} Details"
+                    data-bs-toggle="modal"
+                    data-bs-target="#details-modal"
+                    :data-attributes="[
+                        'data-show-url' => route($routeInitialize.'.show', $model->uuid)
+                    ]"
+                />
+            @endif
         @endcan
         @can($permissionPrefix.'-edit')
             @if($permissionPrefix=='role')

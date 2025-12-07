@@ -116,3 +116,8 @@
   text-align: center;
   margin-top: 1rem;
 }
+.notification-scroll {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}

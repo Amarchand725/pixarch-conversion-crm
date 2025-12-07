@@ -8,8 +8,7 @@ Route::group([
     'middleware' => ['web', 'auth']
 ], function () {
     Route::controller(NotificationController::class)->group(function () {
-        Route::post('mark-all-read', 'markAllRead');
-        Route::post('{notification}/read', 'markRead');
+        Route::get('mark-all-read', 'markAllRead')->name('mark-all-read');
     });
 
     // 🧱 Resource CRUD

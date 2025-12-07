@@ -16,87 +16,99 @@
             <!-- Notification -->
             <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
                 <a
-                class="nav-link dropdown-toggle hide-arrow"
-                href="javascript:void(0);"
-                data-bs-toggle="dropdown"
-                data-bs-auto-close="outside"
-                aria-expanded="false"
+                    class="nav-link dropdown-toggle hide-arrow"
+                    href="javascript:void(0);"
+                    data-bs-toggle="dropdown"
+                    data-bs-auto-close="outside"
+                    aria-expanded="false"
                 >
-                <i class="ti ti-bell ti-md"></i>
-                <span class="badge bg-danger rounded-pill badge-notifications">{{ count($unreadNotifications) }}</span>
+                    <i class="ti ti-bell ti-md"></i>
+                    <span class="badge bg-danger rounded-pill badge-notifications">{{ count($unreadNotifications) }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end py-0">
                     <li class="dropdown-menu-header border-bottom">
                         <div class="dropdown-header d-flex align-items-center py-3">
                             <h5 class="text-body mb-0 me-auto">Notification</h5>
-                            <a
-                                href="javascript:void(0)"
-                                class="dropdown-notifications-all text-body"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="Mark all as read">
+                            <a href="javascript:void(0);"
+                                title="Mark all as read"
+                                class="show text-body text-decoration-none"
+                                data-bs-toggle="modal"
+                                data-bs-target="#"
+                                data-show-url="{{ route('back-office.notifications.mark-all-read') }}"
+                            >
                                 <i class="ti ti-mail-opened fs-4"></i>
                             </a>
                         </div>
                     </li>
                     @if(count($unreadNotifications) == 0)
-                        <li class="dropdown-notifications-list scrollable-container">
+                        <li class="dropdown-notifications-list">
                             <div class="text-center p-3">
                                 <p class="mb-0">No new notifications</p>
                             </div>
                         </li>
                     @else
-                        @foreach ($unreadNotifications as $notification)
-                            <li class="dropdown-notifications-list scrollable-container">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                                        <div class="d-flex">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <img src="{{ $notification->data['assigner_avatar'] }}" alt class="h-auto rounded-circle" />
+                        <div class="notification-scroll">
+                            @foreach ($unreadNotifications as $notification)
+                                <li class="dropdown-notifications-list scrollable-container">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar">
+                                                        <img src="{{ $notification->data['assigner_avatar'] }}" alt class="h-auto rounded-circle" />
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">
+                                                        <a href="javascript:void(0);"
+                                                            title="Show Details"
+                                                            class="notification-title show text-body text-decoration-none"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#show-xl-modal"
+                                                            data-show-url="{{ $notification->data['url'] }}"
+                                                            data-id="{{ $notification->id }}">
+                                                            {{ $notification->data['title'] }} 🎉
+                                                        </a>
+                                                    </h6>
+                                                    <a href="javascript:void(0);"
+                                                        title="Read Notification"
+                                                        class="show text-body text-decoration-none"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#"
+                                                        data-show-url="{{ route('back-office.notifications.show', $notification->id) }}"
+                                                    >
+                                                        <p class="mb-0">{{ $notification->data['message'] }}</p>
+                                                    </a>
+                                                    @php
+                                                    $created = $notification->created_at;
+
+                                                    if ($created->isToday()) {
+                                                        $humanTime = $created->diffForHumans();
+                                                    } elseif ($created->isYesterday()) {
+                                                        $humanTime = 'Yesterday at ' . $created->format('h:i A');
+                                                    } else {
+                                                        $humanTime = $created->format('M d \a\t h:i A');
+                                                    }
+                                                    @endphp
+                                                    <small class="text-muted">{{ $humanTime }}</small>
+                                                </div>
+                                                <div class="flex-shrink-0 dropdown-notifications-actions">
+                                                    <a href="javascript:void(0)" class="dropdown-notifications-read">
+                                                        <span class="badge badge-dot"></span>
+                                                    </a>
+                                                    <a href="javascript:void(0)" class="dropdown-notifications-archive">
+                                                        <span class="ti ti-x"></span>
+                                                    </a>
                                                 </div>
                                             </div>
-                                            <div class="flex-grow-1">
-                                                <h6 class="mb-1">
-                                                    <a href="javascript:void(0);"
-                                                        class="notification-title show"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#show-xl-modal"
-                                                        data-show-url="{{ $notification->data['url'] }}"
-                                                        data-id="{{ $notification->id }}">
-                                                        {{ $notification->data['title'] }} 🎉
-                                                    </a>
-                                                </h6>
-                                                <p class="mb-0">{{ $notification->data['message'] }}</p>
-                                                @php
-                                                $created = $notification->created_at;
-
-                                                if ($created->isToday()) {
-                                                    $humanTime = $created->diffForHumans();
-                                                } elseif ($created->isYesterday()) {
-                                                    $humanTime = 'Yesterday at ' . $created->format('h:i A');
-                                                } else {
-                                                    $humanTime = $created->format('M d \a\t h:i A');
-                                                }
-                                                @endphp
-                                                <small class="text-muted">{{ $humanTime }}</small>
-                                            </div>
-                                            <div class="flex-shrink-0 dropdown-notifications-actions">
-                                                <a href="javascript:void(0)" class="dropdown-notifications-read">
-                                                    <span class="badge badge-dot"></span>
-                                                </a>
-                                                <a href="javascript:void(0)" class="dropdown-notifications-archive">
-                                                    <span class="ti ti-x"></span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endforeach
+                                        </li>
+                                    </ul>
+                                </li>
+                            @endforeach
+                        </div>
                     @endif
                     <li class="dropdown-menu-footer border-top">
-                        <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
+                        <a href="{{ route('back-office.notifications.index') }}" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
                             View all notifications
                         </a>
                     </li>

@@ -26,14 +26,13 @@
     <!-- RIGHT SIDE CONTENT -->
     <div class="col-md-9">
         <div class="tab-content">
-
             <!-- ASSIGN -->
             <div class="tab-pane fade {{ $action=='assign'?'show active':'' }}" id="assignTab">
                 <div class="mb-3">
                     <label for="assignee_id" class="form-label">Lead Assignee</label>
                     <select class="form-select" name="assignee_id">
                         @foreach ($agents as $agent)
-                            <option value="{{ $agent->uuid }}" {{ $lead?->assignees->first()->id==$agent->id ? "selected" : '' }}>{{ $agent->name }} ({{ $agent->email }})</option>
+                            <option value="{{ $agent->uuid }}" {{ $lead->assignees->first()->id==$agent->id ? "selected" : '' }}>{{ $agent->name }} ({{ $agent->email }})</option>
                         @endforeach
                     </select>
                 </div>

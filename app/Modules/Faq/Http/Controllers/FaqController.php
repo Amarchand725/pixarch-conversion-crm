@@ -68,8 +68,7 @@ class FaqController extends BaseModuleController
 
         return view(strtolower($this->pathInitialize.'.index'), $this->viewWithVars(get_defined_vars()));
     }
-
-
+    
     public function create()
     {
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());

@@ -95,9 +95,11 @@ class LeadController extends BaseModuleController
     {
         $stages = $this->leadStatus->where('model', 'lead')->get();
         $sources = $this->sourceRepo->get();
-        $agents = $this->userRepo->role('agent')
-                ->whereHas('status', fn($q) => $q->where('name', 'active'))
-                ->get();
+        $agents = $this->userRepo
+            ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+            ->whereHas('status', fn($q) => $q->where('name', 'active'))
+            ->get();
+            
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
@@ -123,9 +125,11 @@ class LeadController extends BaseModuleController
     {
         $stages = $this->leadStatus->where('model', 'lead')->get();
         $sources = $this->sourceRepo->get();
-        $agents = $this->userRepo->role('agent')
-                ->whereHas('status', fn($q) => $q->where('name', 'active'))
-                ->get();
+        $agents = $this->userRepo
+                    ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+                    ->whereHas('status', fn($q) => $q->where('name', 'active'))
+                    ->get();
+
         $model = $this->leadRepo->showModel($lead);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
@@ -271,9 +275,11 @@ class LeadController extends BaseModuleController
     public function actionEdit($action, Lead $lead)
     {
         $stages = $this->leadStatus->where('model', 'lead')->get();
-        $agents = $this->userRepo->role('agent')
-                ->whereHas('status', fn($q) => $q->where('name', 'active'))
-                ->get();
+        $agents = $this->userRepo
+        ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+        ->whereHas('status', fn($q) => $q->where('name', 'active'))
+        ->get();
+
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
     }
 }
