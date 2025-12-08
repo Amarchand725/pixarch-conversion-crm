@@ -64,7 +64,7 @@ class LeadCaptureController extends BaseModuleController
             ? view('back-office.partials.avatar', ['user' => $row->author])->render()
             : '-';
 
-        $row->action = view('back-office.partials.action-buttons', [
+        $row->action = view('back-office.partials.actions', [
             'model'            => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,

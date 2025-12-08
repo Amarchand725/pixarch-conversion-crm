@@ -64,7 +64,7 @@ class ActivityLogController extends BaseModuleController
             ? view('back-office.partials.avatar', ['user' => $row->causer])->render()
             : '-';
 
-        $row->action = view('back-office.partials.action-buttons', [
+        $row->action = view('back-office.partials.actions', [
             'model'            => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,

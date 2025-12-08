@@ -34,7 +34,6 @@ class UserFactory extends Factory
             'doj'   => fake()->date(),
             'phone' => fake()->phoneNumber(),
             'daily_capacity' => fake()->numberBetween(1, 10),
-            'weight' => fake()->numberBetween(1, 5),
             'two_factor'    => null,
             'notification'  => null,
             'password'  => 'user@321',

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Status;
 use App\Models\User;
-use App\Modules\Lead\Models\Lead;
 
 class LeadAssigner
 {

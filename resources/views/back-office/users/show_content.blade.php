@@ -39,14 +39,6 @@
         </td>
     </tr>
     <tr>
-        <td class="text-nowrap fw-semibold">Weight</td>
-        <td>
-            <span class="badge rounded-pill px-3 py-2 bg-primary text-white">
-            {{ $model->weight??'-' }}
-            </span>
-        </td>
-    </tr>
-    <tr>
         <td class="text-nowrap fw-semibold">Gender</td>
         <td>
             @if($model->gender=='M')

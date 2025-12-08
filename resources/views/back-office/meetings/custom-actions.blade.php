@@ -14,7 +14,7 @@
     />
 @endcan
 
-@can($permissionPrefix.'-status')
+@can($permissionPrefix.'-reschedule')
     <x-action-button
         type="button"
         id="reschedule-btn"

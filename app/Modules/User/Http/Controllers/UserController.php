@@ -61,7 +61,7 @@ class UserController extends BaseModuleController
                             . strtoupper($status) .
                             '</span>';
 
-        $row->action = view('back-office.partials.action-buttons', [
+        $row->action = view('back-office.partials.actions', [
             'model' => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,

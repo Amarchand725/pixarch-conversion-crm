@@ -63,7 +63,7 @@ class CampaignController extends BaseModuleController
         $row->status_label = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                     . strtoupper($status) .
                     '</span>';
-        $row->action = view('back-office.partials.action-buttons', [
+        $row->action = view('back-office.partials.actions', [
             'model'            => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,

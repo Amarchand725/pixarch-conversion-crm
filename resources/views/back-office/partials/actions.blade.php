@@ -4,6 +4,12 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-end">
+        {{-- EXTRA ACTIONS FOR SPECIFIC MODULES --}}
+        @if(!empty($extraActions))
+            @foreach($extraActions as $action)
+                {!! $action !!}
+            @endforeach
+        @endif
         @can($permissionPrefix.'-view')
             @if($permissionPrefix=='notification')
                 <x-action-button
@@ -81,13 +87,5 @@
                 ]"
             />
         @endcan
-
-        {{-- EXTRA ACTIONS FOR SPECIFIC MODULES --}}
-        @if(!empty($extraActions))
-            <div class="dropdown-divider"></div>
-            @foreach($extraActions as $action)
-                {!! $action !!}
-            @endforeach
-        @endif
     </div>
 </div>

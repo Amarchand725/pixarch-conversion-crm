@@ -50,7 +50,7 @@ class RoleController extends BaseModuleController
     public function formatRow($row)
     {
         // pass $row as 'model' for the partial
-        $row->action = view('back-office.partials.action-buttons', data: 
+        $row->action = view('back-office.partials.actions', data: 
         [
             'model' => $row,
             'permissionPrefix' => $this->permissionPrefix,

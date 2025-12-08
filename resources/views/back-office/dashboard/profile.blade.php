@@ -112,11 +112,6 @@
                                                     <span class="fw-bold mx-2">Daily Limit:</span>
                                                     <span>{{ auth()->user()->daily_capacity ?? 'N/A' }}</span>
                                                 </li>
-                                                <li class="d-flex align-items-center mb-3">
-                                                    <i class="ti ti-scale"></i>
-                                                    <span class="fw-bold mx-2">Weight:</span>
-                                                    <span>{{ auth()->user()->weight }}</span>
-                                                </li>
                                             </ul>
                                             {{-- <small class="card-text text-uppercase">Teams</small>
                                             <ul class="list-unstyled mb-0 mt-3">

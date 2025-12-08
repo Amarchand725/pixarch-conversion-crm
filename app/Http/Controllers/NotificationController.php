@@ -32,7 +32,7 @@ class NotificationController extends BaseModuleController
             columns: $columns,
             rowFormatter: function ($row) use ($routeInitialize, $permissionPrefix, $singularLabel) {
                 $row['uuid'] = $row->id;
-                $row->action = view('back-office.partials.action-buttons', [
+                $row->action = view('back-office.partials.actions', [
                     'model'            => $row,
                     'permissionPrefix' => $permissionPrefix,
                     'routeInitialize'  => $routeInitialize,

@@ -74,21 +74,6 @@
         <span id="daily_capacity_error" class="text-danger error">{{ $errors->first('daily_capacity') }}</span>
     </div>
 
-    <div class="col-12 col-md-6">
-        <label for="weight" class="form-label fw-semibold">
-            Weight <span class="text-danger">*</span>
-        </label>
-        <input 
-            type="number" 
-            id="weight" 
-            name="weight" 
-            class="form-control dob-picker" 
-            placeholder="Enter weight"
-            value="{{ old('weight', $model->weight) }}"
-        />
-        <span id="weight_error" class="text-danger error">{{ $errors->first('weight') }}</span>
-    </div>
-
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="doj" class="form-label fw-semibold">
