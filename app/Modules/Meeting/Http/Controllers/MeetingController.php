@@ -3,6 +3,7 @@
 namespace App\Modules\Meeting\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
+use App\Modules\Meeting\Http\Requests\MeetingStatusRequest;
 use App\Modules\Meeting\Repositories\Contracts\MeetingContract;
 use App\Modules\Meeting\Http\Requests\MeetingRequest;
 use App\Modules\Meeting\Models\Meeting;
@@ -135,6 +136,7 @@ class MeetingController extends BaseModuleController
     public function update(MeetingRequest $request, Meeting $meeting)
     {
         $payload = $request->validated();
+
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload, $meeting) {
@@ -246,14 +248,14 @@ class MeetingController extends BaseModuleController
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
     }
 
-    public function updateStatus(MeetingRequest $request, Meeting $meeting)
+    public function updateStatus(MeetingStatusRequest $request, Meeting $meeting)
     {
         $payload = $request->validated();
-        
+
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload, $meeting) {
-                $response = $this->meetingRepo->statusModel($lead, $payload);
+                $response = $this->meetingRepo->statusModel($meeting, $payload);
             });
 
             return successResponse($response, $this->singularLabel. ' updated successfully.');

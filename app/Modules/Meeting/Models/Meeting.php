@@ -18,7 +18,14 @@ class Meeting extends Model
 {
     use SoftDeletes, LogsActivity, ModelTrait, HasFactory, NotifiesUsers;
 
-    protected $fillable = ['name', 'status_id'];
+    protected $fillable = [
+        'lead_id',
+        'status_id',
+        'time_zone',
+        'start_date_time',
+        'end_date_time',
+        'description',
+    ]; 
 
     protected static function booted()
     {

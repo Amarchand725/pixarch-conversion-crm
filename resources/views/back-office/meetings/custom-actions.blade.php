@@ -12,6 +12,9 @@
             'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'status', 'meeting' => $model->uuid])
         ]"
     />
+@endcan
+
+@can($permissionPrefix.'-status')
     <x-action-button
         type="button"
         id="reschedule-btn"

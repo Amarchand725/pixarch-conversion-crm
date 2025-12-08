@@ -1,7 +1,7 @@
 <div class="row g-3 mb-4">
     <div class="col-12 col-md-12">
         <label for="lead_id" class="form-label fw-semibold">
-        Lead
+        Lead <span class="text-danger">*</span>
         </label>
         <select id="lead_id" name="lead_id" class="form-select">
         <option value="">Select Lead</option>
@@ -12,7 +12,7 @@
         <span id="lead_id_error" class="text-danger error">{{ $errors->first('lead_id') }}</span>
     </div>
     <div class="col-12 col-md-6">
-        <label for="start_date_time" class="form-label">Start Date & Time</label>
+        <label for="start_date_time" class="form-label">Start Date & Time <span class="text-danger">*</span></label>
         <input type="datetime-local" class="form-control" value="{{ old('start_date_time') }}" name="start_date_time">
         <span id="start_date_time_error" class="text-danger error">{{ $errors->first('start_date_time') }}</span>
     </div>
@@ -22,7 +22,7 @@
         <span id="end_date_time_error" class="text-danger error">{{ $errors->first('end_date_time') }}</span>
     </div>
     <div class="col-12 col-md-12">
-        <label for="attendee_id" class="form-label">Meeting Attendee</label>
+        <label for="attendee_id" class="form-label">Meeting Attendee <span class="text-danger">*</span></label>
         <select class="form-select" name="attendee_id">
             <option value="">Select meeting attendee</option>
             @foreach ($agents as $attendee)
