@@ -42,7 +42,7 @@
             <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
                 <div class="mb-3">
                     <label for="description" class="form-label">Add Note</label>
-                    <textarea class="form-control" name="description" rows="5">{{ $lead?->lastStatusLog?->description ?? '' }}</textarea>
+                    <textarea class="form-control" name="description" rows="5" placeholder="Enter note...">{{ $lead?->lastStatusLog?->description ?? '' }}</textarea>
                 </div>
             </div>
 

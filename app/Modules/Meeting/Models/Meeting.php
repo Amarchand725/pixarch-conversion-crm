@@ -2,6 +2,7 @@
 
 namespace App\Modules\Meeting\Models;
 
+use App\Models\LogEntityStatus;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,6 +11,7 @@ use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Status;
 use App\Models\User;
+use App\Modules\Lead\Models\Lead;
 
 class Meeting extends Model
 {
@@ -52,5 +54,24 @@ class Meeting extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function attendees()
+    {
+        return $this->belongsToMany(User::class, 'meeting_users', 'meeting_id', 'user_id');
+    }
+
+    public function lead(){
+        return $this->belongsTo(Lead::class, 'lead_id');
+    }
+
+    public function statusLogs()
+    {
+        return $this->morphMany(LogEntityStatus::class, 'model');
+    }
+
+    public function lastStatusLog()
+    {
+        return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
     }
 }

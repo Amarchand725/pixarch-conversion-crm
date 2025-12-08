@@ -45,7 +45,6 @@
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/node-waves/node-waves.css" />
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
-    <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/fullcalendar/fullcalendar.css" />
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/apex-charts/apex-charts.css" />
 
     <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}" />
@@ -126,7 +125,6 @@
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="{{ asset('back-office') }}/assets/vendor/libs/fullcalendar/fullcalendar.js"></script>
     <script src="{{ asset('back-office') }}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 
     <!-- Main JS -->

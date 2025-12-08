@@ -16,10 +16,6 @@ class LeadStatusRequest extends FormRequest
 
     public function rules(): array
     {
-        // return [
-        //     'status_id' => ['required', 'exists:statuses,id'],
-        // ];
-
         return [
             // Always required
             'status_id' => ['required', 'exists:statuses,id'],
@@ -35,15 +31,6 @@ class LeadStatusRequest extends FormRequest
             'time_zone' => ['nullable', 'string'],
         ];
     }
-
-    // public function prepareForValidation()
-    // {
-    //     if ($this->has('status_id')) {
-    //         $this->merge([
-    //             'status_id' => Status::where('uuid', $this->input('status_id'))->value('id')
-    //         ]);
-    //     }
-    // }
 
     public function prepareForValidation()
     {

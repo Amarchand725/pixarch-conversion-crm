@@ -10,15 +10,21 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Status;
+use App\Models\User;
+use App\Modules\Lead\Models\Lead;
 
 class MeetingController extends BaseModuleController
 {
     protected $status;
+    protected $lead;
+    protected $agent;
     
     public function __construct(
         protected MeetingContract $meetingRepo
     ){
         $this->status = new Status();
+        $this->lead = new Lead();
+        $this->agent = new User();
         // Initialize common module variables automatically
         $this->autoInit();
     }
@@ -26,9 +32,10 @@ class MeetingController extends BaseModuleController
     public function index(Request $request)
     {
         $columns = [
-            'name'      => ['label' => 'name', 'searchable' => 'name'],
-            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
-            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
+            'attendee'     => ['label' => 'Attendee', 'html' => true, 'searchable' => false],
+            'lead_name'      => ['label' => 'Lead Name', 'searchable' => false],
+            'status_lab'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'meeting_date_time'     => ['label' => 'Date & Time', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -51,12 +58,22 @@ class MeetingController extends BaseModuleController
     public function formatRow($row)
     {
         $status = $row->status?->name ?? 'de-active';
-        $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+        $row->status_lab = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                     . strtoupper($status) .
                     '</span>';
-        
-        $row->author_id = $row->author
-                ? view('back-office.partials.avatar', ['user' => $row->author])->render()
+
+        $lead = $row?->lead ?? '-';
+        if($lead){
+            $row->lead_name = $lead?->name.' ('.$lead?->phone.')';
+        }else{
+            $row->lead_name = '-';
+        }
+
+        $row->meeting_date_time = $row?->start_date_time.' | '.$row?->end_date_time;
+                    
+        $attendee = $row->attendees()->first() ?? '';
+        $row->attendee = $attendee
+                ? view('back-office.partials.avatar', ['user' => $attendee])->render()
                 : '-';
 
         $row->action = view('back-office.partials.action-buttons', [
@@ -71,6 +88,10 @@ class MeetingController extends BaseModuleController
 
     public function create()
     {
+        $agent_status_id = $this->status->where('model', 'User')->where('name', 'active')->value('id');
+        $lead_status_id = $this->status->where('model', 'Lead')->where('name', 'active')->value('id');
+        $agents = $this->agent->where('status_id',$agent_status_id)->get();
+        $leads = $this->lead->where('status_id',$lead_status_id)->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
@@ -82,7 +103,7 @@ class MeetingController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload) {
                 $this->meetingRepo->storeModel($payload);
             });
-            return successResponse($response, $this->singularLabel. ' registered successfully.');
+            return successResponse($response, $this->singularLabel. ' scheduled successfully.');
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -94,6 +115,10 @@ class MeetingController extends BaseModuleController
     public function edit(Meeting $meeting)
     {
         $statuses = $this->status->where('model', 'Meeting')->get();
+        $agent_status_id = $this->status->where('model', 'User')->where('name', 'active')->value('id');
+        $lead_status_id = $this->status->where('model', 'Lead')->where('name', 'active')->value('id');
+        $agents = $this->agent->where('status_id',$agent_status_id)->get();
+        $leads = $this->lead->where('status_id',$lead_status_id)->get();
         $model = $this->meetingRepo->showModel($meeting);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }

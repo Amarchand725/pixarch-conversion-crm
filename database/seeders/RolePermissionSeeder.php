@@ -181,6 +181,15 @@ class RolePermissionSeeder extends Seeder
             'activity_log-list',
             'activity_log-view',
             'activity_log-delete',
+
+            //Meeting management
+            'meeting-list',
+            'meeting-create',
+            'meeting-view',
+            'meeting-edit',
+            'meeting-delete',
+            'meeting-restore',
+            'meeting-status',
         ];
 
         return $generalPermissions;
