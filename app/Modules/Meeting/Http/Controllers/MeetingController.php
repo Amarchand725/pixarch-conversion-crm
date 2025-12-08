@@ -106,7 +106,7 @@ class MeetingController extends BaseModuleController
     public function store(MeetingRequest $request)
     {
         $payload = $request->validated();
-        dd($payload);
+        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
