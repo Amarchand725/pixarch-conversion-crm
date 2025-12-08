@@ -257,7 +257,7 @@
         @endif
     </div>
     <!-- Modals -->
-    <x-modals />
+    <x-modals size="modal-xl" />
     <!--/ Modals -->
     @push('js')
         <!-- Page JS -->

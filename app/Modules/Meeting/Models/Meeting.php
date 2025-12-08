@@ -12,10 +12,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Status;
 use App\Models\User;
 use App\Modules\Lead\Models\Lead;
+use App\Models\Traits\NotifiesUsers;
 
 class Meeting extends Model
 {
-    use SoftDeletes, LogsActivity, ModelTrait, HasFactory;
+    use SoftDeletes, LogsActivity, ModelTrait, HasFactory, NotifiesUsers;
 
     protected $fillable = ['name', 'status_id'];
 
@@ -49,11 +50,6 @@ class Meeting extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
-    }
-
-    public function author()
-    {
-        return $this->belongsTo(User::class, 'author_id');
     }
 
     public function attendees()

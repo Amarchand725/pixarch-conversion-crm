@@ -99,13 +99,14 @@ class MeetingController extends BaseModuleController
         $agent_status_id = $this->status->where('model', 'User')->where('name', 'active')->value('id');
         $lead_status_id = $this->status->where('model', 'Lead')->where('name', 'active')->value('id');
         $agents = $this->agent->where('status_id',$agent_status_id)->get();
-        $leads = $this->lead->where('status_id',$lead_status_id)->get();
+        $leads = $this->lead->get();
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
     public function store(MeetingRequest $request)
     {
         $payload = $request->validated();
+        dd($payload);
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
@@ -126,7 +127,7 @@ class MeetingController extends BaseModuleController
         $agent_status_id = $this->status->where('model', 'User')->where('name', 'active')->value('id');
         $lead_status_id = $this->status->where('model', 'Lead')->where('name', 'active')->value('id');
         $agents = $this->agent->where('status_id',$agent_status_id)->get();
-        $leads = $this->lead->where('status_id',$lead_status_id)->get();
+        $leads = $this->lead->get();
         $model = $this->meetingRepo->showModel($meeting);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
