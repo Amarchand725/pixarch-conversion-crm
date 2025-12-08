@@ -4,7 +4,6 @@ namespace App\Modules\ActivityLog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\ModelTrait;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,8 +12,9 @@ use App\Models\User;
 
 class ActivityLog extends Model
 {
-    use SoftDeletes, LogsActivity, ModelTrait, HasFactory;
+    use LogsActivity, ModelTrait, HasFactory;
 
+    protected $table = 'activity_log';
     protected $fillable = ['name', 'status_id'];
 
     protected static function booted()

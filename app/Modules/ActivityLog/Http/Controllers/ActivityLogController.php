@@ -4,10 +4,8 @@ namespace App\Modules\ActivityLog\Http\Controllers;
 
 use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Modules\ActivityLog\Repositories\Contracts\ActivityLogContract;
-use App\Modules\ActivityLog\Http\Requests\ActivityLogRequest;
-use App\Modules\ActivityLog\Models\ActivityLog;
+use Spatie\Activitylog\Models\Activity as ActivityLog;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Status;
 
@@ -26,11 +24,11 @@ class ActivityLogController extends BaseModuleController
     public function index(Request $request)
     {
         $columns = [
-            'name'      => ['label' => 'name', 'searchable' => 'name'],
-            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
-            'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
-            'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
-            'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
+            'log_name'      => ['label' => 'Log Name', 'html' => true, 'searchable' => 'log_name'], // e.g., default, authentication
+            'event'         => ['label' => 'Event', 'html' => true, 'searchable' => 'event'],       // created, updated, deleted
+            'causer'        => ['label' => 'Performed By', 'html' => true, 'searchable' => false], // user who performed action
+            'created_at'    => ['label' => 'Date & Time', 'searchable' => 'created_at'],
+            'action'        => ['label' => 'Action', 'html' => true, 'searchable' => false], // buttons if needed
         ];
 
         $query = $this->activityLogRepo->getAll();
@@ -50,14 +48,21 @@ class ActivityLogController extends BaseModuleController
 
     public function formatRow($row)
     {
-        $status = $row->status?->name ?? 'de-active';
-        $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
-                    . strtoupper($status) .
-                    '</span>';
-        
-        $row->author_id = $row->author
-                ? view('back-office.partials.avatar', ['user' => $row->author])->render()
-                : '-';
+        $row['uuid'] = $row->id;
+        $row->log_name = ucwords(str_replace('_', ' ', $row->log_name));
+
+        $eventName = $row->getRawOriginal('event'); // raw value: created, updated, deleted
+
+        $row->event = '<span class="badge rounded-pill px-3 py-2 '
+                    . activityEventBadgeClass($eventName)
+                    . '">'
+                    . ucfirst($eventName)
+                    . '</span>';
+  
+        // Who did the action
+        $row->causer = optional($row->causer)->id
+            ? view('back-office.partials.avatar', ['user' => $row->causer])->render()
+            : '-';
 
         $row->action = view('back-office.partials.action-buttons', [
             'model'            => $row,

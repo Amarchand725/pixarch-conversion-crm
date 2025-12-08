@@ -577,7 +577,7 @@ class MakeModuleCommand extends Command
 
     protected function createViews(string $module, array $fields = [])
     {
-        $pluralFolder = Str::plural(Str::snake($module));
+        $pluralFolder = Str::kebab(Str::plural($module));
         $viewPath = resource_path("views/back-office/{$pluralFolder}");
 
         // Make directories

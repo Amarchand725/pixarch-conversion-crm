@@ -81,11 +81,11 @@
             </a>
         </li>
         @endcan
-        @can('lead_capture-list')
-        <li class="menu-item {{ request()->is('back-office/lead-captures') || request()->is('back-office/lead-captures/*')?'active open':'' }}">
-            <a href="{{ route('back-office.lead-captures.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-clipboard-list"></i>
-                <div data-i18n="Lead Captures List">Lead Captures List</div>
+        @can('activity_log-list')
+        <li class="menu-item {{ request()->is('back-office/activity-logs') || request()->is('back-office/activity-logs/*')?'active open':'' }}">
+            <a href="{{ route('back-office.activity-logs.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-activity"></i>
+                <div data-i18n="Activity Logs List">Activity Logs List</div>
             </a>
         </li>
         @endcan

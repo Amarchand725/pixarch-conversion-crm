@@ -170,3 +170,17 @@ function campaignTypes(): array
         'Call',
     ];
 }
+
+if (!function_exists('activityEventBadgeClass')) {
+    function activityEventBadgeClass(string $event): string
+    {
+        $classes = [
+            'created'  => 'bg-success text-white',
+            'updated'  => 'bg-warning text-white',
+            'deleted'  => 'bg-danger text-white',
+            'restored' => 'bg-info text-white',
+        ];
+
+        return $classes[strtolower($event)] ?? 'bg-secondary text-white';
+    }
+}
