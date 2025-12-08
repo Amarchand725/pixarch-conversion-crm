@@ -24,7 +24,7 @@ class Meeting extends Model
         static::creating(function ($model) {
             if (empty($model->status_id)) {
                 $model->status_id = Status::where('model', 'Meeting')
-                    ->where('name', 'active')
+                    ->where('name', 'Upcoming')
                     ->value('id');
             }
         });

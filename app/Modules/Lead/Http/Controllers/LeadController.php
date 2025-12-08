@@ -65,6 +65,8 @@ class LeadController extends BaseModuleController
 
     public function formatRow($row)
     {   
+        $extraActions = [];
+
         // Keep numeric value untouched for DataTables
         $amount = floatval($row->value ?? 0);
         $symbol = config('app.currency_symbol');
@@ -81,11 +83,20 @@ class LeadController extends BaseModuleController
                             . strtoupper($status) .
                             '</span>';
 
-        $row->action = view($this->pathInitialize.'.actions', [
+        //Adding extra custom actions
+        $extraActions[] = view($this->pathInitialize.'.custom-actions', [
+            'model' => $row,
+            'routeInitialize' => $this->routePrefix,
+            'singularLabel' => $this->singularLabel,
+            'permissionPrefix' => $this->permissionPrefix,
+        ])->render();
+
+        $row->action = view('back-office.partials.actions', [
             'model' => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,
             'singularLabel'    => $this->singularLabel,
+            'extraActions' => $extraActions, // Pass the extra buttons
         ])->render();
 
         return $row;

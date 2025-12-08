@@ -12,9 +12,12 @@ Route::group([
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
         Route::post('{id}/restore', 'restore')->name('restore');
         Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+        Route::post('{meeting}/update-status', 'updateStatus')->name('update-status');
+
+        Route::get('action/edit/{action}/{meeting?}', 'actionEdit')->name('action.edit');
     });
 
     // 🧱 Resource CRUD
     Route::resource('/', MeetingController::class)
-            ->parameters(['' => 'Meeting']);
+            ->parameters(['' => 'meeting']);
 });

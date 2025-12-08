@@ -81,5 +81,13 @@
                 ]"
             />
         @endcan
+
+        {{-- EXTRA ACTIONS FOR SPECIFIC MODULES --}}
+        @if(!empty($extraActions))
+            <div class="dropdown-divider"></div>
+            @foreach($extraActions as $action)
+                {!! $action !!}
+            @endforeach
+        @endif
     </div>
 </div>

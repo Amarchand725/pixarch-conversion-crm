@@ -75,11 +75,20 @@ class MeetingController extends BaseModuleController
                 ? view('back-office.partials.avatar', ['user' => $attendee])->render()
                 : '-';
 
-        $row->action = view('back-office.partials.action-buttons', [
-            'model'            => $row,
+        //Adding extra custom actions
+        $extraActions[] = view($this->pathInitialize.'.custom-actions', [
+            'model' => $row,
+            'routeInitialize' => $this->routePrefix,
+            'singularLabel' => $this->singularLabel,
+            'permissionPrefix' => $this->permissionPrefix,
+        ])->render();
+
+        $row->action = view('back-office.partials.actions', [
+            'model' => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,
             'singularLabel'    => $this->singularLabel,
+            'extraActions' => $extraActions, // Pass the extra buttons
         ])->render();
 
         return $row;
@@ -222,6 +231,36 @@ class MeetingController extends BaseModuleController
             return redirect()->route(strtolower('meetings.index'))->with('success', 'Bulk restore successful.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function actionEdit($action, Meeting $meeting): string
+    {
+        $statuses = $this->status->where('model', 'Meeting')->get();
+        $agents = $this->agent
+        ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+        ->whereHas('status', fn($q) => $q->where('name', 'active'))
+        ->get();
+
+        return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
+    }
+
+    public function updateStatus(MeetingRequest $request, Meeting $meeting)
+    {
+        $payload = $request->validated();
+        
+        try {
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $meeting) {
+                $response = $this->meetingRepo->statusModel($lead, $payload);
+            });
+
+            return successResponse($response, $this->singularLabel. ' updated successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500); // optional HTTP 500
         }
     }
 }

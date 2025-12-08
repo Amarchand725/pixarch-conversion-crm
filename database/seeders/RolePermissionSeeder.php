@@ -190,6 +190,7 @@ class RolePermissionSeeder extends Seeder
             'meeting-delete',
             'meeting-restore',
             'meeting-status',
+            'meeting-reschedule',
         ];
 
         return $generalPermissions;

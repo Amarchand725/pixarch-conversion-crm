@@ -4,6 +4,7 @@ namespace App\Modules\Meeting\Http\Requests;
 
 use App\Models\Status;
 use App\Models\User;
+use App\Modules\Lead\Models\Lead;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MeetingRequest extends FormRequest
@@ -41,6 +42,12 @@ class MeetingRequest extends FormRequest
         if ($this->has('attendee_id')) {
             $this->merge([
                 'attendee_id' => User::where('uuid', $this->input('attendee_id'))->value('id')
+            ]);
+        }
+
+        if ($this->has('lead_id')) {
+            $this->merge([
+                'lead_id' => Lead::where('uuid', $this->input('lead_id'))->value('id')
             ]);
         }
     }
