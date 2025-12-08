@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->nullOnDelete();
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
             $table->text('shareable_link')->comment('URL for sharing lead capture form');
+            $table->boolean('faq_status')->default(1)->comment('for faq section enable/disable');
             $table->string('name')->comment('e.g Contact form, facebook lead form');
             $table->string('description')->nullable();
             $table->softDeletes();

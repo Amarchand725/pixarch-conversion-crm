@@ -13,7 +13,7 @@
                             <img
                                 src="{{ optional(Auth::user()?->avatar)->path
                                     ? asset('storage/' . Auth::user()?->avatar->path)
-                                    : asset('back-office/assets/img/avatars/1' . '.png') }}"
+                                    : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                 alt="user image"
                                 class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"
                             />
@@ -53,6 +53,11 @@
                     </li> --}}
                     <li class="nav-item">
                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" 
+                        data-bs-target="#navs-edit-profile" aria-controls="navs-edit-profile" 
+                        aria-selected="true"><i class="ti ti-edit me-1 ti-xs"></i>Edit Profile</button>
+                    </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" 
                         data-bs-target="#navs-password" aria-controls="navs-password" 
                         aria-selected="true"><i class="ti ti-lock me-1 ti-xs"></i>Password</button>
                     </li>
@@ -72,14 +77,21 @@
                                                     <i class="ti ti-user"></i><span class="fw-bold mx-2">Name:</span> <span>{{ auth()->user()->name }}</span>
                                                 </li>
                                                 <li class="d-flex align-items-center mb-3">
+                                                    <i class="ti ti-gender-bigender"></i>
+                                                    <span class="fw-bold mx-2">Gender:</span> 
+                                                    <span>
+                                                        @if( auth()->user()->gender=='M')
+                                                            Male
+                                                        @else
+                                                            Female
+                                                        @endif
+                                                    </span>
+                                                </li>
+                                                <li class="d-flex align-items-center mb-3">
                                                     <i class="ti ti-check"></i><span class="fw-bold mx-2">Status:</span> <span>{{ ucfirst(auth()->user()->status->name) }}</span>
                                                 </li>
                                                 <li class="d-flex align-items-center mb-3">
                                                     <i class="ti ti-crown"></i><span class="fw-bold mx-2">Role:</span> <span>{{ auth()->user()?->roles()?->first()?->name }}</span>
-                                                </li>
-                                                <li class="d-flex align-items-center mb-3">
-                                                    <i class="ti ti-file-description"></i><span class="fw-bold mx-2">Languages:</span>
-                                                    <span>English</span>
                                                 </li>
                                             </ul>
                                             <small class="card-text text-uppercase">Contacts</small>
@@ -91,6 +103,19 @@
                                                 <li class="d-flex align-items-center mb-3">
                                                     <i class="ti ti-mail"></i><span class="fw-bold mx-2">Email:</span>
                                                     <span>{{ auth()->user()->email }}</span>
+                                                </li>
+                                            </ul>
+                                            <small class="card-text text-uppercase">Lead Limitation</small>
+                                            <ul class="list-unstyled mb-4 mt-3">
+                                                <li class="d-flex align-items-center mb-3">
+                                                    <i class="ti ti-gauge"></i>
+                                                    <span class="fw-bold mx-2">Daily Limit:</span>
+                                                    <span>{{ auth()->user()->daily_capacity ?? 'N/A' }}</span>
+                                                </li>
+                                                <li class="d-flex align-items-center mb-3">
+                                                    <i class="ti ti-scale"></i>
+                                                    <span class="fw-bold mx-2">Weight:</span>
+                                                    <span>{{ auth()->user()->weight }}</span>
                                                 </li>
                                             </ul>
                                             {{-- <small class="card-text text-uppercase">Teams</small>
@@ -221,6 +246,123 @@
                             <!--/ User Profile Content -->
                         </div>
                     </div>
+                    <div class="tab-pane fade" id="navs-edit-profile" role="tabpanel">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-10 pl-md-2 pt-md-0 pt-sm-4 pt-4">
+                                    <div class="tab-content px-primary">
+                                        <div id="" class="tab-pane fade active show">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="d-flex align-items-center text-capitalize mb-0 title tab-content-header">
+                                                    Edit Profile
+                                                </h5>
+                                                <div class="d-flex align-items-center mb-0"></div>
+                                            </div>
+                                            <hr />
+                                            <div class="content py-primary" id="edit-profile">
+                                                <div class="content" id="">
+                                                    <form class="ajax-form" id="create-form" data-modal-id="edit-profile" action="{{ route('back-office.auth.update-profile') }}" data-method="POST" enctype="multipart/form-data">
+                                                        @csrf
+
+                                                        <!-- Name -->
+                                                        <div class="form-group">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-lg-3 col-md-3">
+                                                                    <label>Name <span class="text-danger">*</span></label>
+                                                                </div>
+
+                                                                <div class="col-lg-8 col-md-8">
+                                                                    <input type="text" value="{{ old('name', auth()->user()->name) }}" class="form-control" id="name" name="name" placeholder="Enter full name">
+                                                                    <span id="name_error" class="text-danger error"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Phone -->
+                                                        <div class="form-group mt-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-lg-3 col-md-3">
+                                                                    <label>Phone <span class="text-danger">*</span></label>
+                                                                </div>
+
+                                                                <div class="col-lg-8 col-md-8">
+                                                                    <input type="tel" value="{{ old('phone', auth()->user()->phone) }}" class="form-control phoneNumber" id="phone" name="phone" placeholder="Enter phone number">
+                                                                    <span id="phone_error" class="text-danger error"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Gender -->
+                                                        <div class="form-group mt-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-lg-3 col-md-3">
+                                                                    <label>Gender <span class="text-danger">*</span></label>
+                                                                </div>
+
+                                                                <div class="col-lg-8 col-md-8">
+                                                                    <select id="gender" name="gender" class="form-select">
+                                                                        <option value="M" {{ old('name', auth()->user()->gender)=='M' ? 'selected' : '' }}>Male</option>
+                                                                        <option value="F" {{ old('name', auth()->user()->gender)=='F' ? 'selected' : '' }}>Female</option>
+                                                                    </select>
+                                                                    <span id="gender_error" class="text-danger error"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Avatar -->
+                                                        <div class="form-group mt-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-lg-3 col-md-3">
+                                                                    <label>Avatar <span class="text-danger">*</span></label>
+                                                                </div>
+
+                                                                <div class="col-lg-8 col-md-8">
+                                                                    <!-- File input -->
+                                                                    <input 
+                                                                        type="file" 
+                                                                        id="avatar" 
+                                                                        name="avatar" 
+                                                                        accept=".png, .jpg, .jpeg" 
+                                                                        class="form-control"
+                                                                        onchange="previewAvatar(event)"
+                                                                    />
+                                                                    <small class="text-muted">Allowed file types: png, jpg, jpeg.</small>
+
+                                                                    <!-- Preview wrapper -->
+                                                                    <div class="mb-3">
+                                                                        <img id="avatar_preview" 
+                                                                            alt="Avatar Preview" 
+                                                                            class="img-thumbnail rounded-circle" 
+                                                                            style="width: 80px; height: 80px; object-fit: cover; {{ auth()->user()?->avatar?->path ? '' : 'display: none;' }}"
+                                                                            src="{{ auth()->user()?->avatar?->path ? asset('storage/'.auth()->user()?->avatar?->path) : '' }}"
+                                                                        >
+                                                                    </div>
+                                                                    <span id="avatar_error" class="text-danger error"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group mt-5 mb-0">
+                                                            <div class="col-12 mt-3">
+                                                                <div class="demo-inline-spacing sub-btn">
+                                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                                                </div>
+                                                                <div class="demo-inline-spacing loading-btn" style="display: none;">
+                                                                    <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
+                                                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                                                    Loading...
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="navs-password" role="tabpanel">
                         <div class="card-body">
                             <div class="row">
@@ -300,11 +442,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group mt-5 mb-0">
-                                                            <button type="submit" class="btn text-center btn-primary">
-                                                                <span class="w-100">
-                                                                    Save
-                                                                </span>
-                                                            </button>
+                                                            <div class="col-12 mt-3">
+                                                                <div class="demo-inline-spacing sub-btn">
+                                                                    <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                                                </div>
+                                                                <div class="demo-inline-spacing loading-btn" style="display: none;">
+                                                                    <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
+                                                                    <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
+                                                                    Loading...
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -621,4 +769,26 @@
         </div>
         <!--/ Navbar pills -->
     </div>
+
+    @push('js')
+        <script>
+            function previewAvatar(event) {
+                const input = event.target;
+                const preview = document.getElementById('avatar_preview');
+
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block'; // show preview
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    // Reset preview if no file selected
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            }
+        </script>
+    @endpush
 </x-app-layout>

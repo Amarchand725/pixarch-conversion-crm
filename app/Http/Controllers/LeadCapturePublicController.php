@@ -35,9 +35,12 @@ class LeadCapturePublicController extends BaseModuleController
 
     public function show($uuid)
     {
+        $faqs = null;
         $status_id = $this->status->where('model', 'Faq')->where('name', 'active')->value('id');
         $model = $this->lead_capture->where('uuid', $uuid)->firstOrFail();
-        $faqs = Faq::where('status_id', $status_id)->get();
+        if($model->faq_status){
+            $faqs = Faq::where('status_id', $status_id)->get();
+        }
         $title = $model->name.' - Form';
         return view('frontend.landing-form', get_defined_vars());
     }

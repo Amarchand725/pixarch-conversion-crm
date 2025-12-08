@@ -81,6 +81,14 @@
             </a>
         </li>
         @endcan
+        @can('lead_capture-list')
+        <li class="menu-item {{ request()->is('back-office/lead-captures') || request()->is('back-office/lead-captures/*')?'active open':'' }}">
+            <a href="{{ route('back-office.lead-captures.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-clipboard-list"></i>
+                <div data-i18n="Lead Captures List">Lead Captures List</div>
+            </a>
+        </li>
+        @endcan
 
         <li class="menu-item {{ request()->is('back-office/meetings') || request()->is('back-office/roles/*')?'active open':'' }}">
             <a href="{{ route('back-office.meetings.index') }}" class="menu-link">

@@ -20,6 +20,7 @@ class LeadCaptureRequest extends FormRequest
         return [
             'status_id' => ['nullable', 'exists:statuses,id'],
             'campaign_id' => ['nullable', 'exists:campaigns,id'],
+            'faq_status' => ['required', 'boolean'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             

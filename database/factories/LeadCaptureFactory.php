@@ -21,6 +21,7 @@ class LeadCaptureFactory extends Factory
         return [
             'status_id'   => $statusId,
             'campaign_id' => $this->faker->randomElement(Campaign::pluck('id')->toArray()),
+            'faq_status'   => 1,
             'name'        => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(),
         ];

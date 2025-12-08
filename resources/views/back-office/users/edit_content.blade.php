@@ -15,6 +15,19 @@
         />
         <span id="name_error" class="text-danger error">{{ $errors->first('name') }}</span>
     </div>
+    
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="gender" class="form-label fw-semibold">
+            Gender <span class="text-danger">*</span>
+        </label>
+        <select id="gender" name="gender" class="form-select">
+            <option value="">Select gender</option>
+            <option value="M" {{ $model->gender=='M' ? 'selected' :'' }}>Male</option>
+            <option value="F" {{ $model->gender=='F' ? 'selected' :'' }}>Female</option>
+        </select>
+        <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
+    </div>
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="phone" class="form-label fw-semibold">
@@ -30,18 +43,52 @@
         />
         <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
     </div>
-    <!-- Name Input -->
+    
     <div class="col-12 col-md-6">
-        <label for="gender" class="form-label fw-semibold">
-            Gender <span class="text-danger">*</span>
+        <label for="email" class="form-label fw-semibold">
+            Email <span class="text-danger">*</span>
         </label>
-        <select id="gender" name="gender" class="form-select">
-            <option value="">Select gender</option>
-            <option value="M" {{ $model->gender=='M' ? 'selected' :'' }}>Male</option>
-            <option value="F" {{ $model->gender=='F' ? 'selected' :'' }}>Female</option>
-        </select>
-        <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
+        <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            class="form-control" 
+            placeholder="Enter email" 
+            value="{{ old('email', $model->email) }}"
+        />
+        <span id="email_error" class="text-danger error">{{ $errors->first('email') }}</span>
     </div>
+
+    <div class="col-12 col-md-6">
+        <label for="daily_capacity" class="form-label fw-semibold">
+            Daily Capacity <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="number" 
+            id="daily_capacity" 
+            name="daily_capacity" 
+            class="form-control dob-picker" 
+            placeholder="Enter daily capacity"
+            value="{{ old('daily_capacity', $model->daily_capacity) }}"
+        />
+        <span id="daily_capacity_error" class="text-danger error">{{ $errors->first('daily_capacity') }}</span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label for="weight" class="form-label fw-semibold">
+            Weight <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="number" 
+            id="weight" 
+            name="weight" 
+            class="form-control dob-picker" 
+            placeholder="Enter weight"
+            value="{{ old('weight', $model->weight) }}"
+        />
+        <span id="weight_error" class="text-danger error">{{ $errors->first('weight') }}</span>
+    </div>
+
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="doj" class="form-label fw-semibold">
@@ -56,19 +103,18 @@
         />
         <span id="doj_error" class="text-danger error">{{ $errors->first('doj') }}</span>
     </div>
+
     <div class="col-12 col-md-6">
-        <label for="email" class="form-label fw-semibold">
-            Email <span class="text-danger">*</span>
+        <label for="status_id" class="form-label fw-semibold">
+            Status
         </label>
-        <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            class="form-control" 
-            placeholder="Enter email" 
-            value="{{ old('email', $model->email) }}"
-        />
-        <span id="email_error" class="text-danger error">{{ $errors->first('email') }}</span>
+        <select id="status_id" name="status_id" class="form-select">
+            <option value="">Select status</option>
+            @foreach ($statuses as $status)
+                <option value="{{ $status->uuid }}" {{ $model->status_id==$status->id?'selected':'' }}>{{ ucfirst($status->name) }}</option>
+            @endforeach
+        </select>
+        <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
     </div>
 
     <!-- Avatar Upload -->
@@ -99,18 +145,7 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-12">
-        <label for="status_id" class="form-label fw-semibold">
-            Status
-        </label>
-        <select id="status_id" name="status_id" class="form-select">
-            <option value="">Select status</option>
-            @foreach ($statuses as $status)
-                <option value="{{ $status->uuid }}" {{ $model->status_id==$status->id?'selected':'' }}>{{ ucfirst($status->name) }}</option>
-            @endforeach
-        </select>
-        <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
-    </div>
+    
 </div>
 
 <script>

@@ -16,7 +16,11 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Role</td>
-        <td>{{ $model?->roles()?->first()?->name??'-' }}</td>
+        <td>
+            <span class="badge rounded-pill px-3 py-2 bg-success text-white">
+            {{ $model?->roles()?->first()?->name??'-' }}
+            </span>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Email</td>
@@ -25,6 +29,22 @@
     <tr>
         <td class="text-nowrap fw-semibold">Phone</td>
         <td>{{ $model->phone??'-' }}</td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Daily Capacity</td>
+        <td>
+            <span class="badge rounded-pill px-3 py-2 bg-info text-white">
+            {{ $model->daily_capacity??'-' }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Weight</td>
+        <td>
+            <span class="badge rounded-pill px-3 py-2 bg-primary text-white">
+            {{ $model->weight??'-' }}
+            </span>
+        </td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Gender</td>
@@ -40,7 +60,7 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Date of Joining</td>
-        <td>{{ $model->doj??'-' }}</td>
+        <td>{{ getDateFormat($model->doj)??'-' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Status</td>

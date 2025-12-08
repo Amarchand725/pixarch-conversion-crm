@@ -14,7 +14,20 @@
         />
         <span id="name_error" class="text-danger error">{{ $errors->first('name') }}</span>
     </div>
+   
     <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="gender" class="form-label fw-semibold">
+            Gender <span class="text-danger">*</span>
+        </label>
+        <select id="gender" name="gender" class="form-select">
+            <option value="" selected>Select gender</option>
+            <option value="M" selected>Male</option>
+            <option value="F">Female</option>
+        </select>
+        <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
+    </div>
+     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="phone" class="form-label fw-semibold">
             Phone
@@ -29,33 +42,7 @@
         />
         <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>
     </div>
-    <!-- Name Input -->
-    <div class="col-12 col-md-6">
-        <label for="gender" class="form-label fw-semibold">
-            Gender <span class="text-danger">*</span>
-        </label>
-        <select id="gender" name="gender" class="form-select">
-            <option value="" selected>Select gender</option>
-            <option value="M" selected>Male</option>
-            <option value="F">Female</option>
-        </select>
-        <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
-    </div>
-    <!-- Name Input -->
-    <div class="col-12 col-md-6">
-        <label for="doj" class="form-label fw-semibold">
-            Date of Joining
-        </label>
-        <input 
-            type="date" 
-            id="doj" 
-            name="doj" 
-            class="form-control dob-picker" 
-            placeholder="MM-DD-YYYY"
-            value="{{ old('doj') }}"
-        />
-        <span id="doj_error" class="text-danger error">{{ $errors->first('doj') }}</span>
-    </div>
+   
     <div class="col-12 col-md-6">
         <label for="email" class="form-label fw-semibold">
             Email <span class="text-danger">*</span>
@@ -97,6 +84,52 @@
             value="{{ old('password_confirmation') }}"
         />
         <span id="password_confirmation_error" class="text-danger error">{{ $errors->first('password_confirmation') }}</span>
+    </div>
+    <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="daily_capacity" class="form-label fw-semibold">
+            Daily Capacity <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="number" 
+            id="daily_capacity" 
+            name="daily_capacity" 
+            class="form-control dob-picker" 
+            placeholder="Enter daily capacity"
+            value="{{ old('daily_capacity') }}"
+        />
+        <span id="daily_capacity_error" class="text-danger error">{{ $errors->first('daily_capacity') }}</span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label for="weight" class="form-label fw-semibold">
+            Weight <span class="text-danger">*</span>
+        </label>
+        <input 
+            type="number" 
+            id="weight" 
+            name="weight" 
+            class="form-control dob-picker" 
+            placeholder="Enter weight"
+            value="{{ old('weight') }}"
+        />
+        <span id="weight_error" class="text-danger error">{{ $errors->first('weight') }}</span>
+    </div>
+
+     <!-- Name Input -->
+    <div class="col-12 col-md-6">
+        <label for="doj" class="form-label fw-semibold">
+            Date of Joining
+        </label>
+        <input 
+            type="date" 
+            id="doj" 
+            name="doj" 
+            class="form-control dob-picker" 
+            placeholder="MM-DD-YYYY"
+            value="{{ old('doj') }}"
+        />
+        <span id="doj_error" class="text-danger error">{{ $errors->first('doj') }}</span>
     </div>
 
     <!-- Avatar Upload -->

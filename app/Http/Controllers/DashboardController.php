@@ -58,7 +58,6 @@ class DashboardController extends Controller
 
         return view('back-office.dashboard', get_defined_vars());
     }
-
     public function profile(){
         $title = Auth::user()->name . "'s Profile";
         return view('back-office.profile', get_defined_vars());

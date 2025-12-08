@@ -177,8 +177,7 @@ class MakeModuleCommand extends Command
                 [$name, $type] = explode(':', $field);
                 if ($name === 'id') return "\$table->id();";
                 if ($name === 'uuid') return "\$table->uuid('uuid')->unique();";
-                if ($name === 'status_id') return "\$table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();";
-                if ($name === 'author_id_id') return "\$table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();";
+                if ($name === 'status_id') return "\$table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();";
                 return "\$table->{$type}('{$name}')->nullable();";
             })
             ->implode("\n            ");
@@ -505,7 +504,6 @@ class MakeModuleCommand extends Command
         public function rules(): array
         {
             return [
-                'status_id' => ['nullable', 'exists:statuses,id'],
                 {$rulesBlock}
             ];
         }

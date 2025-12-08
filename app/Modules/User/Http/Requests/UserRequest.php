@@ -39,6 +39,8 @@ class UserRequest extends FormRequest
                 'min:6'
             ],
             'avatar' => [ 'nullable'],
+            'daily_capacity' => ['required', 'numeric', 'min:1'],
+            'weight' => ['required', 'numeric', 'min:1'],
         ];
     }
 

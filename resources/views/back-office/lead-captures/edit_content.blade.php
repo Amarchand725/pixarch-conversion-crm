@@ -28,6 +28,16 @@
       <span id="campaign_id_error" class="text-danger error">{{ $errors->first('campaign_id') }}</span>
     </div>
     <div class="col-12 col-md-6">
+      <label for="faq_status" class="form-label fw-semibold">
+        Faq Status <span class="text-danger">*</span>
+      </label>
+      <select id="faq_status" name="faq_status" class="form-select">
+        <option value="1" {{ $model->faq_status==1?'selected':'' }}>Enable</option>
+        <option value="0" {{ $model->faq_status==0?'selected':'' }}>Disable</option>
+      </select>
+      <span id="faq_status_error" class="text-danger error">{{ $errors->first('faq_status') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
         <label for="status_id" class="form-label fw-semibold">
           Status
         </label>

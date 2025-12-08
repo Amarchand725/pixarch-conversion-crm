@@ -36,6 +36,8 @@ class User extends Authenticatable
         'gender',
         'doj',
         'phone',
+        'daily_capacity',
+        'weight',
         'two_factor',
         'notification',
         'status_id'
