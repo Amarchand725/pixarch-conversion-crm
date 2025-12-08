@@ -187,55 +187,57 @@
             </div>
             <!--/ Pricing Plans -->
             <!-- FAQS -->
-            <div class="pricing-faqs bg-alt-pricing rounded-bottom">
-                <div class="container py-5 px-lg-5">
-                <div class="row mt-0 mt-md-4">
-                    <div class="col-12 text-center mb-4">
-                    <h2 class="mb-2">FAQs</h2>
-                    <p class="mb-2">Let us help answer the most common questions.</p>
-                    </div>
-                </div>
-                <div class="row mx-4">
-                    <div class="col-12">
-                        <div id="faq" class="accordion accordion-without-arrow">
-                            @if($faqs->count())
-                                <div class="accordion" id="faqAccordion">
-                                    @foreach($faqs as $index => $faq)
-                                        <div class="card accordion-item">
-                                            <h6 class="accordion-header" id="heading-{{ $index }}">
-                                                <button
-                                                    class="accordion-button {{ $index != 0 ? 'collapsed' : '' }}"
-                                                    type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#collapse-{{ $index }}"
-                                                    aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
-                                                    aria-controls="collapse-{{ $index }}"
-                                                >
-                                                    {{ $faq->question }}
-                                                </button>
-                                            </h6>
-
-                                            <div
-                                                id="collapse-{{ $index }}"
-                                                class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}"
-                                                aria-labelledby="heading-{{ $index }}"
-                                                data-bs-parent="#faqAccordion"
-                                            >
-                                                <div class="accordion-body">
-                                                    {!! nl2br(e($faq->answer)) !!}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="text-center text-muted">No FAQs available at the moment.</p>
-                            @endif
+            @if(count($faqs) > 0)
+                <div class="pricing-faqs bg-alt-pricing rounded-bottom">
+                    <div class="container py-5 px-lg-5">
+                    <div class="row mt-0 mt-md-4">
+                        <div class="col-12 text-center mb-4">
+                        <h2 class="mb-2">FAQs</h2>
+                        <p class="mb-2">Let us help answer the most common questions.</p>
                         </div>
                     </div>
+                    <div class="row mx-4">
+                        <div class="col-12">
+                            <div id="faq" class="accordion accordion-without-arrow">
+                                @if($faqs->count())
+                                    <div class="accordion" id="faqAccordion">
+                                        @foreach($faqs as $index => $faq)
+                                            <div class="card accordion-item">
+                                                <h6 class="accordion-header" id="heading-{{ $index }}">
+                                                    <button
+                                                        class="accordion-button {{ $index != 0 ? 'collapsed' : '' }}"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#collapse-{{ $index }}"
+                                                        aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
+                                                        aria-controls="collapse-{{ $index }}"
+                                                    >
+                                                        {{ $faq->question }}
+                                                    </button>
+                                                </h6>
+
+                                                <div
+                                                    id="collapse-{{ $index }}"
+                                                    class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}"
+                                                    aria-labelledby="heading-{{ $index }}"
+                                                    data-bs-parent="#faqAccordion"
+                                                >
+                                                    <div class="accordion-body">
+                                                        {!! nl2br(e($faq->answer)) !!}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p class="text-center text-muted">No FAQs available at the moment.</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                </div>
-            </div>
+            @endif
             <!--/ FAQS -->
         </div>
     </div>

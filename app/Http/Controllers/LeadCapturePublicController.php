@@ -35,7 +35,7 @@ class LeadCapturePublicController extends BaseModuleController
 
     public function show($uuid)
     {
-        $faqs = null;
+        $faqs = [];
         $status_id = $this->status->where('model', 'Faq')->where('name', 'active')->value('id');
         $model = $this->lead_capture->where('uuid', $uuid)->firstOrFail();
         if($model->faq_status){
