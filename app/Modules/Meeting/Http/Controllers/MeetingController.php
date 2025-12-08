@@ -62,8 +62,7 @@ class MeetingController extends BaseModuleController
                     . strtoupper($status) .
                     '</span>';
 
-        $lead = $row?->lead ?? '-';
-        if($lead){
+        if($lead = $row?->lead){
             $row->lead_name = $lead?->name.' ('.$lead?->phone.')';
         }else{
             $row->lead_name = '-';
