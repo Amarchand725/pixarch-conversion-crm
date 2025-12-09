@@ -279,7 +279,7 @@ class MeetingController extends BaseModuleController
                     'start' => $meeting->start_date_time,
                     'end' => $meeting->end_date_time,
                     'extendedProps' => [
-                        'calendar' => strtolower('business'), // e.g. 'personal', 'business'
+                        'calendar' => 'Business', // e.g. 'personal', 'business'
                         'description' => $meeting->description,
                     ]
                 ];
