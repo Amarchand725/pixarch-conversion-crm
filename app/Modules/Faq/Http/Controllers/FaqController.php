@@ -30,7 +30,7 @@ class FaqController extends BaseModuleController
 
         $columns = [
             'question'      => ['label' => 'Question', 'searchable' => 'question'],
-            'status'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'status_id'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
@@ -43,7 +43,7 @@ class FaqController extends BaseModuleController
             columns: $columns,
             rowFormatter: function ($row) use ($routeInitialize, $permissionPrefix, $singularLabel) {
                 $status = $row->status?->name ?? 'de-active';
-                $row->status = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+                $row->status_id = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                             . strtoupper($status) .
                             '</span>';
                 

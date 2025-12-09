@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Campaign\Http\Controllers\CampaignController;
 
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:campaign']
 ], function () {
     Route::controller(CampaignController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

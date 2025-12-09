@@ -5,7 +5,7 @@ use App\Modules\Faq\Http\Controllers\FaqController;
 
 // 🧩 Faq Module Routes
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:faq']
 ], function () {
     Route::controller(FaqController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

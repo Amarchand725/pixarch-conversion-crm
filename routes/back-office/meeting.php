@@ -5,7 +5,7 @@ use App\Modules\Meeting\Http\Controllers\MeetingController;
 
 // 🧩 Meeting Module Routes
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:meeting']
 ], function () {
     Route::controller(MeetingController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

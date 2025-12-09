@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Lead\Http\Controllers\LeadController;
 
 Route::group([
-    'middleware' => ['web', 'auth']
+    'middleware' => ['web', 'auth', 'permission.actions:lead']
 ], function () {
     Route::controller(LeadController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');

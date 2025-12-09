@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Team\Http\Controllers\TeamController;
 
 // 🧩 Team Module Routes
-Route::middleware(['web', 'auth'])
+Route::middleware(['web', 'auth', 'permission.actions:team'])
     ->prefix('teams')
     ->name('teams.')
     ->group(function () {

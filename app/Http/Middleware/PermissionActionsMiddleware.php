@@ -24,15 +24,10 @@ class PermissionActionsMiddleware
         'bulkDelete' => 'bulk-delete',
         'permanentDelete' => 'permanent-delete',
         'restore' => 'restore',
-        'export' => 'export',
-        'download' => 'download',
 
         // User-specific
         'directPermission' => 'direct-permission',
         'status' => 'status',
-
-        'assignUser' => 'assign-user',
-        'assignedUsers' => 'assigned-users-list',
     ];
 
     /**
@@ -56,7 +51,7 @@ class PermissionActionsMiddleware
         if ($suffix) {
             $permission = "{$prefix}-{$suffix}";
             if (!$user->can($permission)) {
-                return redirect()->route('dashboard') // you can create a named route
+                return redirect()->route('back-office.auth.dashboard') // you can create a named route
                 ->with('error', "You do not have required authorization");
             }
         }
