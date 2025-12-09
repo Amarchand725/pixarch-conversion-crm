@@ -69,17 +69,16 @@ class AuthController extends Controller
         $title = Auth::user()->name . "'s Profile";
 
         $authUser = auth()->user();
-        $isAdmin = $authUser->hasRole('admin'); // adjust according to your role system
+        $isAdmin = $authUser->hasRole('Admin'); // adjust according to your role system
         $agentId = $authUser->id;
 
         // 1️⃣ Lead Activities
         $leadQuery = LogEntityStatus::with(['assignee', 'lead']);
 
+        $leadActivities = null;
         if (!$isAdmin) {
             $leadQuery->where('assignee_id', $agentId);
-        }
-
-        $leadActivities = $leadQuery->get()
+            $leadActivities = $leadQuery->get()
             ->map(function($log) {
                 return [
                     'type' => 'lead_assigned', // you can also make dynamic using $log->action
@@ -88,6 +87,7 @@ class AuthController extends Controller
                     'created_at' => $log->created_at,
                 ];
             });
+        }
 
         // 2️⃣ Meeting Activities
         $meetingQuery = Meeting::with(['attendees', 'lead']);
@@ -111,41 +111,6 @@ class AuthController extends Controller
             ->merge($meetingActivities)
             ->sortByDesc('created_at')
             ->values(); // reset keys
-
-        
-        // $agentId = auth()->id(); // current agent
-
-        // // 1️⃣ Lead Activities
-        // $leadActivities = LogEntityStatus::with(['assignee', 'lead'])
-        //     ->where('assignee_id', $agentId)
-        //     ->get()
-        //     ->map(function($log) {
-        //         return [
-        //             'type' => 'lead_assigned', // or dynamically from $log->action
-        //             'description' => $log->description ?? "Lead '{$log->lead?->name}' updated",
-        //             'related_user' => $log->assignee,
-        //             'created_at' => $log->created_at,
-        //         ];
-        //     });
-
-        // // 2️⃣ Meeting Activities
-        // $meetingActivities = Meeting::with(['attendees', 'lead'])
-        //     ->whereHas('attendees', fn($q) => $q->where('user_id', $agentId))
-        //     ->get()
-        //     ->map(function($meeting) {
-        //         return [
-        //             'type' => 'meeting_scheduled',
-        //             'description' => "Meeting with '{$meeting->lead?->name}' scheduled @ ".getDateTimeFormat($meeting->start_date_time),
-        //             'related_user' => $meeting->attendees->first(), // main agent
-        //             'created_at' => $meeting->created_at,
-        //         ];
-        //     });
-
-        // // 3️⃣ Merge and sort all activities
-        // $activities = collect($leadActivities)
-        //     ->merge($meetingActivities)
-        //     ->sortByDesc('created_at')
-        //     ->values(); // reset keys
             
         return view('back-office.dashboard.profile', get_defined_vars());
     }

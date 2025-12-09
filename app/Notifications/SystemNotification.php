@@ -31,7 +31,7 @@ class SystemNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast', 'mail'];
+        return ['database', 'broadcast'];
     }
 
     public function toMail($notifiable)
