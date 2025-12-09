@@ -54,6 +54,25 @@ class RolePermissionSeeder extends Seeder
 
             $adminRole->syncPermissions(Permission::where('guard_name', 'user')->get());
 
+            // Roles
+            $leadRole = Role::where('name', 'Lead')->first();
+            $agentRole = Role::where('name', 'Agent')->first();
+
+            // Permissions to assign to Lead & Agent
+            $limitedPermissions = [
+                'lead-list', 
+                'lead-view', 
+                'notification-list', 
+                'notification-view', 
+                'meeting-list', 
+                'meeting-view', 
+                'meeting-status',
+            ];
+
+            // Assign only these permissions to Lead & Agent
+            $leadRole->syncPermissions($limitedPermissions);
+            $agentRole->syncPermissions($limitedPermissions);
+
             $this->command->info('admin role created and permissions assigned successfully!');
         });
     }

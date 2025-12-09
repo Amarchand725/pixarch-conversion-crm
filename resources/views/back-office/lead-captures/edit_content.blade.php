@@ -29,7 +29,7 @@
     </div>
     <div class="col-12 col-md-6">
       <label for="faq_status" class="form-label fw-semibold">
-        Faq Status <span class="text-danger">*</span>
+        Faq Section <span class="text-danger">*</span>
       </label>
       <select id="faq_status" name="faq_status" class="form-select">
         <option value="1" {{ $model->faq_status==1?'selected':'' }}>Enable</option>
