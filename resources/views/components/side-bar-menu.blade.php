@@ -29,6 +29,15 @@
             <span class="menu-header-text">Apps &amp; Pages</span>
         </li>
 
+        @can('notification-list')
+        <li class="menu-item {{ request()->is('back-office/notifications') || request()->is('back-office/notifications/*')?'active open':'' }}">
+            <a href="{{ route('back-office.notifications.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-bell"></i>
+                <div data-i18n="Notifications List">Notifications List</div>
+            </a>
+        </li>
+        @endcan
+
         @can('lead-list')
         <li class="menu-item {{ request()->is('back-office/leads') || request()->is('back-office/leads/*')?'active open':'' }}">
             <a href="{{ route('back-office.leads.index') }}" class="menu-link">
@@ -90,11 +99,13 @@
         </li>
         @endcan
 
-        <li class="menu-item {{ request()->is('back-office/meetings') || request()->is('back-office/roles/*')?'active open':'' }}">
+        @can('meeting-list')
+        <li class="menu-item {{ request()->is('back-office/meetings') || request()->is('back-office/meetings/*')?'active open':'' }}">
             <a href="{{ route('back-office.meetings.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-calendar"></i>   
                 <div data-i18n="Meetings List">Meetings List</div>
             </a>
         </li>
+        @endcan
     </ul>
 </aside>
