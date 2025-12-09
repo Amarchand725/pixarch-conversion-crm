@@ -46,8 +46,17 @@ class LeadController extends BaseModuleController
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        // query builder from repository or your service
-        $query = $this->leadRepo->getAll();
+        $user = auth()->user();
+
+        // If Admin → fetch all meetings
+        if ($user->hasRole('Admin')) {
+            $query = $this->leadRepo->getAll(); // builder
+        } 
+        // Else → fetch only meetings where user is attendee
+        else {
+            $query = $user->leads(); // builder
+        }
+
         $total_leads = $query->count();
         
         $dataTable = new \App\Services\DataTableService(

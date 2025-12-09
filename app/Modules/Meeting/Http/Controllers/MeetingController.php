@@ -42,12 +42,6 @@ class MeetingController extends BaseModuleController
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        // if(auth()->user()->hasRole('Admin')){
-            // $query = $this->meetingRepo->getAll();
-        // }else{
-        //     $query = auth()->user()->meetings();
-        // }
-
         $user = auth()->user();
 
         // If Admin → fetch all meetings

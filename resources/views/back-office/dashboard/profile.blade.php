@@ -10,12 +10,20 @@
                 <div class="card mb-4">
                     <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                         <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                            {{-- <img
+                                src="{{ optional(Auth::user()?->avatar)->path
+                                    ? asset('storage/' . Auth::user()?->avatar->path)
+                                    : asset('back-office/assets/img/avatars/default-avatar.png') }}"
+                                alt="user image"
+                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"
+                            /> --}}
                             <img
                                 src="{{ optional(Auth::user()?->avatar)->path
                                     ? asset('storage/' . Auth::user()?->avatar->path)
                                     : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                 alt="user image"
                                 class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"
+                                style="width: 100px; height: 120px; object-fit: cover;"
                             />
                         </div>
                         <div class="flex-grow-1 mt-3 mt-sm-5">
@@ -140,7 +148,7 @@
                                     <div class="card card-action mb-4">
                                         <div class="card-body pb-0">
                                             <ul class="timeline ms-1 mb-0">
-                                                @foreach($activities as $activity)
+                                                @forelse($activities as $activity)
                                                 <li class="timeline-item timeline-item-transparent {{ $loop->last ? 'border-0' : '' }}">
                                                     <span class="timeline-point 
                                                         {{ $activityColors[$activity['type']] ?? 'timeline-point-secondary' }}"></span>
@@ -164,7 +172,14 @@
                                                         @endif
                                                     </div>
                                                 </li>
-                                                @endforeach
+                                                @empty
+                                                    <li class="timeline-item timeline-item-transparent border-0">
+                                                        <div class="timeline-event text-center p-3">
+                                                            <h6 class="text-muted mb-1">No Activities Found</h6>
+                                                            <small class="text-muted">There are no logs or meetings yet.</small>
+                                                        </div>
+                                                    </li>
+                                                @endforelse
                                             </ul>
                                         </div>
                                     </div>
