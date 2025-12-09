@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\Status;
 use App\Models\User;
 use App\Modules\Lead\Models\Lead;
+use NunoMaduro\Collision\Adapters\Phpunit\Support\ResultReflection;
 
 class MeetingController extends BaseModuleController
 {
@@ -265,5 +266,25 @@ class MeetingController extends BaseModuleController
                 'message' => $e->getMessage()
             ], 500); // optional HTTP 500
         }
+    }
+
+    public function calendarEvents(Request $request)
+    {
+        $events = Meeting::query()
+            ->get()
+            ->map(function($meeting){
+                return [
+                    'id' => $meeting->id,
+                    'title' => $meeting?->lead?->name,
+                    'start' => $meeting->start_date_time,
+                    'end' => $meeting->end_date_time,
+                    'extendedProps' => [
+                        'calendar' => strtolower('business'), // e.g. 'personal', 'business'
+                        'description' => $meeting->description,
+                    ]
+                ];
+            });
+
+        return response()->json(['events' => $events]);
     }
 }

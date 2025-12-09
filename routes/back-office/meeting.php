@@ -15,6 +15,7 @@ Route::group([
         Route::post('{meeting}/update-status', 'updateStatus')->name('update-status');
 
         Route::get('action/edit/{action}/{meeting?}', 'actionEdit')->name('action.edit');
+        Route::get('calendar/events', 'calendarEvents')->name('calendar.events');
     });
 
     // 🧱 Resource CRUD

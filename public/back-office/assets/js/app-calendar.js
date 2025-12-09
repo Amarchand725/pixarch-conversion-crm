@@ -218,34 +218,71 @@ document.addEventListener('DOMContentLoaded', function () {
     // AXIOS: fetchEvents
     // * This will be called by fullCalendar to fetch events. Also this can be used to refetch events.
     // --------------------------------------------------------------------------------------------------
+    // function fetchEvents(info, successCallback) {
+    //   // Fetch Events from API endpoint reference
+    //   $.ajax(
+    //     {
+    //       // url: '../../../app-assets/data/app-calendar-events.js',
+    //       url: '/back-office/meetings/calendar/events',
+    //       type: 'GET',
+    //       success: function (result) {
+    //         // Get requested calendars as Array
+    //         var calendars = selectedCalendars();
+
+    //         return [result.events.filter(event => calendars.includes(event.extendedProps.calendar))];
+    //       },
+    //       error: function (error) {
+    //         console.log(error);
+    //       }
+    //     }
+    //   );
+
+    //   let calendars = selectedCalendars();
+    //   // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
+    //   // You should make an API call, look into above commented API call for reference
+    //   let selectedEvents = currentEvents.filter(function (event) {
+    //     // console.log(event.extendedProps.calendar.toLowerCase());
+    //     return calendars.includes(event.extendedProps.calendar.toLowerCase());
+    //   });
+    //   if (selectedEvents.length > 0) {
+    //     successCallback(selectedEvents);
+    //   }
+    // }
+
     function fetchEvents(info, successCallback) {
-      // Fetch Events from API endpoint reference
-      /* $.ajax(
-        {
-          url: '../../../app-assets/data/app-calendar-events.js',
-          type: 'GET',
-          success: function (result) {
-            // Get requested calendars as Array
-            var calendars = selectedCalendars();
+      let calendars = selectedCalendars(); // Array of selected calendars
 
-            return [result.events.filter(event => calendars.includes(event.extendedProps.calendar))];
-          },
-          error: function (error) {
-            console.log(error);
-          }
+      $.ajax({
+        url: '/back-office/meetings/calendar/events',
+        type: 'GET',
+        success: function (result) {
+          let eventsFromDb = result.events || [];
+
+          // Convert start/end to ISO 8601 (replace space with 'T')
+          eventsFromDb = eventsFromDb.map(e => ({
+            ...e,
+            start: e.start ? e.start.replace(' ', 'T') : null,
+            end: e.end ? e.end.replace(' ', 'T') : e.start ? e.start.replace(' ', 'T') : null
+          }));
+
+          // Remove events with null start or title
+          let validEvents = eventsFromDb.filter(e => e.start && e.title);
+
+          // Filter by selected calendars
+          let filteredEvents = validEvents.filter(e =>
+            calendars.includes(e.extendedProps.calendar.toLowerCase())
+          );
+
+          // Send events to FullCalendar
+          successCallback(filteredEvents);
+
+          // Keep a copy for other JS operations
+          currentEvents = validEvents;
+        },
+        error: function (error) {
+          console.log('Error fetching events:', error);
         }
-      ); */
-
-      let calendars = selectedCalendars();
-      // We are reading event object from app-calendar-events.js file directly by including that file above app-calendar file.
-      // You should make an API call, look into above commented API call for reference
-      let selectedEvents = currentEvents.filter(function (event) {
-        // console.log(event.extendedProps.calendar.toLowerCase());
-        return calendars.includes(event.extendedProps.calendar.toLowerCase());
       });
-      // if (selectedEvents.length > 0) {
-      successCallback(selectedEvents);
-      // }
     }
 
     // Init FullCalendar

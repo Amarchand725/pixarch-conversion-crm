@@ -45,6 +45,13 @@
                                         <i class="ti ti-plus me-1"></i>
                                         <span class="align-middle">Add Event</span>
                                     </button>
+
+                                    <!-- Removed Add Event Button -->
+                                    {{-- <div class="d-flex align-items-center" style="padding: 0.5rem 1rem;">
+                                        <h5 class="mb-0" style="font-weight: 500;">
+                                            <i class="ti ti-calendar me-1"></i> Full Calendar
+                                        </h5>
+                                    </div> --}}
                                 </div>
                             </div>
                             <div class="p-3">
