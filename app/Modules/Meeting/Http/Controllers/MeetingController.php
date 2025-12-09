@@ -42,10 +42,21 @@ class MeetingController extends BaseModuleController
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        if(auth()->user()->hasRole('Admin')){
-            $query = $this->meetingRepo->getAll();
-        }else{
-            $query = auth()->user()->meetings()->getAll();
+        // if(auth()->user()->hasRole('Admin')){
+            // $query = $this->meetingRepo->getAll();
+        // }else{
+        //     $query = auth()->user()->meetings();
+        // }
+
+        $user = auth()->user();
+
+        // If Admin → fetch all meetings
+        if ($user->hasRole('Admin')) {
+            $query = Meeting::with('lead'); // builder
+        } 
+        // Else → fetch only meetings where user is attendee
+        else {
+            $query = $user->meetings()->with('lead'); // builder
         }
 
         $dataTable = new \App\Services\DataTableService(
@@ -272,26 +283,32 @@ class MeetingController extends BaseModuleController
         }
     }
 
-    public function calendarEvents()
+    public function calendarEvents(Request $request)
     {
-        if(auth()->user()->hasRole('Admin')){
-            $query = $this->meetingRepo->getAll();
-        }else{
-            $query = auth()->user()->meetings()->getAll();
+        $user = auth()->user();
+
+        // If Admin → fetch all meetings
+        if ($user->hasRole('Admin')) {
+            $meetings = Meeting::with('lead')->get();
+        } 
+        // Else → fetch only meetings where user is attendee
+        else {
+            $meetings = $user->meetings()->with('lead')->get();
         }
 
-        $events = $query->map(function($meeting){
-                    return [
-                        'id' => $meeting->id,
-                        'title' => $meeting?->lead?->name,
-                        'start' => $meeting->start_date_time,
-                        'end' => $meeting->end_date_time,
-                        'extendedProps' => [
-                            'calendar' => 'Business', // e.g. 'personal', 'business'
-                            'description' => $meeting->description,
-                        ]
-                    ];
-                });
+        // Map for FullCalendar
+        $events = $meetings->map(function ($meeting) {
+            return [
+                'id' => $meeting->id,
+                'title' => $meeting?->lead?->name,
+                'start' => $meeting->start_date_time,
+                'end' => $meeting->end_date_time,
+                'extendedProps' => [
+                    'calendar' => 'Business',
+                    'description' => $meeting->description,
+                ],
+            ];
+        });
 
         return response()->json(['events' => $events]);
     }

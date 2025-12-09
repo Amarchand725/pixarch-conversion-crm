@@ -135,6 +135,6 @@ class User extends Authenticatable
 
     public function meetings()
     {
-        return $this->belongsToMany(Meeting::class, 'meeting_user');
+        return $this->belongsToMany(Meeting::class, 'meeting_users');
     }
 }
