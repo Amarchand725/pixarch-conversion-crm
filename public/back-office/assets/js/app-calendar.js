@@ -147,45 +147,81 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Event click function
+    // function eventClick(info) {
+    //   eventToUpdate = info.event;
+    //   if (eventToUpdate.url) {
+    //     info.jsEvent.preventDefault();
+    //     window.open(eventToUpdate.url, '_blank');
+    //   }
+    //   bsAddEventSidebar.show();
+    //   // For update event set offcanvas title text: Update Event
+    //   if (offcanvasTitle) {
+    //     offcanvasTitle.innerHTML = 'Update Event';
+    //   }
+    //   btnSubmit.innerHTML = 'Update';
+    //   btnSubmit.classList.add('btn-update-event');
+    //   btnSubmit.classList.remove('btn-add-event');
+    //   btnDeleteEvent.classList.remove('d-none');
+
+    //   eventTitle.value = eventToUpdate.title;
+    //   start.setDate(eventToUpdate.start, true, 'Y-m-d');
+    //   eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
+    //   eventToUpdate.end !== null
+    //     ? end.setDate(eventToUpdate.end, true, 'Y-m-d')
+    //     : end.setDate(eventToUpdate.start, true, 'Y-m-d');
+    //   eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
+    //   eventToUpdate.extendedProps.location !== undefined
+    //     ? (eventLocation.value = eventToUpdate.extendedProps.location)
+    //     : null;
+    //   eventToUpdate.extendedProps.guests !== undefined
+    //     ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change')
+    //     : null;
+    //   eventToUpdate.extendedProps.description !== undefined
+    //     ? (eventDescription.value = eventToUpdate.extendedProps.description)
+    //     : null;
+
+    //   // // Call removeEvent function
+    //   // btnDeleteEvent.addEventListener('click', e => {
+    //   //   removeEvent(parseInt(eventToUpdate.id));
+    //   //   // eventToUpdate.remove();
+    //   //   bsAddEventSidebar.hide();
+    //   // });
+    // }
+
     function eventClick(info) {
       eventToUpdate = info.event;
-      if (eventToUpdate.url) {
-        info.jsEvent.preventDefault();
-        window.open(eventToUpdate.url, '_blank');
-      }
+
+      // Show sidebar
       bsAddEventSidebar.show();
-      // For update event set offcanvas title text: Update Event
+
+      // Set sidebar title
       if (offcanvasTitle) {
-        offcanvasTitle.innerHTML = 'Update Event';
+        offcanvasTitle.innerHTML = 'Event Details';
       }
-      btnSubmit.innerHTML = 'Update';
-      btnSubmit.classList.add('btn-update-event');
-      btnSubmit.classList.remove('btn-add-event');
-      btnDeleteEvent.classList.remove('d-none');
 
-      eventTitle.value = eventToUpdate.title;
+      // Populate fields (readonly)
+      eventTitle.value = eventToUpdate.title || '';
       start.setDate(eventToUpdate.start, true, 'Y-m-d');
-      eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
-      eventToUpdate.end !== null
-        ? end.setDate(eventToUpdate.end, true, 'Y-m-d')
-        : end.setDate(eventToUpdate.start, true, 'Y-m-d');
-      eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
-      eventToUpdate.extendedProps.location !== undefined
-        ? (eventLocation.value = eventToUpdate.extendedProps.location)
-        : null;
-      eventToUpdate.extendedProps.guests !== undefined
-        ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change')
-        : null;
-      eventToUpdate.extendedProps.description !== undefined
-        ? (eventDescription.value = eventToUpdate.extendedProps.description)
-        : null;
 
-      // // Call removeEvent function
-      // btnDeleteEvent.addEventListener('click', e => {
-      //   removeEvent(parseInt(eventToUpdate.id));
-      //   // eventToUpdate.remove();
-      //   bsAddEventSidebar.hide();
-      // });
+      if (eventToUpdate.end !== null) {
+        end.setDate(eventToUpdate.end, true, 'Y-m-d');
+      } else {
+        end.setDate(eventToUpdate.start, true, 'Y-m-d');
+      }
+
+      eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
+
+      if (eventToUpdate.extendedProps.description !== undefined) {
+        eventDescription.value = eventToUpdate.extendedProps.description;
+      }
+
+      // Optional: populate other fields like location or guests if needed
+      if (eventToUpdate.extendedProps.location !== undefined && eventLocation) {
+        eventLocation.value = eventToUpdate.extendedProps.location;
+      }
+      if (eventToUpdate.extendedProps.guests !== undefined && eventGuests) {
+        eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change');
+      }
     }
 
     // Modify sidebar toggler

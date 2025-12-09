@@ -108,7 +108,7 @@
                                 aria-labelledby="addEventSidebarLabel"
                             >
                                 <div class="offcanvas-header my-1">
-                                    <h5 class="offcanvas-title" id="addEventSidebarLabel">Add Event</h5>
+                                    <h5 class="offcanvas-title" id="addEventSidebarLabel">Event Details</h5>
                                     <button
                                         type="button"
                                         class="btn-close text-reset"
@@ -126,11 +126,12 @@
                                                 id="eventTitle"
                                                 name="eventTitle"
                                                 placeholder="Event Title"
+                                                readonly
                                             />
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="eventLabel">Label</label>
-                                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+                                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel" disabled>
                                                 <option data-label="success" value="Business" selected>Business</option>
                                             </select>
                                         </div>
@@ -142,6 +143,7 @@
                                                 id="eventStartDate"
                                                 name="eventStartDate"
                                                 placeholder="Start Date"
+                                                readonly
                                             />
                                         </div>
                                         <div class="mb-3">
@@ -152,34 +154,21 @@
                                                 id="eventEndDate"
                                                 name="eventEndDate"
                                                 placeholder="End Date"
+                                                readonly
                                             />
                                         </div>
                                         <div class="mb-3">
-                                            <label class="switch">
-                                                <input type="checkbox" class="switch-input allDay-switch" />
-                                                <span class="switch-toggle-slider">
-                                                <span class="switch-on"></span>
-                                                <span class="switch-off"></span>
-                                                </span>
-                                                <span class="switch-label">All Day</span>
-                                            </label>
-                                        </div>
-                                        <div class="mb-3">
                                             <label class="form-label" for="eventDescription">Description</label>
-                                            <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
+                                            <textarea class="form-control" name="eventDescription" id="eventDescription" readonly></textarea>
                                         </div>
-                                        <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
-                                            <div>
-                                                <button type="submit" class="btn btn-primary btn-add-event me-sm-3 me-1">Add</button>
-                                                <button
-                                                    type="reset"
-                                                    class="btn btn-label-secondary btn-cancel me-sm-0 me-1"
-                                                    data-bs-dismiss="offcanvas"
-                                                >
-                                                Cancel
-                                                </button>
-                                            </div>
-                                            <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+                                        <div class="mb-3 d-flex justify-content-start my-4">
+                                            <button
+                                                type="button"
+                                                class="btn btn-label-secondary btn-cancel me-1"
+                                                data-bs-dismiss="offcanvas"
+                                            >
+                                                Close
+                                            </button>
                                         </div>
                                     </form>
                                 </div>

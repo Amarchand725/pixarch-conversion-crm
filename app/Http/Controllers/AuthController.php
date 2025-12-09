@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Enum\GenderEnum;
+use App\Models\LogEntityStatus;
+use App\Models\Meeting;
 
 class AuthController extends Controller
 {
@@ -65,6 +67,41 @@ class AuthController extends Controller
     }
     public function profile(){
         $title = Auth::user()->name . "'s Profile";
+        
+        $agentId = auth()->id(); // current agent
+
+        // 1️⃣ Lead Activities
+        $leadActivities = LogEntityStatus::with(['assignee', 'lead'])
+            ->where('assignee_id', $agentId)
+            ->get()
+            ->map(function($log) {
+                return [
+                    'type' => 'lead_assigned', // or dynamically from $log->action
+                    'description' => $log->description ?? "Lead '{$log->lead?->name}' updated",
+                    'related_user' => $log->assignee,
+                    'created_at' => $log->created_at,
+                ];
+            });
+
+        // 2️⃣ Meeting Activities
+        $meetingActivities = Meeting::with(['attendees', 'lead'])
+            ->whereHas('attendees', fn($q) => $q->where('user_id', $agentId))
+            ->get()
+            ->map(function($meeting) {
+                return [
+                    'type' => 'meeting_scheduled',
+                    'description' => "Meeting with '{$meeting->lead?->name}' scheduled @ ".getDateTimeFormat($meeting->start_date_time),
+                    'related_user' => $meeting->attendees->first(), // main agent
+                    'created_at' => $meeting->created_at,
+                ];
+            });
+
+        // 3️⃣ Merge and sort all activities
+        $activities = collect($leadActivities)
+            ->merge($meetingActivities)
+            ->sortByDesc('created_at')
+            ->values(); // reset keys
+            
         return view('back-office.dashboard.profile', get_defined_vars());
     }
 

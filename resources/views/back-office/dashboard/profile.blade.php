@@ -67,7 +67,7 @@
                         <div class="card-body">
                             <!-- User Profile Content -->
                             <div class="row">
-                                <div class="col-xl-12 col-lg-5 col-md-5">
+                                <div class="col-xl-4 col-lg-5 col-md-5">
                                     <!-- About User -->
                                     <div class="card mb-4">
                                         <div class="card-body">
@@ -126,117 +126,50 @@
                                     </div>
                                     <!--/ About User -->
                                 </div>
-                                {{-- <div class="col-xl-8 col-lg-7 col-md-7">
+                                @php
+                                    $activityColors = [
+                                        'lead_assigned' => 'timeline-point-primary',
+                                        'meeting_scheduled' => 'timeline-point-success',
+                                        'document_shared' => 'timeline-point-danger',
+                                        'followup_done' => 'timeline-point-info',
+                                    ];
+                                @endphp
+
+                                <div class="col-xl-8 col-lg-7 col-md-7">
                                     <!-- Activity Timeline -->
                                     <div class="card card-action mb-4">
-                                    <div class="card-header align-items-center">
-                                        <h5 class="card-action-title mb-0">Activity Timeline</h5>
-                                        <div class="card-action-element">
-                                        <div class="dropdown">
-                                            <button
-                                            type="button"
-                                            class="btn dropdown-toggle hide-arrow p-0"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            >
-                                            <i class="ti ti-dots-vertical text-muted"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" href="javascript:void(0);">Share timeline</a></li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);">Suggest edits</a></li>
-                                            <li>
-                                                <hr class="dropdown-divider" />
-                                            </li>
-                                            <li><a class="dropdown-item" href="javascript:void(0);">Report bug</a></li>
+                                        <div class="card-body pb-0">
+                                            <ul class="timeline ms-1 mb-0">
+                                                @foreach($activities as $activity)
+                                                <li class="timeline-item timeline-item-transparent {{ $loop->last ? 'border-0' : '' }}">
+                                                    <span class="timeline-point 
+                                                        {{ $activityColors[$activity['type']] ?? 'timeline-point-secondary' }}"></span>
+                                                    <div class="timeline-event">
+                                                        <div class="timeline-header">
+                                                            <h6 class="mb-0">{{ ucfirst(str_replace('_', ' ', $activity['type'])) }}</h6>
+                                                            <small class="text-muted">{{ \Carbon\Carbon::parse($activity['created_at'])->diffForHumans() }}</small>
+                                                        </div>
+                                                        <p class="mb-2">{{ $activity['description'] }}</p>
+                                                        @if($activity['related_user'])
+                                                        <div class="d-flex flex-wrap">
+                                                            <div class="avatar me-2">
+                                                                <img src="{{ $activity['related_user']->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png') }}" 
+                                                                    alt="Avatar" class="rounded-circle" />
+                                                            </div>
+                                                            <div class="ms-1">
+                                                                <h6 class="mb-0">{{ $activity['related_user']->name }}</h6>
+                                                                <span>{{ $activity['related_user']->role ?? 'Agent' }}</span>
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                </li>
+                                                @endforeach
                                             </ul>
                                         </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body pb-0">
-                                        <ul class="timeline ms-1 mb-0">
-                                        <li class="timeline-item timeline-item-transparent">
-                                            <span class="timeline-point timeline-point-primary"></span>
-                                            <div class="timeline-event">
-                                            <div class="timeline-header">
-                                                <h6 class="mb-0">Client Meeting</h6>
-                                                <small class="text-muted">Today</small>
-                                            </div>
-                                            <p class="mb-2">Project meeting with john @10:15am</p>
-                                            <div class="d-flex flex-wrap">
-                                                <div class="avatar me-2">
-                                                <img src="{{ asset('back-office') }}/assets/img/avatars/3.png" alt="Avatar" class="rounded-circle" />
-                                                </div>
-                                                <div class="ms-1">
-                                                <h6 class="mb-0">Lester McCarthy (Client)</h6>
-                                                <span>CEO of Infibeam</span>
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </li>
-                                        <li class="timeline-item timeline-item-transparent">
-                                            <span class="timeline-point timeline-point-success"></span>
-                                            <div class="timeline-event">
-                                            <div class="timeline-header">
-                                                <h6 class="mb-0">Create a new project for client</h6>
-                                                <small class="text-muted">2 Day Ago</small>
-                                            </div>
-                                            <p class="mb-0">Add files to new design folder</p>
-                                            </div>
-                                        </li>
-                                        <li class="timeline-item timeline-item-transparent">
-                                            <span class="timeline-point timeline-point-danger"></span>
-                                            <div class="timeline-event">
-                                            <div class="timeline-header">
-                                                <h6 class="mb-0">Shared 2 New Project Files</h6>
-                                                <small class="text-muted">6 Day Ago</small>
-                                            </div>
-                                            <p class="mb-2">
-                                                Sent by Mollie Dixon
-                                                <img
-                                                src="{{ asset('back-office') }}/assets/img/avatars/4.png"
-                                                class="rounded-circle me-3"
-                                                alt="avatar"
-                                                height="24"
-                                                width="24"
-                                                />
-                                            </p>
-                                            <div class="d-flex flex-wrap gap-2 pt-1">
-                                                <a href="javascript:void(0)" class="me-3">
-                                                <img
-                                                    src="{{ asset('back-office') }}/assets/img/icons/misc/doc.png"
-                                                    alt="Document image"
-                                                    width="15"
-                                                    class="me-2"
-                                                />
-                                                <span class="fw-semibold text-heading">App Guidelines</span>
-                                                </a>
-                                                <a href="javascript:void(0)">
-                                                <img
-                                                    src="{{ asset('back-office') }}/assets/img/icons/misc/xls.png"
-                                                    alt="Excel image"
-                                                    width="15"
-                                                    class="me-2"
-                                                />
-                                                <span class="fw-semibold text-heading">Testing Results</span>
-                                                </a>
-                                            </div>
-                                            </div>
-                                        </li>
-                                        <li class="timeline-item timeline-item-transparent border-0">
-                                            <span class="timeline-point timeline-point-info"></span>
-                                            <div class="timeline-event">
-                                            <div class="timeline-header">
-                                                <h6 class="mb-0">Project status updated</h6>
-                                                <small class="text-muted">10 Day Ago</small>
-                                            </div>
-                                            <p class="mb-0">Woocommerce iOS App Completed</p>
-                                            </div>
-                                        </li>
-                                        </ul>
-                                    </div>
                                     </div>
                                     <!--/ Activity Timeline -->
-                                </div> --}}
+                                </div>
                             </div>
                             <!--/ User Profile Content -->
                         </div>
