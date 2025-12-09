@@ -118,15 +118,6 @@
                                 </div>
                                 <div class="offcanvas-body pt-0">
                                     <form class="event-form pt-0" id="eventForm" onsubmit="return false">
-                                        {{-- <div class="mb-3">
-                                            <label class="form-label" for="eventLead">Lead</label>
-                                            <select id="lead_id" name="lead_id" class="form-select">
-                                                <option value="">Select Lead</option>
-                                                @foreach ($leads as $lead)
-                                                    <option value="{{ $lead->uuid }}" {{ old('lead_id')==$lead->uuid ? 'selected' : '' }}>{{ ucfirst($lead->name) }} ({{ ucfirst($lead->email) }})</option>
-                                                @endforeach
-                                            </select>
-                                        </div> --}}
                                         <div class="mb-3">
                                             <label class="form-label" for="eventTitle">Title</label>
                                             <input

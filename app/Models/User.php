@@ -132,4 +132,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_user');
+    }
 }

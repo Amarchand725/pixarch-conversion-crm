@@ -42,7 +42,11 @@ class MeetingController extends BaseModuleController
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
 
-        $query = $this->meetingRepo->getAll();
+        if(auth()->user()->hasRole('Admin')){
+            $query = $this->meetingRepo->getAll();
+        }else{
+            $query = auth()->user()->meetings()->getAll();
+        }
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,
@@ -268,22 +272,26 @@ class MeetingController extends BaseModuleController
         }
     }
 
-    public function calendarEvents(Request $request)
+    public function calendarEvents()
     {
-        $events = Meeting::query()
-            ->get()
-            ->map(function($meeting){
-                return [
-                    'id' => $meeting->id,
-                    'title' => $meeting?->lead?->name,
-                    'start' => $meeting->start_date_time,
-                    'end' => $meeting->end_date_time,
-                    'extendedProps' => [
-                        'calendar' => 'Business', // e.g. 'personal', 'business'
-                        'description' => $meeting->description,
-                    ]
-                ];
-            });
+        if(auth()->user()->hasRole('Admin')){
+            $query = $this->meetingRepo->getAll();
+        }else{
+            $query = auth()->user()->meetings()->getAll();
+        }
+
+        $events = $query->map(function($meeting){
+                    return [
+                        'id' => $meeting->id,
+                        'title' => $meeting?->lead?->name,
+                        'start' => $meeting->start_date_time,
+                        'end' => $meeting->end_date_time,
+                        'extendedProps' => [
+                            'calendar' => 'Business', // e.g. 'personal', 'business'
+                            'description' => $meeting->description,
+                        ]
+                    ];
+                });
 
         return response()->json(['events' => $events]);
     }
