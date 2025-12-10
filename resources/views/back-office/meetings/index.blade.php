@@ -36,15 +36,6 @@
                         <div class="col app-calendar-sidebar" id="app-calendar-sidebar">
                             <div class="border-bottom p-4 my-sm-0 mb-3">
                                 <div class="d-grid">
-                                    {{-- <button
-                                        class="btn btn-primary btn-toggle-sidebar"
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#addEventSidebar"
-                                        aria-controls="addEventSidebar"
-                                        >
-                                        <i class="ti ti-plus me-1"></i>
-                                        <span class="align-middle">Add Event</span>
-                                    </button> --}}
                                     <!-- Removed Add Event Button -->
                                     <div class="d-flex align-items-center" style="padding: 0.5rem 1rem;">
                                         <h5 class="mb-0" style="font-weight: 500;">
@@ -192,6 +183,7 @@
                                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
                                             <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
                                         
+                                            @can($permissionPrefix.'-create')
                                             <x-action-button
                                                 type="button"
                                                 id="add-btn"
@@ -206,6 +198,7 @@
                                                     'data-create-url' => route($routeInitialize.'.create')
                                                 ]"
                                             />
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>

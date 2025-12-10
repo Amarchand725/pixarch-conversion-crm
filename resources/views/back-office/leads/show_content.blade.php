@@ -32,7 +32,7 @@
     </tr> 
     <tr>
         <td class="text-nowrap fw-semibold">Pipeline</td>
-        <td>{{ $model->pipeline??'-' }}</td>
+        <td>{{ ucfirst($model->pipeline) ??'-' }}</td>
     </tr>    
     <tr>
         <td class="text-nowrap fw-semibold">Value</td>

@@ -13,7 +13,8 @@
                     <div class="col-md-6">
                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
                             <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
-                        
+                            
+                            @can($permissionPrefix.'-create')
                             <x-action-button
                                 type="button"
                                 id="add-btn"
@@ -28,6 +29,7 @@
                                     'data-create-url' => route($routeInitialize.'.create')
                                 ]"
                             />
+                            @endcan
                         </div>
                     </div>
                 </div>

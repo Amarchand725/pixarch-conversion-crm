@@ -36,12 +36,6 @@
         </td>
     </tr>
     <tr>
-        <td class="text-nowrap fw-semibold">Timezone</td>
-        <td>
-            {{ $model->timezone ?? '-' }}
-        </td>
-    </tr>
-    <tr>
         <td class="text-nowrap fw-semibold">Start Date Time</td>
         <td>
             {{ getDateTimeFormat($model->start_date_time) }}
