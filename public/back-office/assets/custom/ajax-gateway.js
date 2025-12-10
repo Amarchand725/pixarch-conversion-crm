@@ -306,11 +306,22 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
             $(targeted_modal).find('#edit-content').html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading...</div>');
         },
         success: function (response) {
-            const $modal = $(targeted_modal);
-            $modal.find('#edit-content').html(response);
+            const modal = $(targeted_modal);
+
+            if (typeof response.flag !== 'undefined') {
+                // For THIS module only (create = false, edit = true)
+                modal.find('#edit-content').html(response.html);
+            } else {
+                // All other modules
+                modal.find('#edit-content').html(response);
+            }
 
             // ---------- Lead Capture form initialization ----------
-            if ($modal.find('#fields-wrapper').length) {
+           if (
+                modal.find('#fields-wrapper').length &&
+                (typeof response.flag !== 'undefined' && response.flag === true)
+            ) {
+
                 // Reset wrapper and index
                 fieldIndex = 0;
                 $('#fields-wrapper').html('');

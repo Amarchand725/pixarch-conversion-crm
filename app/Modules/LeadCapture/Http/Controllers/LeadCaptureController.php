@@ -76,9 +76,11 @@ class LeadCaptureController extends BaseModuleController
 
     public function create()
     {
+        $flag = false;
         $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
         $campaigns = $this->campaigns->where('status_id', $status_id)->get();
-        return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
+        $formHtml = (string) view($this->pathInitialize.'.create_content', get_defined_vars());
+        return response()->json(['html' => $formHtml, 'flag' => $flag]);
     }
 
     public function store(LeadCaptureRequest $request)
@@ -101,11 +103,13 @@ class LeadCaptureController extends BaseModuleController
 
     public function edit(LeadCapture $leadCapture)
     {
+        $flag = true;
         $status_id = $this->status->where('model', 'Campaign')->where('name', 'active')->value('id');
         $campaigns = $this->campaigns->where('status_id', $status_id)->get();
         $statuses = $this->status->where('model', 'LeadCapture')->get();
         $model = $this->leadCaptureRepo->showModel($leadCapture, ['campaign', 'status', 'author', 'fields']);
-        return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
+        $formHtml = (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
+        return response()->json(['html' => $formHtml, 'flag' => $flag]);
     }
 
     public function update(LeadCaptureRequest $request, LeadCapture $leadCapture)
