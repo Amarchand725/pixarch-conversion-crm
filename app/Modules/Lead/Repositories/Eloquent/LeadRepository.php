@@ -118,7 +118,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                 foreach ($assignees as $user) {
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
-                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar =  asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -161,7 +161,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -247,7 +247,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has scheduled a meeting for you';
                     $model->notifyUser(
                         $attendee,
@@ -283,7 +283,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -304,7 +304,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has updated status of your lead';
                     $model->notifyUser(
                         $user,
