@@ -43,22 +43,21 @@
             <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
                 <div class="mb-3">
                     <label for="description" class="form-label">Add Note</label>
-                    <textarea class="form-control" name="description" rows="5" placeholder="Enter note...">{{ $lead?->lastStatusLog?->description ?? '' }}</textarea>
+                    <textarea class="form-control" name="description" rows="5" placeholder="Enter note..."></textarea>
                     <span id="description_error" class="text-danger error">{{ $errors->first('description') }}</span>
                 </div>
             </div>
 
-            @php $meeting = $lead?->lastStatusLog?->meeting; @endphp
             <!-- MEETING -->
             <div class="tab-pane fade {{ $action=='meeting'?'show active':'' }}" id="meetingTab">
                 <div class="mb-3">
                     <label for="start_date_time" class="form-label">Start Date & Time</label>
-                    <input type="datetime-local" class="form-control" value="{{ old('start_date_time', $meeting->start_date_time ?? '') }}" name="start_date_time">
+                    <input type="datetime-local" class="form-control" value="{{ old('start_date_time') }}" name="start_date_time">
                     <span id="start_date_time_error" class="text-danger error">{{ $errors->first('start_date_time') }}</span>
                 </div>
                 <div class="mb-3">
                     <label for="end_date_time" class="form-label">End Date & Time</label>
-                    <input type="datetime-local" class="form-control" value="{{ old('end_date_time', $meeting->end_date_time ?? '') }}" name="end_date_time">
+                    <input type="datetime-local" class="form-control" value="{{ old('end_date_time') }}" name="end_date_time">
                     <span id="end_date_time_error" class="text-danger error">{{ $errors->first('end_date_time') }}</span>
                 </div>
                 <div class="mb-3">
@@ -66,7 +65,7 @@
                     <select class="form-select" name="attendee_id">
                         <option value="">Select meeting attendee</option>
                         @foreach ($agents as $attendee)
-                            <option value="{{ $attendee->uuid }}" {{ $meeting?->attendees->first()->id==$attendee->id ? 'selected' : '' }}>{{ $attendee->name }} ({{ $attendee->email }})</option>
+                            <option value="{{ $attendee->uuid }}">{{ $attendee->name }} ({{ $attendee->email }})</option>
                         @endforeach
                     </select>
                     <span id="attendee_id_error" class="text-danger error">{{ $errors->first('attendee_id') }}</span>

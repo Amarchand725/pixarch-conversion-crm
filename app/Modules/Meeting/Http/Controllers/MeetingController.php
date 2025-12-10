@@ -46,11 +46,11 @@ class MeetingController extends BaseModuleController
 
         // If Admin → fetch all meetings
         if ($user->hasRole('Admin')) {
-            $query = Meeting::with('lead'); // builder
+            $query = Meeting::with('lead')->orderBy('id', 'desc'); // builder
         } 
         // Else → fetch only meetings where user is attendee
         else {
-            $query = $user->meetings()->with('lead'); // builder
+            $query = $user->meetings()->orderBy('id', 'desc')->with('lead'); // builder
         }
 
         $dataTable = new \App\Services\DataTableService(

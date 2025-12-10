@@ -284,6 +284,27 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
                     $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has assigned you a lead';
+                    $model->notifyUser(
+                        $user,
+                        $assigner_avatar,
+                        $title,
+                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
+                        $link,
+                        'lead_status_updated'
+                    );
+                }
+            }
+        }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id']){
+            // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
+            $assignees = $model->assignees; // belongsTo
+
+            if ($assignees && $assignees->count()) {
+                foreach ($assignees as $user) {
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner = auth()->user();
+                    $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has updated status of your lead';
                     $model->notifyUser(
                         $user,
