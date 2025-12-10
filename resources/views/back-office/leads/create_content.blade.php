@@ -67,7 +67,7 @@
         <select name="source_id" id="source_id" class="select2 form-select source_id">
             <option value="">Select Source</option>
             @foreach($sources as $source)
-                <option value="{{$source?->uuid}}">{{$source->name ?? '-'}}</option>
+                <option value="{{$source?->uuid}}">{{ ucfirst($source->name)  }}</option>
             @endforeach
         </select>
         <span id="source_id_error" class="text-danger error">{{ $errors->first('source_id') }}</span>
@@ -79,7 +79,7 @@
         <select name="status_id" id="status_id" class="select2 form-select status_id">
             <option value="">Select Stage</option>
             @foreach($stages as $stage)
-                <option value="{{$stage?->uuid}}">{{$stage->name ?? '-'}}</option>
+                <option value="{{$stage?->uuid}}">{{ ucfirst($stage->name)  }}</option>
             @endforeach
         </select>
         <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
@@ -89,7 +89,7 @@
             Pipeline
         </label>
         <select name="pipeline" id="pipeline" class="select2 form-select">
-            <option value="">Select Status</option>
+            <option value="">Select Pipeline</option>
             @foreach(pipelines() as $pipeline)
                 <option value="{{$pipeline}}">{{ ucfirst($pipeline)  }}</option>
             @endforeach

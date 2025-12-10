@@ -68,7 +68,7 @@
         <select name="source_id" id="source_id" class="select2 form-select source_id">
             <option value="">Select Source</option>
             @foreach($sources as $source)
-                <option value="{{$source?->uuid}}" {{ $model->source_id==$source->id ? 'selected' : '' }}>{{$source->name ?? '-'}}</option>
+                <option value="{{$source?->uuid}}" {{ $model->source_id==$source->id ? 'selected' : '' }}>{{ ucfirst($source->name) }}</option>
             @endforeach
         </select>
         <span id="source_id_error" class="text-danger error">{{ $errors->first('source_id') }}</span>
