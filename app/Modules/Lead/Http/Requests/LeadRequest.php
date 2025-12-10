@@ -32,8 +32,8 @@ class LeadRequest extends FormRequest
                 'email',
                 Rule::unique('leads', 'email')->ignore($lead),
             ],
-            'value'    => [
-                'nullable',
+            'budget'    => [
+                'nullable', 'numeric',
             ],
             'source_id' => ['nullable', 'exists:sources,id'],
             'status_id' => ['nullable', 'exists:statuses,id'],

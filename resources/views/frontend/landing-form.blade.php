@@ -46,10 +46,10 @@
                             @csrf
 
                             <!-- Default Fields -->
-                            @foreach (['name','phone','email','value'] as $fieldKey)
+                            @foreach (['name','phone','email','budget'] as $fieldKey)
                                 @php
                                     $label = ucfirst($fieldKey);
-                                    $type = $fieldKey === 'value' ? 'number' : ($fieldKey === 'email' ? 'email' : ($fieldKey === 'phone' ? 'tel' : 'text'));
+                                    $type = $fieldKey === 'budget' ? 'number' : ($fieldKey === 'email' ? 'email' : ($fieldKey === 'phone' ? 'tel' : 'text'));
                                     $placeholder = "Enter $label";
                                     $value = old($fieldKey);
                                 @endphp

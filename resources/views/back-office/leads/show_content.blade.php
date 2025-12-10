@@ -35,10 +35,10 @@
         <td>{{ ucfirst($model->pipeline) ??'-' }}</td>
     </tr>    
     <tr>
-        <td class="text-nowrap fw-semibold">Value</td>
+        <td class="text-nowrap fw-semibold">Budget</td>
         <td>
             <span class="text-success">
-                {{ config('app.currency_symbol') }}{{ number_format($model->value, 2) }}
+                {{ config('app.currency_symbol') }}{{ number_format($model->budget, 2) }}
             </span>
         </td>
     </tr>   

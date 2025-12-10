@@ -46,18 +46,18 @@
     </div>
 
     <div class="col-12 col-md-6">
-        <label for="value" class="form-label fw-semibold">
-            Value 
+        <label for="budget" class="form-label fw-semibold">
+            Budget 
         </label>
         <input 
             type="number" 
-            id="value" 
-            name="value" 
+            id="budget" 
+            name="budget" 
             class="form-control" 
-            placeholder="Enter value" 
-            value="{{ old('value') }}"
+            placeholder="Enter your budget" 
+            value="{{ old('budget') }}"
         />
-        <span id="value_error" class="text-danger error">{{ $errors->first('value') }}</span>
+        <span id="budget_error" class="text-danger error">{{ $errors->first('budget') }}</span>
     </div>
 
     <div class="col-12 col-md-6">

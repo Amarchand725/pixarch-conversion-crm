@@ -41,7 +41,7 @@ class LeadController extends BaseModuleController
             'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
             'pipeline' => ['label' => 'Pipeline', 'searchable' => 'pipeline'],
-            'value_label' => ['label' => 'Value', 'html' => true, 'searchable' => false],
+            'budget' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
         ];
@@ -77,10 +77,10 @@ class LeadController extends BaseModuleController
         $extraActions = [];
 
         // Keep numeric value untouched for DataTables
-        $amount = floatval($row->value ?? 0);
+        $amount = floatval($row->budget ?? 0);
         $symbol = config('app.currency_symbol');
         // New property for display
-        $row->value_label = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
+        $row->budget = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
         if($row->assignees->first()){
             $row->assigned_to = view('back-office.partials.avatar', ['user' => $row->assignees->first()])->render();
         }else{
