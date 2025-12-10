@@ -308,6 +308,30 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
         success: function (response) {
             const $modal = $(targeted_modal);
             $modal.find('#edit-content').html(response);
+
+            // ---------- Lead Capture form initialization ----------
+            if ($modal.find('#fields-wrapper').length) {
+                // Reset wrapper and index
+                fieldIndex = 0;
+                $('#fields-wrapper').html('');
+
+                // Check if existingFields variable is passed from controller
+                if (typeof existingFields !== 'undefined' && Array.isArray(existingFields)) {
+                    existingFields.forEach((field, i) => renderField(field, i));
+                    fieldIndex = existingFields.length;
+                }
+
+                // ----- Initialize Select2 for all selects inside fields-wrapper -----
+                $('#fields-wrapper select').each(function () {
+                    $(this).select2({
+                        dropdownParent: $(this).closest('.field-item'),
+                        width: '100%',
+                    });
+                });
+
+                // Optional: Initialize event listeners if needed (remove/change handlers already delegated)
+            }
+            // ------------------------------------------------------
         },
         error: function (xhr) {
             if (xhr.status === 403) {

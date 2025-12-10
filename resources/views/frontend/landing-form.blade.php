@@ -144,7 +144,6 @@
                                                 alt="Image Preview" 
                                                 class="img-thumbnail rounded-circle" 
                                                 style="width: 80px; height: 80px; object-fit: cover; display: none;"
-
                                             >
                                         </div>
                                     @elseif($field->type==='select')
@@ -155,8 +154,13 @@
                                             @if($field->required) required @endif
                                         >
                                             <option value="">Select {{ $field->label }}</option>
+
                                             @if(!empty($field->options))
-                                                @foreach(explode(',', $field->options) as $option)
+                                                @php
+                                                    $options = is_array($field->options) ? $field->options : explode(',', $field->options);
+                                                @endphp
+
+                                                @foreach($options as $option)
                                                     <option value="{{ trim($option) }}" {{ trim($option)==$value ? 'selected' : '' }}>
                                                         {{ trim($option) }}
                                                     </option>

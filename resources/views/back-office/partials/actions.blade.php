@@ -21,7 +21,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#details-modal"
                     :data-attributes="[
-                        'data-show-url' => $model->data['url']
+                        'data-show-url' => url('back-office').$model->data['url']
                     ]"
                 />
             @else

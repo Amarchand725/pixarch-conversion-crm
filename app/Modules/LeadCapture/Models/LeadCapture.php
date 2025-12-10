@@ -64,4 +64,8 @@ class LeadCapture extends Model
     {
         return $this->hasMany(CaptureFormField::class, 'lead_capture_id');
     }
+
+    protected $casts = [
+        'faq_status' => 'boolean',
+    ];
 }

@@ -56,7 +56,7 @@ class NotificationController extends BaseModuleController
                 $row->data_display = '
                 <div class="d-flex align-items-start">
                     <div class="flex-shrink-0 me-3">
-                        <img src="'.($data['assigner_avatar'] ?? asset("back-office/assets/img/avatars/default-avatar.png")).'" 
+                        <img src="'.asset('storage').'/'.($data['assigner_avatar'] ?? asset("back-office/assets/img/avatars/default-avatar.png")).'" 
                             class="rounded-circle" width="40" height="40" />
                     </div>
                     <div class="flex-grow-1">

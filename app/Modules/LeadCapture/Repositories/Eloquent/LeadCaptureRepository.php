@@ -50,7 +50,10 @@ class LeadCaptureRepository extends BaseRepository implements LeadCaptureContrac
     public function updateModel(Model $model, array $payload): Model
     {
         // Fill model attributes except fields
-        $model->toFill($payload, ['fields']);
+        $model->toFill($payload, ['fields', 'faq_status']);
+        $model->save();
+
+        $model->faq_status = (bool) $payload['faq_status']; // ensures boolean
         $model->save();
 
         if (!empty($payload['fields'])) {

@@ -10,13 +10,6 @@
                 <div class="card mb-4">
                     <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                         <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
-                            {{-- <img
-                                src="{{ optional(Auth::user()?->avatar)->path
-                                    ? asset('storage/' . Auth::user()?->avatar->path)
-                                    : asset('back-office/assets/img/avatars/default-avatar.png') }}"
-                                alt="user image"
-                                class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"
-                            /> --}}
                             <img
                                 src="{{ optional(Auth::user()?->avatar)->path
                                     ? asset('storage/' . Auth::user()?->avatar->path)

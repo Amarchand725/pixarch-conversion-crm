@@ -57,6 +57,29 @@
         <span id="description_error" class="text-danger error">{{ $errors->first('description') }}</span>
     </div>
     <div class="col-12 col-md-12">
+  <div class="col-12 mt-3 action-btn d-flex justify-content-end align-items-center">
+    <!-- Normal buttons -->
+    <div class="demo-inline-spacing sub-btn me-2">
+      <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>  
+    </div>
+
+    <!-- Loading buttons -->
+    <div class="demo-inline-spacing loading-btn" style="display: none;">
+        <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
+          Cancel
+        </button>
+        <button class="btn btn-primary waves-effect waves-light" type="button" disabled>
+          <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          Loading...
+        </button>
+    </div>
+  </div>
+</div>
+
+    <div class="col-12 col-md-12">
       <div class="col-12 col-md-6">
         <h5 class="fw-bold mb-3">Form Fields</h5>
       </div>

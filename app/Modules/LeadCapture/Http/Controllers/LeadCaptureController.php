@@ -31,7 +31,7 @@ class LeadCaptureController extends BaseModuleController
         $columns = [
             'campaign_id' => ['label' => 'Campaign Name', 'html' => true, 'searchable' => false],
             'name'      => ['label' => 'Form Name', 'searchable' => 'name'],
-            'status_label'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
+            'status_id'     => ['label' => 'Status', 'html' => true, 'searchable' => false],
             'author_id'     => ['label' => 'Author', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action'     => ['label' => 'Action', 'html' => true, 'searchable' => false],
@@ -56,7 +56,7 @@ class LeadCaptureController extends BaseModuleController
     {
         $row->campaign_id = $row->campaign?->name ?? '-';
         $status = $row->status?->name ?? 'de-active';
-        $row->status_label = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
+        $row->status_id = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
                         . strtoupper($status) .
                         '</span>';
 
@@ -111,6 +111,7 @@ class LeadCaptureController extends BaseModuleController
     public function update(LeadCaptureRequest $request, LeadCapture $leadCapture)
     {
         $payload = $request->validated();
+        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload, $leadCapture) {

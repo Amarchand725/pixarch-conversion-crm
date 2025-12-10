@@ -28,7 +28,7 @@ class LeadCaptureRequest extends FormRequest
 
             // Dynamic Field Validations
             'fields.*.label' => ['required', 'string', 'max:255'],
-            'fields.*.type' => ['required', 'string', 'in:text,email,number,textarea,select,file'],
+            'fields.*.type' => ['required', 'string', 'in:text,email,tel,number,textarea,select,file'],
             'fields.*.placeholder' => ['nullable', 'string', 'max:255'],
             'fields.*.required' => ['required', 'in:0,1'],
             'fields.*.options' => ['nullable', 'string'], // only needed when type=select

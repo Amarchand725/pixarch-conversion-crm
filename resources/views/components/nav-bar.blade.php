@@ -55,7 +55,11 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar">
-                                                        <img src="{{ $notification->data['assigner_avatar'] }}" alt class="h-auto rounded-circle" />
+                                                        <img 
+                                                            src="{{ asset('storage') }}/{{ $notification->data['assigner_avatar'] }}" 
+                                                            alt class="h-auto rounded-circle" 
+                                                            style="width:50px; height: 50px !important;"
+                                                        />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -64,8 +68,8 @@
                                                             title="Show Details"
                                                             class="notification-title show text-body text-decoration-none"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#show-xl-modal"
-                                                            data-show-url="{{ $notification->data['url'] }}"
+                                                            data-bs-target="#details-modal"
+                                                            data-show-url="{{ url('back-office') }}{{ $notification->data['url'] }}"
                                                             data-id="{{ $notification->id }}">
                                                             {{ $notification->data['title'] }} 🎉
                                                         </a>

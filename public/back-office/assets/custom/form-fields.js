@@ -4,8 +4,9 @@ let fieldIndex = 0;
  * Renders a field card
  * @param {Object} field - optional existing field data
  */
-function renderField(field = {}) {
-    const index = fieldIndex;
+
+function renderField(field = {}, customIndex = null) {
+    const index = customIndex !== null ? customIndex : fieldIndex;
     const type = field.type || 'text';
     const required = field.required ?? 0;
     const label = field.label || '';
@@ -51,15 +52,11 @@ function renderField(field = {}) {
             <i class="ti ti-x"></i>
           </button>
         </div>
-        <div class="col-12 mt-2 select-options ${type !== 'select' ? 'd-none' : ''}" id="options-${index}">
-          <label class="form-label fw-bold">Select Options (comma separated)</label>
-          <input type="text" name="fields[${index}][options]" class="form-control" placeholder="Male, Female, Other" value="${options}">
-        </div>
       </div>
     </div>
     `;
     $('#fields-wrapper').append(html);
-    fieldIndex++;
+    if (customIndex === null) fieldIndex++;
 }
 
 // Remove field
@@ -77,11 +74,4 @@ $(document).on('change', '.field-type', function () {
 // Add new field button
 $(document).on('click', '#add-field', function () {
     renderField();
-});
-
-// Initialize existing fields if editing
-$(document).ready(function() {
-  if (typeof existingFields !== 'undefined' && Array.isArray(existingFields)) {
-    existingFields.forEach(field => renderField(field));
-  }
 });

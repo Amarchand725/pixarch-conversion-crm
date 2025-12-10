@@ -78,15 +78,15 @@ class AuthController extends Controller
         $leadActivities = null;
         if (!$isAdmin) {
             $leadQuery->where('assignee_id', $agentId);
-            $leadActivities = $leadQuery->get()
-            ->map(function($log) {
-                return [
-                    'type' => 'lead_assigned', // you can also make dynamic using $log->action
-                    'description' => $log->description ?? "Lead '{$log->lead?->name}' updated",
-                    'related_user' => $log->assignee,
-                    'created_at' => $log->created_at,
-                ];
-            });
+            // $leadActivities = $leadQuery->get()
+            // ->map(function($log) {
+            //     return [
+            //         'type' => 'lead_assigned', // you can also make dynamic using $log->action
+            //         'description' => $log->description ?? "Lead '{$log->lead?->name}' updated",
+            //         'related_user' => $log->assignee,
+            //         'created_at' => $log->created_at,
+            //     ];
+            // });
         }
 
         // 2️⃣ Meeting Activities

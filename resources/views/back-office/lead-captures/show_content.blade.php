@@ -33,6 +33,23 @@
             </span>
         </td>
     </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Faq Section</td>
+        <td>
+            @php 
+                $status = $model?->faq_status;
+            @endphp 
+            <span class="badge rounded-pill px-3 py-2 bg-info text-white ?? 'bg-warning text-white' }}">
+                {{ $status ? 'Enable' : 'Disable' }}
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Description</td>
+        <td>
+            {{ $model->description ?? '-' }}
+        </td>
+    </tr>
     @if($author = $model->author)
     <tr>
         <td class="text-nowrap fw-semibold">Author</td>
@@ -67,8 +84,8 @@
                             <strong>{{ $field->label }}</strong> 
                             (Type: {{ ucfirst($field->type) }} 
                             @if($field->required) | Required @endif
-                            @if($field->type === 'select' && $field->options)
-                                | Options: {{ $field->options }}
+                            @if($field->type === 'select' && !empty($field->options))
+                                | Options: {{ is_array($field->options) ? implode(', ', $field->options) : $field->options }}
                             @endif)
                         </li>
                     @endforeach
