@@ -184,3 +184,66 @@ if (!function_exists('activityEventBadgeClass')) {
         return $classes[strtolower($event)] ?? 'bg-secondary text-white';
     }
 }
+
+if (!function_exists('module_label')) {
+    function module_label(string $action, string $module, string $field = null)
+    {
+        $moduleName = __('labels.' . $module);
+
+        switch ($action) {
+            case 'add':
+                return __('ui.add_item', ['module' => $moduleName]);
+            case 'edit':
+                return __('ui.edit_item', ['module' => $moduleName]);
+            case 'list':
+                return __('ui.list_item', ['module' => $moduleName]);
+            case 'save':
+                return __('ui.save', ['module' => $moduleName]);
+            case 'delete':
+                return __('ui.delete', ['module' => $moduleName]);
+            case 'module_title':
+                return __('ui.module_title', ['module' => $moduleName]);
+            case 'placeholder':
+                if ($field) {
+                    $fieldName = __('labels.' . $field);
+                    return __('ui.enter_field', ['field' => $fieldName]);
+                }
+                return '';
+            case 'tooltip_add':
+                return __('ui.tooltip_add', ['module' => $moduleName]);
+            case 'tooltip_edit':
+                return __('ui.tooltip_edit', ['module' => $moduleName]);
+            case 'tooltip_delete':
+                return __('ui.tooltip_delete', ['module' => $moduleName]);
+            default:
+                return '';
+        }
+    }
+}
+
+if (!function_exists('module_message')) {
+    function module_message(string $type, string $module, string $user = null)
+    {
+        $moduleName = __('labels.' . $module);
+        $params = ['module' => $moduleName];
+        if ($user) {
+            $params['user'] = $user;
+        }
+        return __('messages.' . $type, $params);
+    }
+}
+
+// @php
+// $module = 'users';
+// $field = 'name';
+// @endphp
+
+// <h1>{{ module_label('module_title', $module) }}</h1>
+// <input type="text" placeholder="{{ module_label('placeholder', $module, $field) }}">
+// <button title="{{ module_label('tooltip_add', $module) }}">{{ module_label('add', $module) }}</button>
+
+// @if(session('success'))
+//     <div class="alert alert-success">
+//         {{ module_message('created', $module) }}
+//     </div>
+// @endif
