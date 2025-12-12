@@ -22,6 +22,7 @@ class LeadStatusRequest extends FormRequest
 
             // Only validate if the field is present
             'assignee_id' => ['nullable', 'exists:users,id'],
+            'amount' => ['nullable', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
 
             // Meeting fields: validate only if start or end time is present

@@ -86,6 +86,11 @@
                     </select>
                     <span id="status_id_error" class="text-danger error">{{ $errors->first('status_id') }}</span>
                 </div>
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Budget Amount</label>
+                    <input type="number" class="form-control" placeholder="Enter budget if have changed" value="{{ old('amount') }}" name="amount">
+                    <span id="amount_error" class="text-danger error">{{ $errors->first('amount') }}</span>
+                </div>
             </div>
         </div>
     </div>

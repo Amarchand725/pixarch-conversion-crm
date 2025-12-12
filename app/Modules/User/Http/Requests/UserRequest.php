@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Http\Requests;
 
+use App\Enum\AgentTypeEnum;
 use App\Enum\GenderEnum;
 use App\Models\Status;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,6 +28,7 @@ class UserRequest extends FormRequest
                 Rule::unique('users', 'phone')->ignore($user),
             ],
             'gender' => ['required', Rule::in(GenderEnum::cases())],
+            'type' => ['required', Rule::in(AgentTypeEnum::cases())],
             'doj' => [ 'nullable'],
             'email'    => [
                 'required',

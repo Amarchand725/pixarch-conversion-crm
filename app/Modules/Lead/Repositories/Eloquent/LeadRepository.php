@@ -89,6 +89,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         $model->toFill($payload, ['status_id', 'assignee_id']);
         $model->save();
 
+        $logStatus['amount'] = $payload['budget'];
         $logStatus['status_id'] = $payload['status_id'];
         $logStatus['assignee_id'] = $payload['assignee_id'];
         $logStatus['model_id'] = $model->id;
@@ -142,6 +143,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         $model->toFill($payload, ['status_id', 'assignee_id']);
         $model->save();
 
+        $logStatus['amount'] = $payload['budget'];
         $logStatus['status_id'] = $payload['status_id'];
         $logStatus['assignee_id'] = $payload['assignee_id'];
         $logStatus['model_id'] = $model->id;
@@ -262,6 +264,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         }
 
         $logStatus['description'] = $payload['description'] ?? 'Status updated via drag & drop';
+        $logStatus['amount'] = $payload['amount'] ?? null;
         $logStatus['status_id'] = $payload['status_id'];
         $logStatus['assignee_id'] = $assignee_id;
         $logStatus['model_id'] = $model->id;
@@ -270,6 +273,11 @@ class LeadRepository extends BaseRepository implements LeadContract
         $log = $model->statusLogs()->make();
         $log->toFill($logStatus);
         $log->save();
+
+        if($model->budget != $payload['amount']){
+            $model->budget = $payload['amount'];
+            $model->save();
+        }
 
         if($log && $model->lastStatusLog?->assignee_id != $assignee_id){
             //assign new agent lead.

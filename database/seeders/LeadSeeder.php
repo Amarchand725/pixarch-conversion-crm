@@ -44,6 +44,7 @@ class LeadSeeder extends Seeder
 
             $lead->assignees()->sync([rand(3, 10)]);
 
+            $logStatues['amount'] = $lead->budget;
             $logStatues['status_id'] = $status->id;
             $logStatues['assignee_id'] = $lead->currentAssignee?->user_id;
             $logStatues['model_id'] = $lead->id;

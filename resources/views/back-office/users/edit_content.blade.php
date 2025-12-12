@@ -28,6 +28,20 @@
         </select>
         <span id="gender_error" class="text-danger error">{{ $errors->first('gender') }}</span>
     </div>
+    <div class="col-12 col-md-6">
+        <label for="type" class="form-label fw-semibold">
+            Type <span class="text-danger">*</span>
+        </label>
+        <select id="type" name="type" class="form-select">
+            <option value="" selected>Select type</option>
+             @foreach (\App\Enum\AgentTypeEnum::cases() as $type)
+                <option value="{{ $type->value }}" {{ old('type', $model->type) == $type->value ? 'selected' : '' }}>
+                    {{ ucwords(str_replace('_', ' ', $type->value)) }}
+                </option>
+            @endforeach
+        </select>
+        <span id="type_error" class="text-danger error">{{ $errors->first('type') }}</span>
+    </div>
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="phone" class="form-label fw-semibold">

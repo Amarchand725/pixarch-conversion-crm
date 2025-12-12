@@ -121,7 +121,7 @@ class UserController extends BaseModuleController
 
     public function show(User $user)
     {
-        $model = $this->userRepo->showModel($user);
+        $model = $this->userRepo->showModel($user, ['avatar', 'roles', 'statusInfo']);
         return (string) view($this->pathInitialize.'.show_content', get_defined_vars());
     }
 

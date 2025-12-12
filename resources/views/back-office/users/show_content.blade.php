@@ -51,6 +51,13 @@
         </td>
     </tr>
     <tr>
+        <td class="text-nowrap fw-semibold">Type</td>
+        <td>
+            {{ ucwords(str_replace('_', ' ', $model->type)) }}
+        </td>
+    </tr>
+    
+    <tr>
         <td class="text-nowrap fw-semibold">Date of Joining</td>
         <td>{{ getDateFormat($model->doj)??'-' }}</td>
     </tr>

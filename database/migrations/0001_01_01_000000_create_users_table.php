@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\AgentTypeEnum;
 use App\Enum\GenderEnum;
 use App\Enum\NotificationTypeEnum;
 use Illuminate\Database\Migrations\Migration;
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->unsignedBigInteger('avatar_id')->nullable()->constrained('attachments')->cascadeOnUpdate()->nullOnDelete();
             $table->enum('gender', array_column(GenderEnum::cases(), 'value'))->nullable();
             $table->date('doj')->nullable()->comment('date of joining');
+            $table->string('type')->array_column(AgentTypeEnum::cases(), 'value')->nullable()->comment('Agent Type: Automated Agents, Manual Agents');
             $table->enum('two_factor', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();
             $table->enum('notification', array_column(NotificationTypeEnum::cases(), 'value'))->nullable();
             $table->timestamp('email_verified_at')->nullable();

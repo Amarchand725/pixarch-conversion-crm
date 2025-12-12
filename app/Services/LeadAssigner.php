@@ -12,7 +12,10 @@ class LeadAssigner
         $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
         
         // Get all active agents
-        $agents = User::role('Agent')
+        $agents = User::whereHas('roles', function ($q) {
+            $q->where('name', '!=', 'Admin');
+        })
+        ->where('type', 'auto_assigned')
         ->where('status_id', $status_id)
         ->orderBy('id')
         ->get();

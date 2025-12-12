@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
             $table->foreignId('assignee_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('meeting_id')->nullable()->constrained('meetings')->nullOnDelete();
+            $table->bigInteger('amount')->nullable()->comment('lead amount if lead and finalization is different');
             $table->text('description')->nullable();
 
             $table->timestamps();

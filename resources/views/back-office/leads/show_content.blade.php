@@ -96,6 +96,7 @@
         <tr>
             <th>Assignee</th>
             <th>Status</th>
+            <th>Budget</th>
             <th>Description</th>
             <th>Author</th>
             <th>Created At</th>
@@ -122,6 +123,11 @@
                     @endphp 
                     <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status->name)) ?? 'bg-light text-dark' }}">
                         {{ strtoupper($status->name) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge rounded-pill px-3 py-2 bg-info text-white">
+                        {{ $symbol }}{{ $statusLog->amount }}
                     </span>
                 </td>
                 <td>{{ $statusLog->description ?? '-' }}</td>

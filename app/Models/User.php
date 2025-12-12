@@ -34,6 +34,7 @@ class User extends Authenticatable
         'password',
         'avatar_id',
         'gender',
+        'type',
         'doj',
         'phone',
         'daily_capacity',

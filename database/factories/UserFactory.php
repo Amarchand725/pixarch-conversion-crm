@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enum\AgentTypeEnum;
 use App\Enum\GenderEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -31,6 +32,7 @@ class UserFactory extends Factory
             'email' =>  $username . "@mailinator.com",
             'avatar_id'    => null,
             'gender'    => fake()->randomElement(array_column(GenderEnum::cases(), 'value')),
+            'type'    => fake()->randomElement(array_column(AgentTypeEnum::cases(), 'value')),
             'doj'   => fake()->date(),
             'phone' => fake()->phoneNumber(),
             'daily_capacity' => fake()->numberBetween(1, 10),
