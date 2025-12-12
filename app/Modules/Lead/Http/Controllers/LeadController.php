@@ -108,6 +108,8 @@ class LeadController extends BaseModuleController
             'extraActions' => $extraActions, // Pass the extra buttons
         ])->render();
 
+        $row->show_url = route($this->routePrefix.'.show', $row->uuid);
+
         return $row;
     }
 
