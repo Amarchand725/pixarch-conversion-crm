@@ -35,6 +35,30 @@
             </span>
         </td>
     </tr>
+    @if($agents = $model->agents)
+    <tr>
+        <td class="text-nowrap fw-semibold">Agents</td>
+        <td>
+            @forelse($agents as $agent)
+                @php
+                    $avatarPath = optional($agent->avatar)->path
+                            ? asset('storage/' . $agent->avatar->path)
+                            : asset('back-office/assets/img/avatars/default-avatar.png');
+                @endphp
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <img src="{{ $avatarPath }}" width="36" height="36" class="rounded-circle" alt="Avatar">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">{{ $agent->name ?? '-' }}</span>
+                        <small class="text-muted">{{ $agent->email ?? '-' }}</small>
+                    </div>
+                </div>
+            @empty
+                -
+            @endforelse
+        </td>
+    </tr>
+    @endif
+
     @if($author = $model->author)
     <tr>
         <td class="text-nowrap fw-semibold">Author</td>

@@ -7,18 +7,22 @@ use App\Models\User;
 
 class LeadAssigner
 {
-    public static function getNextAgent()
+    public static function getNextAgent($campaignAgents = null)
     {
         $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
         
         // Get all active agents
-        $agents = User::whereHas('roles', function ($q) {
-            $q->where('name', '!=', 'Admin');
-        })
-        ->where('type', 'auto_assigned')
-        ->where('status_id', $status_id)
-        ->orderBy('id')
-        ->get();
+        if(!empty($campaignAgents) && $campaignAgents->isNotEmpty()){
+            $agents = $campaignAgents; // use campaign-specific agents
+        } else {
+            $agents = User::whereHas('roles', function ($q) {
+                $q->where('name', '!=', 'Admin');
+            })
+            ->where('type', 'auto_assigned')
+            ->where('status_id', $status_id)
+            ->orderBy('id')
+            ->get();
+        }
 
         if ($agents->isEmpty()) {
             return null;

@@ -3,6 +3,7 @@
 namespace App\Modules\Campaign\Http\Requests;
 
 use App\Models\Status;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,6 +24,8 @@ class CampaignRequest extends FormRequest
             'start_date' => ['nullable', 'date', 'date_format:Y-m-d'],
             'end_date'   => ['nullable', 'date', 'date_format:Y-m-d', 'after_or_equal:start_date'],
             'description' => ['nullable', 'string'],
+            'user_ids' => ['nullable', 'array'],
+            'user_ids.*' => ['integer', 'exists:users,id'],
         ];
     }
 
@@ -31,6 +34,17 @@ class CampaignRequest extends FormRequest
         if ($this->has('status_id')) {
             $this->merge([
                 'status_id' => Status::where('uuid', $this->input('status_id'))->value('id')
+            ]);
+        }
+
+        if ($this->has('user_ids')) {
+            $userIds = collect($this->input('user_ids'))
+                ->map(fn($uuid) => User::where('uuid', $uuid)->value('id'))
+                ->filter() // remove nulls if uuid not found
+                ->toArray();
+
+            $this->merge([
+                'user_ids' => $userIds
             ]);
         }
     }

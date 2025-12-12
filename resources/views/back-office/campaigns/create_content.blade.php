@@ -27,6 +27,20 @@
         <span id="type_error" class="text-danger error">{{ $errors->first('type') }}</span>
     </div>
     <div class="col-12 col-md-6">
+        <label for="user_id" class="form-label fw-semibold">
+            Agents
+        </label>
+        <select id="user_id" name="user_ids[]" class="form-select" multiple>
+            @foreach ($agents as $agent)
+                <option value="{{ $agent->uuid }}" 
+                    {{ (collect(old('user_ids'))->contains($agent->uuid)) ? 'selected' : '' }}>
+                    {{ $agent->name }} ({{ $agent->email }})
+                </option>
+            @endforeach
+        </select>
+        <span id="user_id_error" class="text-danger error">{{ $errors->first('user_id') }}</span>
+    </div>
+    <div class="col-12 col-md-6">
         <label for="budget" class="form-label fw-semibold">
             Budget
         </label>

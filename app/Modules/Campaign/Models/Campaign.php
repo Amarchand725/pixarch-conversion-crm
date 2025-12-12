@@ -53,4 +53,9 @@ class Campaign extends Model
     {
         return $this->belongsTo(User::class, 'author_id');
     }
+
+    public function agents()
+    {
+        return $this->belongsToMany(User::class, 'campaign_agents', 'campaign_id', 'user_id');
+    }
 }

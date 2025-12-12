@@ -47,14 +47,17 @@ class LeadCapturePublicController extends BaseModuleController
 
     public function store(LeadRequest $request, $lead_capture_uuid){
         $payload = $request->validated();
-        $lead_capture_id = $this->lead_capture->where('uuid', $lead_capture_uuid)->value('id');
+        $leadCapture = $this->lead_capture->where('uuid', $lead_capture_uuid)->first();
+        $lead_capture_id = $leadCapture->id;
         $status_id = $this->status->where('model', 'Lead')->where('name', 'created')->value('id');
+        
+        $campaignAgents = optional($leadCapture->campaign)->agents ?? collect();
         
         try {
             $response = null;
-            DB::transaction(function () use (&$response, $payload, $lead_capture_id, $status_id) {
+            DB::transaction(function () use (&$response, $payload, $lead_capture_id, $status_id, $campaignAgents) {
                 $payload['status_id'] = $status_id; //default
-                $payload['assignee_id'] = LeadAssigner::getNextAgent(); //rol-robbin agent id
+                $payload['assignee_id'] = LeadAssigner::getNextAgent($campaignAgents); //rol-robbin agent id
                 $payload['author'] = null; //default
                 $payload['source_id'] = $this->source->where('name', 'website')->value('id');
                 $payload['lead_capture_id'] = $lead_capture_id;

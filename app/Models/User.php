@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Traits\LogsModelActivity;
+use App\Modules\Campaign\Models\Campaign;
 use App\Modules\Lead\Models\Lead;
 
 class User extends Authenticatable
@@ -137,5 +138,10 @@ class User extends Authenticatable
     public function meetings()
     {
         return $this->belongsToMany(Meeting::class, 'meeting_users');
+    }
+
+    public function campaigns()
+    {
+        return $this->belongsToMany(Campaign::class, 'campaign_agents', 'user_id', 'campaign_id');
     }
 }
