@@ -146,48 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    // Event click function
-    // function eventClick(info) {
-    //   eventToUpdate = info.event;
-    //   if (eventToUpdate.url) {
-    //     info.jsEvent.preventDefault();
-    //     window.open(eventToUpdate.url, '_blank');
-    //   }
-    //   bsAddEventSidebar.show();
-    //   // For update event set offcanvas title text: Update Event
-    //   if (offcanvasTitle) {
-    //     offcanvasTitle.innerHTML = 'Update Event';
-    //   }
-    //   btnSubmit.innerHTML = 'Update';
-    //   btnSubmit.classList.add('btn-update-event');
-    //   btnSubmit.classList.remove('btn-add-event');
-    //   btnDeleteEvent.classList.remove('d-none');
-
-    //   eventTitle.value = eventToUpdate.title;
-    //   start.setDate(eventToUpdate.start, true, 'Y-m-d');
-    //   eventToUpdate.allDay === true ? (allDaySwitch.checked = true) : (allDaySwitch.checked = false);
-    //   eventToUpdate.end !== null
-    //     ? end.setDate(eventToUpdate.end, true, 'Y-m-d')
-    //     : end.setDate(eventToUpdate.start, true, 'Y-m-d');
-    //   eventLabel.val(eventToUpdate.extendedProps.calendar).trigger('change');
-    //   eventToUpdate.extendedProps.location !== undefined
-    //     ? (eventLocation.value = eventToUpdate.extendedProps.location)
-    //     : null;
-    //   eventToUpdate.extendedProps.guests !== undefined
-    //     ? eventGuests.val(eventToUpdate.extendedProps.guests).trigger('change')
-    //     : null;
-    //   eventToUpdate.extendedProps.description !== undefined
-    //     ? (eventDescription.value = eventToUpdate.extendedProps.description)
-    //     : null;
-
-    //   // // Call removeEvent function
-    //   // btnDeleteEvent.addEventListener('click', e => {
-    //   //   removeEvent(parseInt(eventToUpdate.id));
-    //   //   // eventToUpdate.remove();
-    //   //   bsAddEventSidebar.hide();
-    //   // });
-    // }
-
     function eventClick(info) {
       eventToUpdate = info.event;
 
@@ -335,6 +293,24 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       eventClick: function (info) {
         eventClick(info);
+      },
+      eventContent: function(info) {
+          // Format time
+          let startTime = info.event.start 
+              ? new Date(info.event.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+              : '';
+
+          let title = info.event.title || '';
+          let attendeeName = info.event.extendedProps.attendeeName || '';
+
+          return {
+              html: `
+                  <div style="white-space: normal; text-align:left;">
+                      <b>${startTime} - ${title}</b><br>
+                      <span style="font-size: 11px; color:#555;">Attendee: ${attendeeName}</span>
+                  </div>
+              `
+          };
       },
       datesSet: function () {
         modifyToggler();

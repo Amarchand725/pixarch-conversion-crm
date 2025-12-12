@@ -283,21 +283,32 @@ class MeetingController extends BaseModuleController
 
         // If Admin → fetch all meetings
         if ($user->hasRole('Admin')) {
-            $meetings = Meeting::with('lead')->get();
+            $meetings = Meeting::with('lead', 'attendees')->get();
         } 
         // Else → fetch only meetings where user is attendee
         else {
-            $meetings = $user->meetings()->with('lead')->get();
+            $meetings = $user->meetings()->with('lead', 'attendees')->get();
         }
 
         // Map for FullCalendar
         $events = $meetings->map(function ($meeting) {
+
+            // get attendee names safely
+            $attendees = collect();
+
+            if ($meeting->relationLoaded('attendees')) {
+                $attendees = $meeting->attendees->pluck('name');
+            } 
+
+            $attendeeNames = $attendees->implode(', ');
+
             return [
                 'id' => $meeting->id,
                 'title' => $meeting?->lead?->name,
                 'start' => $meeting->start_date_time,
                 'end' => $meeting->end_date_time,
                 'extendedProps' => [
+                    'attendeeName' => $attendeeNames, // add this
                     'calendar' => 'Business',
                     'description' => $meeting->description,
                 ],
