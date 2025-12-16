@@ -19,6 +19,9 @@
             transform: translateY(-2px);
             transition: transform 0.2s;
         }
+        .g-recaptcha {
+            margin: 15px 0;
+        }
     </style>
 @endpush
 @section('content')
@@ -45,6 +48,7 @@
                         <form action="{{ route('lead-capture.store', $model->uuid) }}" method="POST" class="row g-3 needs-validation" id="create-form" enctype="multipart/form-data" novalidate>
                             @csrf
 
+                            <input type="hidden" name="captcha_required" value="1">
                             <!-- Default Fields -->
                             @foreach (['name','phone','email','budget'] as $fieldKey)
                                 @php
@@ -180,6 +184,17 @@
                                 </div>
                             @endforeach
 
+                            <!-- CAPTCHA -->
+                            <div class="g-recaptcha"
+                                data-sitekey="{{ config('recaptcha.site_key') }}">
+                            </div>
+                            <!-- Display CAPTCHA validation error -->
+                            @error('g-recaptcha-response')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
                             <!-- Submit Buttons -->
                             <div class="col-12 mt-4 d-flex flex-wrap justify-content-start gap-3 align-items-center">
                                 <button type="submit" class="btn btn-primary btn-lg px-4 shadow-sm">Submit</button>
@@ -250,6 +265,8 @@
     </div>
 @endsection
 @push('js')
+    <!-- Load reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
         $('select').each(function () {
             $(this).select2({

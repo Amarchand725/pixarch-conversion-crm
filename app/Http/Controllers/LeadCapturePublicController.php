@@ -48,6 +48,7 @@ class LeadCapturePublicController extends BaseModuleController
 
     public function store(LeadRequest $request, $lead_capture_uuid, PhoneNumberService $phoneService){
         $payload = $request->validated();
+
         $parsed = $phoneService->parse($request->phone);
         $payload['numeric_code'] = $parsed['numeric_code'];
         $payload['iso_code'] = $parsed['iso_code'];

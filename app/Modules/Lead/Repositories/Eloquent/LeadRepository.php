@@ -112,7 +112,7 @@ class LeadRepository extends BaseRepository implements LeadContract
             if(auth()->user()){
                 $assigner = auth()->user();
             }else{
-                $assigner = User::role('Admin')->value('id');
+                $assigner = User::role('Admin')->firstOrFail();
             }
 
             if ($assignees && $assignees->count()) {
