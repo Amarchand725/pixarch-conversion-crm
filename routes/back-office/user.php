@@ -9,8 +9,11 @@ Route::group([
     Route::controller(UserController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-        Route::post('{id}/restore', 'restore')->name('restore');
-        Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+        Route::post('{user}/restore', 'restore')->name('restore');
+        Route::delete('{user}/force-delete', 'forceDelete')->name('forceDelete');
+
+        Route::get('action/edit/{user?}', 'editPassword')->name('action.edit');
+        Route::put('action/update-password/{user?}', 'changePassword')->name('action.update-password');
     });
 
     // 🧱 Resource CRUD

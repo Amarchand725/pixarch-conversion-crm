@@ -62,11 +62,20 @@ class UserController extends BaseModuleController
                             . strtoupper($status) .
                             '</span>';
 
+        //Adding extra custom actions
+        $extraActions[] = view($this->pathInitialize.'.custom-actions', [
+            'model' => $row,
+            'routeInitialize' => $this->routePrefix,
+            'singularLabel' => $this->singularLabel,
+            'permissionPrefix' => $this->permissionPrefix,
+        ])->render();
+
         $row->action = view('back-office.partials.actions', [
             'model' => $row,
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize'  => $this->routePrefix,
             'singularLabel'    => $this->singularLabel,
+            'extraActions' => $extraActions, // Pass the extra buttons
         ])->render();
 
         // Role - first role name from Spatie roles
@@ -210,6 +219,29 @@ class UserController extends BaseModuleController
             return redirect()->route(strtolower('users.index'))->with('success', 'Bulk restore successful.');
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function editPassword(?User $user)
+    {
+        $model = $user ? $this->userRepo->showModel($user) : null;
+        return (string) view($this->pathInitialize.'.change_password_content', get_defined_vars());
+    }
+
+    public function changePassword(Request $request, User $user)
+    {
+        $request->validate([
+            'password' => 'required|min:8',
+        ]);
+        
+        try {
+            $this->userRepo->updateModel($user, ['password' => $request->password]);
+            return successResponse([], 'Password updated successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 }

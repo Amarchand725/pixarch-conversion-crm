@@ -103,6 +103,7 @@ class RolePermissionSeeder extends Seeder
             'user-status',
             'user-direct_permission',
             'user-impersonate',
+            'user-change_password',
 
             // Permission management
             'permission-list',

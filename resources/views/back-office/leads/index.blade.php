@@ -129,7 +129,17 @@
                                                             ? asset('back-office/assets/' . $lead->assignees->first()->avatar->path)
                                                             : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                                     width="36" height="36" alt="Avatar" title="{{ $lead?->assignees->first()->name ?? '' }}">
-                                                <span class="fw-semibold">{{ $lead->name }}</span>
+                                                <span class="fw-semibold">
+                                                    <a href="#" class="show fw-semibold cursor-pointer"
+                                                        data-show-url="{{ route($routeInitialize.'.show', $lead->uuid) }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#details-modal"
+                                                        title="View {{ $singularLabel }} Details"
+                                                        label="View {{ $singularLabel }} Details"
+                                                        >
+                                                        {{ $lead->name ?? '' }}
+                                                    </a>
+                                                </span>
                                             </div>
 
                                             <!-- Value Badge stays on same row -->
