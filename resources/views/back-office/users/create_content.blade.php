@@ -50,8 +50,8 @@
             type="text" 
             id="phone" 
             name="phone" 
-            class="form-control phoneNumber" 
-            placeholder="(999) - 12345678"
+            class="form-control" 
+            placeholder="Enter phone number e.g +14155552671"
             value="{{ old('phone') }}"
         />
         <span id="phone_error" class="text-danger error">{{ $errors->first('phone') }}</span>

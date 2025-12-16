@@ -25,6 +25,8 @@ class Lead extends Model
         'name', 
         'email', 
         'phone', 
+        'numeric_code', 
+        'iso_code', 
         'value', 
         'pipeline',
         'status', 

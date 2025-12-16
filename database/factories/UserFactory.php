@@ -25,6 +25,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $username = fake()->username();
+        $phone_number = fake()->phoneNumber();
         return [
             'status_id'    => 1,
             'name'    => fake()->name(),
@@ -34,7 +35,9 @@ class UserFactory extends Factory
             'gender'    => fake()->randomElement(array_column(GenderEnum::cases(), 'value')),
             'type'    => fake()->randomElement(array_column(AgentTypeEnum::cases(), 'value')),
             'doj'   => fake()->date(),
-            'phone' => fake()->phoneNumber(),
+            'phone' => $phone_number,
+            'numeric_code' => $phone_number ? fake()->randomElement(['1', '44', '91', '61', '81']) : null,
+            'iso_code' => $phone_number ? fake()->randomElement(['US', 'GB', 'IN', 'AU', 'JP']) : null,
             'daily_capacity' => fake()->numberBetween(1, 10),
             'two_factor'    => null,
             'notification'  => null,

@@ -10,6 +10,7 @@ use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
+use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -143,9 +144,12 @@ class LeadController extends BaseModuleController
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
-    public function store(LeadRequest $request)
+    public function store(LeadRequest $request, PhoneNumberService $phoneService)
     {
         $payload = $request->validated();
+        $parsed = $phoneService->parse($request->phone);
+        $payload['numeric_code'] = $parsed['numeric_code'];
+        $payload['iso_code'] = $parsed['iso_code'];
         
         try {
             $response = null;
@@ -174,9 +178,12 @@ class LeadController extends BaseModuleController
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
-    public function update(LeadRequest $request, Lead $lead)
+    public function update(LeadRequest $request, Lead $lead, PhoneNumberService $phoneService)
     {
         $payload = $request->validated();
+        $parsed = $phoneService->parse($request->phone);
+        $payload['numeric_code'] = $parsed['numeric_code'];
+        $payload['iso_code'] = $parsed['iso_code'];
         try {
             $this->leadRepo->updateModel($lead, $payload);
             return successResponse([], $this->singularLabel. ' updated successfully.');

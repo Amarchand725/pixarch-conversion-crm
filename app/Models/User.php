@@ -38,6 +38,8 @@ class User extends Authenticatable
         'type',
         'doj',
         'phone',
+        'numeric_code',
+        'iso_code',
         'daily_capacity',
         'weight',
         'two_factor',

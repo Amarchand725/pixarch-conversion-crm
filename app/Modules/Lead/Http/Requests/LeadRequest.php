@@ -7,7 +7,6 @@ use Illuminate\Validation\Rule;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
-use App\Modules\LeadCapture\Models\LeadCapture;
 
 class LeadRequest extends FormRequest
 {
@@ -23,8 +22,8 @@ class LeadRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'phone' => [
-                'nullable',
-                'regex:/^\(\d{3}\)\s-\s\d{8}$/',
+                'required',
+                'intl_phone', // validates full international number
                 Rule::unique('leads', 'phone')->ignore($lead),
             ],
             'email'    => [

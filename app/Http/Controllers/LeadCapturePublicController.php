@@ -11,6 +11,7 @@ use App\Modules\LeadCapture\Models\LeadCapture;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use App\Services\LeadAssigner;
+use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -45,8 +46,12 @@ class LeadCapturePublicController extends BaseModuleController
         return view('frontend.landing-form', get_defined_vars());
     }
 
-    public function store(LeadRequest $request, $lead_capture_uuid){
+    public function store(LeadRequest $request, $lead_capture_uuid, PhoneNumberService $phoneService){
         $payload = $request->validated();
+        $parsed = $phoneService->parse($request->phone);
+        $payload['numeric_code'] = $parsed['numeric_code'];
+        $payload['iso_code'] = $parsed['iso_code'];
+
         $leadCapture = $this->lead_capture->where('uuid', $lead_capture_uuid)->first();
         $lead_capture_id = $leadCapture->id;
         $status_id = $this->status->where('model', 'Lead')->where('name', 'created')->value('id');
@@ -57,7 +62,7 @@ class LeadCapturePublicController extends BaseModuleController
             $response = null;
             DB::transaction(function () use (&$response, $payload, $lead_capture_id, $status_id, $campaignAgents) {
                 $payload['status_id'] = $status_id; //default
-                $payload['assignee_id'] = LeadAssigner::getNextAgent($campaignAgents); //rol-robbin agent id
+                $payload['assignee_id'] = LeadAssigner::getNextAgent($campaignAgents, $payload['iso_code']); //rol-robbin agent id
                 $payload['author'] = null; //default
                 $payload['source_id'] = $this->source->where('name', 'website')->value('id');
                 $payload['lead_capture_id'] = $lead_capture_id;

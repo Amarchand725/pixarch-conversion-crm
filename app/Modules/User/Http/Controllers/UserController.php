@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Modules\User\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Modules\User\Repositories\Contracts\UserContract;
+use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -80,10 +81,13 @@ class UserController extends BaseModuleController
         return (string) view($this->pathInitialize.'.create_content', get_defined_vars());
     }
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request, PhoneNumberService $phoneService)
     {
         $payload = $request->validated();
-        
+        $parsed = $phoneService->parse($request->phone);
+        $payload['numeric_code'] = $parsed['numeric_code'];
+        $payload['iso_code'] = $parsed['iso_code'];
+
         try {
             $payload['role'] = 'Agent';
             $response = $this->userRepo->storeModel($payload);
@@ -105,9 +109,13 @@ class UserController extends BaseModuleController
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
 
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, User $user, PhoneNumberService $phoneService)
     {
         $payload = $request->validated();
+        $parsed = $phoneService->parse($request->phone);
+        $payload['numeric_code'] = $parsed['numeric_code'];
+        $payload['iso_code'] = $parsed['iso_code'];
+
         try {
             $this->userRepo->updateModel($user, $payload);
             return successResponse([], $this->singularLabel. ' updated successfully.');

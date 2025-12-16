@@ -7,7 +7,7 @@ use App\Models\User;
 
 class LeadAssigner
 {
-    public static function getNextAgent($campaignAgents = null)
+    public static function getNextAgent($campaignAgents = null, $leadIsoCode = null)
     {
         $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
         
@@ -20,6 +20,7 @@ class LeadAssigner
             })
             ->where('type', 'auto_assigned')
             ->where('status_id', $status_id)
+            ->where('iso_code', $leadIsoCode)
             ->orderBy('id')
             ->get();
         }

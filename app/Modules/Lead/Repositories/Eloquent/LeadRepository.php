@@ -100,7 +100,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         $log->save();
 
         if(empty($payload['assignee_id'])){
-            $payload['assignee_id'] = LeadAssigner::getNextAgent(); //assignee rol-robbin agent id
+            $payload['assignee_id'] = LeadAssigner::getNextAgent($payload['iso_code']); //assignee rol-robbin agent id
         }
 
         if (!empty($payload['assignee_id'])) {
@@ -152,6 +152,10 @@ class LeadRepository extends BaseRepository implements LeadContract
         $log = $model->statusLogs()->firstOrNew();
         $log->toFill($logStatus);
         $log->save();
+
+        if(empty($payload['assignee_id'])){
+            $payload['assignee_id'] = LeadAssigner::getNextAgent($payload['iso_code']); //assignee rol-robbin agent id
+        }
 
         if (!empty($payload['assignee_id'])) {
             $model->assignees()->sync([$payload['assignee_id']]);

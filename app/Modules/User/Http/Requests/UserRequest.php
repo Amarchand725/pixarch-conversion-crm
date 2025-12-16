@@ -22,9 +22,9 @@ class UserRequest extends FormRequest
         return [
             'status_id' => ['nullable', 'exists:statuses,id'],
             'name' => ['required', 'string', 'max:255'],
-            'phone'    => [
+            'phone' => [
                 'nullable',
-                'regex:/^\(\d{3}\)\s-\s\d{8}$/',
+                'intl_phone', // validates full international number
                 Rule::unique('users', 'phone')->ignore($user),
             ],
             'gender' => ['required', Rule::in(GenderEnum::cases())],

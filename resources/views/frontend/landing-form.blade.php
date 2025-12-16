@@ -52,12 +52,15 @@
                                     $type = $fieldKey === 'budget' ? 'number' : ($fieldKey === 'email' ? 'email' : ($fieldKey === 'phone' ? 'tel' : 'text'));
                                     $placeholder = "Enter $label";
                                     $value = old($fieldKey);
+                                    if($label === 'Phone') {
+                                        $placeholder = "Enter phone number e.g +14155552671";
+                                    }
                                 @endphp
 
                                 <div class="col-md-6">
                                     <label for="{{ $fieldKey }}" class="form-label fw-semibold">
                                         {{ $label }}
-                                        @if($fieldKey === 'name') <span class="text-danger">*</span> @endif
+                                        @if($fieldKey === 'name' || $fieldKey === 'phone') <span class="text-danger">*</span> @endif
                                     </label>
 
                                     @if($type === 'tel')
@@ -65,7 +68,7 @@
                                             type="tel"
                                             id="{{ $fieldKey }}"
                                             name="{{ $fieldKey }}"
-                                            class="form-control phoneNumber shadow-sm"
+                                            class="form-control shadow-sm"
                                             placeholder="{{ $placeholder }}"
                                             value="{{ $value }}"
                                             @if($fieldKey==='name') required @endif

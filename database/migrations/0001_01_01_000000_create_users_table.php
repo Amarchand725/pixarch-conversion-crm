@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('username')->unique()->nullable();
             $table->string('name');
             $table->string('phone', 20)->nullable();
+            $table->string('numeric_code', 5)->nullable();
+            $table->string('iso_code', 2)->nullable();
             $table->string('email')->unique();
             $table->integer('daily_capacity')->default(10); // max leads per day
             $table->integer('weight')->default(1); // weighted round-robin
