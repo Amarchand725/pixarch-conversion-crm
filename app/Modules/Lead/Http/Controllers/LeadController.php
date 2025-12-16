@@ -37,8 +37,8 @@ class LeadController extends BaseModuleController
         $statusLeads = $this->leadRepo->getAllCollection();
 
         $columns = [
+            'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
             'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
-            'name' => ['label' => 'Lead Name', 'searchable' => 'name'],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
             'pipeline' => ['label' => 'Pipeline', 'searchable' => 'pipeline'],
             'budget_amount' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
@@ -76,16 +76,34 @@ class LeadController extends BaseModuleController
     {   
         $extraActions = [];
 
+        $row->show_url = route($this->routePrefix . '.show', $row->uuid);
+
         // Keep numeric value untouched for DataTables
         $amount = floatval($row->budget ?? 0);
         $symbol = config('app.currency_symbol');
         // New property for display
         $row->budget_amount = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
         if($row->assignees->first()){
-            $row->assigned_to = view('back-office.partials.avatar', ['user' => $row->assignees->first()])->render();
+            $row->assigned_to = view('back-office.partials.avatar', [
+                    'user' => $row->assignees->first()
+                ]
+            )->render();
         }else{
             $row->assignee_to = '-';
         }
+
+        $label = $this->singularLabel.' Details';
+        $row->name = '
+            <a href="#" class="show fw-semibold cursor-pointer"
+                data-show-url="'.$row->show_url.'"
+                data-bs-toggle="modal"
+                data-bs-target="#details-modal"
+                title="'.e($label).'"
+                label="'.e($label).'"
+                >
+                '.e($row->name).'
+            </a>
+        ';
         
         $status = strtolower($row->lastStatusLog?->status?->name ?? '');
         $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
