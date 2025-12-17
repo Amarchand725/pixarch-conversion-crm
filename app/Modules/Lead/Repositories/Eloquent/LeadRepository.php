@@ -308,7 +308,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner?->avatar?->path
+                    $assigner_avatar = $assigner?->avatar?->path
                                         ? asset('storage/' . $assigner->avatar->path)
                                         : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
@@ -322,7 +322,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     );
                 }
             }
-        }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id'] && auth()->user()->id != $model->lastStatusLog?->assignee_id){
+        }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id'] && auth()->user()->id != $model->lastStatusLog?->assignee_id && statusName('Lead', $payload['status_id']) != 'pool'){
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
 
@@ -331,7 +331,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner?->avatar?->path
+                    $assigner_avatar = $assigner?->avatar?->path
                                         ? asset('storage/' . $assigner->avatar->path)
                                         : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has updated status of your lead';
