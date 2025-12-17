@@ -23,7 +23,7 @@
             type="text" 
             id="phone" 
             name="phone" 
-            class="form-control" 
+            class="form-control phone-input" 
             placeholder="Enter phone number e.g +14155552671"
             value="{{ old('phone') }}"
         />

@@ -72,7 +72,7 @@
                                             type="tel"
                                             id="{{ $fieldKey }}"
                                             name="{{ $fieldKey }}"
-                                            class="form-control shadow-sm"
+                                            class="form-control shadow-sm phone-input"
                                             placeholder="{{ $placeholder }}"
                                             value="{{ $value }}"
                                             @if($fieldKey==='name') required @endif
@@ -123,8 +123,8 @@
                                             type="tel"
                                             id="{{ $field->name }}"
                                             name="fields[{{ $field->name }}]"
-                                            class="form-control phoneNumber shadow-sm"
-                                            placeholder="(999) - 12345678"
+                                            class="form-control phone-input shadow-sm"
+                                            placeholder="Enter phone number e.g +14155552671"
                                             value="{{ $value }}"
                                             @if($field->required) required @endif
                                         />

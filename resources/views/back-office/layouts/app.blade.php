@@ -184,6 +184,41 @@
     <script>
         var btn = $('#scrollTop');
 
+        $(document).on('keyup', '.phone-input', function() {
+          var phone = $(this).val();
+          var formattedPhone = formatInternationalPhoneNumber(phone);
+          $(this).val(formattedPhone);
+        });
+
+        function formatInternationalPhoneNumber(phone) {
+          // Remove everything except digits and plus sign
+          phone = phone.replace(/[^+\d]/g, '');
+
+          // Ensure it starts with '+', if user starts with 00, replace with '+'
+          if (phone.startsWith('00')) {
+              phone = '+' + phone.substring(2);
+          }
+
+          // Limit total digits to 15 (excluding the +)
+          if (phone.startsWith('+')) {
+              var plus = '+';
+              var digits = phone.substring(1, 16); // max 15 digits
+              phone = plus + digits;
+          } else {
+              phone = phone.substring(0, 15); // just in case user removed +
+          }
+
+          // Optional: Add a space after country code (1-3 digits)
+          var match = phone.match(/^\+(\d{1,3})(\d*)$/);
+          if (match) {
+              var countryCode = match[1];
+              var number = match[2];
+              phone = '+' + countryCode + (number ? ' ' + number : '');
+          }
+
+          return phone;
+        }
+
         // Initialize Bootstrap tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
