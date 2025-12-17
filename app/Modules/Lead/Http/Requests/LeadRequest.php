@@ -7,6 +7,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class LeadRequest extends FormRequest
 {
@@ -44,6 +45,11 @@ class LeadRequest extends FormRequest
 
             // Dynamic Field Validations
             'fields.*' => ['nullable'],
+
+            // captcha only if required
+            'g-recaptcha-response' => $this->captchaRequired()
+                ? 'required'
+                : 'nullable',
         ];
     }
     public function prepareForValidation()
@@ -65,5 +71,34 @@ class LeadRequest extends FormRequest
                 'assignee_id' => User::where('uuid', $this->input('assignee_id'))->value('id')
             ]);
         }
+    }
+
+    public function withValidator($validator)
+    {
+        if (! $this->captchaRequired()) {
+            return;
+        }
+
+        $validator->after(function ($validator) {
+            $response = Http::asForm()
+                ->timeout(5)
+                ->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret'   => config('recaptcha.secret_key'),
+                    'response' => $this->input('g-recaptcha-response'),
+                    'remoteip' => $this->ip(),
+                ]);
+
+            if (! data_get($response->json(), 'success')) {
+                $validator->errors()->add(
+                    'g-recaptcha-response',
+                    'Captcha verification failed'
+                );
+            }
+        });
+    }
+
+    protected function captchaRequired(): bool
+    {
+        return $this->boolean('captcha_required');
     }
 }
