@@ -275,7 +275,7 @@ class LeadRepository extends BaseRepository implements LeadContract
             }
         }
 
-        $amount = 0;
+        $amount = $model->budget;
         if(isset($payload['amount'])){
             $amount = $payload['amount'] ?? 0;
         }
