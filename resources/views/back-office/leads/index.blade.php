@@ -295,12 +295,12 @@
 
                 leadEls.forEach(li => {
                     const val = Number(li.dataset.value);
-                    console.log('Lead Value:', val);
+                    // console.log('Lead Value:', val);
                     if (!isNaN(val)) total += val;
                 });
 
                 const totalEl = card.querySelector('.total-value');
-                console.log('Updating Total Value Element:', totalEl);
+                // console.log('Updating Total Value Element:', totalEl);
                 if (totalEl) totalEl.textContent = `Value: $${total.toLocaleString()}`;
 
                 card.dataset.total = total;

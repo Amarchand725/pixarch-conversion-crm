@@ -58,6 +58,16 @@
       a.dropdown-toggle::after {
         display: none !important;
       }
+      .rt-popup {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #1e88e5;
+        color: white;
+        padding: 12px 18px;
+        border-radius: 6px;
+        z-index: 9999;
+      }
     </style>
     @stack('css')
 
@@ -142,7 +152,7 @@
     <script src="{{ asset('back-office/assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('back-office') }}/assets/custom/ajax-gateway.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    
     <script>
         var btn = $('#scrollTop');
 
@@ -223,5 +233,35 @@
         @endif
     </script>
     @stack('js')
+    @vite(['resources/js/app.js'])
+
+    <script>
+      function showPopup(message) {
+          const div = document.createElement('div')
+          div.className = 'rt-popup'
+          div.innerText = message
+
+          document.body.appendChild(div)
+
+          setTimeout(() => div.remove(), 4000)
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        let countEl = document.getElementById('notif-count')
+
+        if (!countEl || typeof Echo === 'undefined') return
+
+        Echo.private('App.Models.User.{{ auth()->id() }}')
+            .notification((notification) => {
+
+                // increase counter
+                let current = parseInt(countEl.innerText || 0)
+                countEl.innerText = current + 1
+
+                toastr.success(notification.message)
+            })
+      })
+  </script>
+
   </body>
 </html>

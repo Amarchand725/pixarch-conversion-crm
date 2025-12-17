@@ -23,7 +23,7 @@
                     aria-expanded="false"
                 >
                     <i class="ti ti-bell ti-md"></i>
-                    <span class="badge bg-danger rounded-pill badge-notifications">{{ count($unreadNotifications) }}</span>
+                    <span class="badge bg-danger rounded-pill badge-notifications" id="notif-count">{{ count($unreadNotifications) }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end py-0">
                     <li class="dropdown-menu-header border-bottom">
