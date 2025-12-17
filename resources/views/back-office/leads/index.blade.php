@@ -93,7 +93,7 @@
                     @forelse($statusLeads as $status)
                         <div class="status-card card"
                             data-status-id="{{ $status['status_id'] }}"
-                            data-total="{{ $status['leads']->sum('value') }}"
+                            data-total="{{ $status['leads']->sum('budget') }}"
                         >
                             <div class="card-header text-center bg-light border-bottom-0 p-3">
                                 <h5 class="mb-1">
@@ -109,7 +109,7 @@
 
                                     <!-- Total Value -->
                                     <span class="badge bg-success fs-6">
-                                        <span class="total-value">Value: ${{ number_format($status['leads']->sum('value')) }}</span>
+                                        <span class="total-value">Value: ${{ number_format($status['leads']->sum('budget')) }}</span>
                                     </span>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                 @forelse($status['leads'] as $lead)
                                     <li class="list-group-item drag-item d-flex flex-column p-3 mb-2 shadow-sm rounded bg-white"
                                         data-lead-id="{{ $lead->uuid }}"
-                                        data-value="{{ $lead->value }}"
+                                        data-value="{{ $lead->budget }}"
                                         style="cursor: grab;">
 
                                         <!-- Top row: Avatar + Name + Value -->
@@ -144,7 +144,7 @@
 
                                             <!-- Value Badge stays on same row -->
                                             <span class="badge bg-success text-white">
-                                                ${{ number_format($lead->value) }}
+                                                ${{ number_format($lead->budget) }}
                                             </span>
                                         </div>
 
@@ -295,12 +295,10 @@
 
                 leadEls.forEach(li => {
                     const val = Number(li.dataset.value);
-                    // console.log('Lead Value:', val);
                     if (!isNaN(val)) total += val;
                 });
 
                 const totalEl = card.querySelector('.total-value');
-                // console.log('Updating Total Value Element:', totalEl);
                 if (totalEl) totalEl.textContent = `Value: $${total.toLocaleString()}`;
 
                 card.dataset.total = total;
