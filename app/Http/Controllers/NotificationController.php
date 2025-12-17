@@ -134,4 +134,13 @@ class NotificationController extends BaseModuleController
             ]);
         }
     }
+
+    public function latest($uuid){
+        $notification = auth()->user()
+                ->unreadNotifications()
+                ->where('id', $uuid)
+                ->first();
+
+        return (string) view($this->pathInitialize.'.item', get_defined_vars());
+    }
 }

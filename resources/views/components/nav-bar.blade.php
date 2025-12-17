@@ -41,7 +41,7 @@
                         </div>
                     </li>
                     @if(count($unreadNotifications) == 0)
-                        <li class="dropdown-notifications-list">
+                        <li class="dropdown-notifications-list no-notifications">
                             <div class="text-center p-3">
                                 <p class="mb-0">No new notifications</p>
                             </div>

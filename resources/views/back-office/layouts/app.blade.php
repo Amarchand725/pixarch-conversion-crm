@@ -283,16 +283,26 @@
 
         Echo.private('App.Models.User.{{ auth()->id() }}')
             .notification((notification) => {
+                fetch(`/back-office/notifications/latest/${notification.id}`)
+                .then(res => res.text())
+                .then(html => {
+                    // Remove placeholder
+                    let placeholder = document.querySelector('.notification-scroll .no-notifications')
+                    if (placeholder) placeholder.remove()
 
-                // increase counter
-                let current = parseInt(countEl.innerText || 0)
-                countEl.innerText = current + 1
+                    // Prepend new notification
+                    document.querySelector('.notification-scroll').insertAdjacentHTML('afterbegin', html)
 
-                // show rich popup
-                showNotificationPopup({
-                    assigner_avatar: notification.assigner_avatar,
-                    title: notification.title,
-                    message: notification.message,
+                    // update counter
+                    let countEl = document.getElementById('notif-count')
+                    countEl.innerText = parseInt(countEl.innerText || 0) + 1
+
+                    // show rich popup
+                    showNotificationPopup({
+                      assigner_avatar: notification.assigner_avatar,
+                      title: notification.title,
+                      message: notification.message,
+                    })
                 })
             })
       })
@@ -311,7 +321,7 @@
 
         document.body.appendChild(div)
 
-        setTimeout(() => div.remove(), 5000)
+        setTimeout(() => div.remove(), 3000)
       }
   </script>
 

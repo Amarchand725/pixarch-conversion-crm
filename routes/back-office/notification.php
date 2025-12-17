@@ -9,6 +9,7 @@ Route::group([
 ], function () {
     Route::controller(NotificationController::class)->group(function () {
         Route::get('mark-all-read', 'markAllRead')->name('mark-all-read');
+        Route::get('latest/{notification}', 'latest')->name('latest');
     });
 
     // 🧱 Resource CRUD
