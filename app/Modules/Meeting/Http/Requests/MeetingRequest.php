@@ -24,8 +24,17 @@ class MeetingRequest extends FormRequest
             'description' => ['nullable', 'string'],
 
             // Meeting fields: validate only if start or end time is present
-            'start_date_time' => ['nullable', 'date', 'required_with:end_date_time'],
-            'end_date_time' => ['nullable', 'date', 'after_or_equal:start_date_time', 'required_with:start_date_time'],
+            'start_date_time' => [
+                'required',
+                'date',
+                'after_or_equal:now',
+            ],
+            'end_date_time' => [
+                'required',
+                'date',
+                'after_or_equal:now',
+                'after_or_equal:start_date_time',
+            ],
             'attendee_id' => ['nullable', 'exists:users,id', 'required_with:start_date_time,end_date_time'],
         ];
     }
