@@ -58,16 +58,44 @@
       a.dropdown-toggle::after {
         display: none !important;
       }
-      .rt-popup {
+      .rt-toast {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: #1e88e5;
-        color: white;
-        padding: 12px 18px;
-        border-radius: 6px;
+        width: 320px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.15);
+        display: flex;
+        gap: 12px;
+        padding: 12px;
         z-index: 9999;
-      }
+        animation: slideIn .3s ease;
+    }
+
+    .rt-toast img {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .rt-toast h6 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .rt-toast p {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #555;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
     </style>
     @stack('css')
 
@@ -233,6 +261,8 @@
         @endif
     </script>
     @stack('js')
+
+    <!-- Real Time Notifications -->
     @vite(['resources/js/app.js'])
 
     <script>
@@ -258,9 +288,31 @@
                 let current = parseInt(countEl.innerText || 0)
                 countEl.innerText = current + 1
 
-                toastr.success(notification.message)
+                // show rich popup
+                showNotificationPopup({
+                    assigner_avatar: notification.assigner_avatar,
+                    title: notification.title,
+                    message: notification.message,
+                })
             })
       })
+
+      function showNotificationPopup(data) {
+        const div = document.createElement('div')
+        div.className = 'rt-toast'
+
+        div.innerHTML = `
+            <img src="${data.assigner_avatar}" onerror="this.src='/images/default-avatar.png'">
+            <div>
+                <h6>${data.title}</h6>
+                <p>${data.message}</p>
+            </div>
+        `
+
+        document.body.appendChild(div)
+
+        setTimeout(() => div.remove(), 5000)
+      }
   </script>
 
   </body>
