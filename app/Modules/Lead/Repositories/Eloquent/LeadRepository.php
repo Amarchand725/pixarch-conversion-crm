@@ -119,7 +119,9 @@ class LeadRepository extends BaseRepository implements LeadContract
                 foreach ($assignees as $user) {
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
-                    $assigner_avatar =  asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar =  $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -167,7 +169,9 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -188,12 +192,14 @@ class LeadRepository extends BaseRepository implements LeadContract
 
     public function statusModel(Model $model, array $payload){
         $assignee_id = $payload['assignee_id'] ?? $model->lastStatusLog?->assignee_id;
+
         if($model?->lastStatusLog?->status?->name == 'pool' && !auth()->user()->hasRole('Admin')){
             $model->assignees()->attach(auth()->id());
             $assignee_id = auth()->id();
         }
 
         // 🟢 If status is "meeting"
+
         if (!empty($payload['start_date_time']) && !empty($payload['attendee_id'])) {
             //attendee user
             $attendee_id = $payload['attendee_id'] ?? auth()->user()->id;
@@ -253,7 +259,9 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner_avatar = $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has scheduled a meeting for you';
                     $model->notifyUser(
                         $attendee,
@@ -267,8 +275,13 @@ class LeadRepository extends BaseRepository implements LeadContract
             }
         }
 
+        $amount = 0;
+        if(isset($payload['amount'])){
+            $amount = $payload['amount'] ?? 0;
+        }
+
         $logStatus['description'] = $payload['description'] ?? 'Status updated via drag & drop';
-        $logStatus['amount'] = $payload['amount'] ?? null;
+        $logStatus['amount'] = $amount;
         $logStatus['status_id'] = $payload['status_id'];
         $logStatus['assignee_id'] = $assignee_id;
         $logStatus['model_id'] = $model->id;
@@ -278,8 +291,8 @@ class LeadRepository extends BaseRepository implements LeadContract
         $log->toFill($logStatus);
         $log->save();
 
-        if($model->budget != $payload['amount']){
-            $model->budget = $payload['amount'];
+        if($model->budget != $amount){
+            $model->budget = $amount;
             $model->save();
         }
 
@@ -290,12 +303,14 @@ class LeadRepository extends BaseRepository implements LeadContract
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
 
-            if ($assignees && $assignees->count()) {
+            if ($assignees && $assignees->count() && auth()->user()->id != $assignee_id) {
                 foreach ($assignees as $user) {
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has assigned you a lead';
                     $model->notifyUser(
                         $user,
@@ -307,7 +322,7 @@ class LeadRepository extends BaseRepository implements LeadContract
                     );
                 }
             }
-        }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id']){
+        }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id'] && auth()->user()->id != $model->lastStatusLog?->assignee_id){
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
 
@@ -316,7 +331,9 @@ class LeadRepository extends BaseRepository implements LeadContract
                     $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
                     $lead = $model ?? 'N/A';
                     $assigner = auth()->user();
-                    $assigner_avatar = asset('storage').'/'.$assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
+                    $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
                     $title = ucfirst($assigner->name).' has updated status of your lead';
                     $model->notifyUser(
                         $user,
@@ -325,6 +342,28 @@ class LeadRepository extends BaseRepository implements LeadContract
                         "{$lead->name} ({$lead->email}) - $lead->pipeline",
                         $link,
                         'lead_status_updated'
+                    );
+                }
+            }
+        }elseif(statusName('Lead', $payload['status_id']) == 'pool'){
+            $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
+            $agents = User::where('id', '!=', auth()->user()->id)->where('status_id', $status_id)->get();
+            if ($agents && $agents->count() > 0) {
+                foreach ($agents as $user) {
+                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
+                    $lead = $model ?? 'N/A';
+                    $assigner = auth()->user();
+                    $assigner_avatar = $assigner?->avatar?->path
+                                        ? asset('storage/' . $assigner->avatar->path)
+                                        : asset('back-office/assets/img/avatars/default-avatar.png');
+                    $title = ucfirst($assigner->name).' has added a lead to the pool';
+                    $model->notifyUser(
+                        $user,
+                        $assigner_avatar,
+                        $title,
+                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
+                        $link,
+                        'lead_added_to_pool'
                     );
                 }
             }

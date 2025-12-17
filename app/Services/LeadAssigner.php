@@ -25,8 +25,13 @@ class LeadAssigner
             ->get();
         }
 
-        if ($agents->isEmpty()) {
-            return null;
+        if ($agents->isEmpty()) { //default to Admins if no agents found
+            $agents = User::whereHas('roles', function ($q) {
+                $q->where('name', 'Admin');
+            })
+            ->where('status_id', $status_id)
+            ->orderBy('id')
+            ->get();
         }
 
         // Filter by daily capacity

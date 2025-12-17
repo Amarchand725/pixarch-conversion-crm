@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Permission;
+use App\Models\Status;
 use Carbon\Carbon;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
@@ -231,6 +232,11 @@ if (!function_exists('module_message')) {
         }
         return __('messages.' . $type, $params);
     }
+}
+
+function statusName($model, $status_id){
+    $status = Status::where('model', $model)->where('id', $status_id)->first();
+    return $status ? $status->name : null;
 }
 
 // @php

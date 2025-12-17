@@ -290,8 +290,7 @@ class LeadController extends BaseModuleController
         
         try {
             $response = null;
-            DB::transaction(function () use (&$response, $payload, $lead) {
-                
+            DB::transaction(function () use (&$response, $payload, $lead) {        
                 $response = $this->leadRepo->statusModel($lead, $payload);
             });
 
