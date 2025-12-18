@@ -80,10 +80,10 @@
 
         <div class="d-flex justify-content-end mb-3">
             <a href="?view=cards" class="btn btn-sm {{ request('view')=='cards' || request('view')==null ? 'btn-primary' : 'btn-outline-primary' }}">
-                <i class="bi bi-grid-3x3-gap"></i> Cards View
+                <i class="bi bi-grid-3x3-gap" style="margin-right: 5px;"></i> Cards View
             </a>
             <a href="?view=list" class="btn btn-sm ms-2 {{ request('view')=='list' ? 'btn-primary' : 'btn-outline-primary' }}">
-                <i class="bi bi-list"></i> List View
+                <i class="bi bi-list" style="margin-right: 5px;"></i> List View
             </a>
         </div>
         
