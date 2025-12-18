@@ -9,8 +9,8 @@ Route::group([
     Route::controller(RoleController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-        Route::post('{id}/restore', 'restore')->name('restore');
-        Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+        Route::post('{role}/restore', 'restore')->name('restore');
+        Route::delete('{role}/force-delete', 'forceDelete')->name('forceDelete');
     });
 
     // 🧱 Resource CRUD
