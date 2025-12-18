@@ -17,7 +17,7 @@
 
                             <!-- Lead Count -->
                             <h4 class="mt-3 mb-1">Total: {{ $status['leads']->count() }}</h4>
-                            <h4 class="mt-3 mb-1">Value: ${{ number_format($status['leads']->sum('value')) }}</h4>
+                            <h4 class="mt-3 mb-1">Value: ${{ number_format($status['leads']->sum('budget')) }}</h4>
                             <small class="text-muted">Leads</small>
 
                         </div>

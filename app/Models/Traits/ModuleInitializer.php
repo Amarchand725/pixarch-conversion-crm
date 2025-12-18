@@ -42,10 +42,11 @@ trait ModuleInitializer
     protected function moduleViewVars(): array
     {
         return [
-            'title' => $this->pluralLabel,
+            'title' => module_label('list', $this->pluralLabel),
             'permissionPrefix' => $this->permissionPrefix,
             'routeInitialize' => $this->routePrefix,
             'singularLabel' => $this->singularLabel,
+            'pluralLabel' => $this->pluralLabel,
         ];
     }
 }

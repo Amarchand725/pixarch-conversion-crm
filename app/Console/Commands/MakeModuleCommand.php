@@ -576,7 +576,7 @@ class MakeModuleCommand extends Command
         $this->info("📚 Repository created: {$path}");
     }
 
-    protected function createViews(string $module, array $fields = [])
+    protected function createViews(string $module, array $fields = []): void
     {
         $pluralFolder = Str::kebab(Str::plural($module));
         $viewPath = resource_path("views/back-office/{$pluralFolder}");
