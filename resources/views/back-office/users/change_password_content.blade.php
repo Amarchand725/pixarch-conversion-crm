@@ -1,27 +1,37 @@
 @method('PUT')
 <div class="row g-3 mb-4">
-    <!-- Password Input -->
-    <div class="col-12 col-md-12 position-relative">
+    <div class="col-12 col-md-12">
         <label for="password" class="form-label fw-semibold">
             Password <span class="text-danger">*</span>
         </label>
-        <div class="input-group">
-            <input 
-                type="password" 
-                id="password" 
-                name="password" 
-                class="form-control" 
-                placeholder="Enter password" 
-                value="{{ old('password') }}"
-            />
-            <button type="button" class="btn btn-outline-secondary" id="generatePassword">
+
+        <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-control" 
+            placeholder="Enter password" 
+            value="{{ old('password') }}"
+        />
+
+        <!-- Action buttons under input -->
+        <div class="d-flex gap-3 mt-2 small">
+            <a href="javascript:void(0)" id="generatePassword" class="text-primary">
                 Generate
-            </button>
-            <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+            </a>
+
+            <a href="javascript:void(0)" id="togglePassword" class="text-secondary">
                 Show
-            </button>
+            </a>
+
+            <a href="javascript:void(0)" id="copyPassword" class="text-success">
+                Copy
+            </a>
         </div>
-        <span id="password_error" class="text-danger error">{{ $errors->first('password') }}</span>
+
+        <span id="password_error" class="text-danger error d-block mt-1">
+            {{ $errors->first('password') }}
+        </span>
     </div>
 </div>
 
@@ -52,5 +62,28 @@ function generatePassword(length = 12) {
             passwordInput.attr('type', 'password');
             $(this).text('Show');
         }
+    });
+
+    document.getElementById('copyPassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+
+        if (!passwordInput.value) {
+            return;
+        }
+
+        // Temporarily show password to copy
+        const originalType = passwordInput.type;
+        passwordInput.type = 'text';
+        passwordInput.select();
+        passwordInput.setSelectionRange(0, 99999);
+
+        navigator.clipboard.writeText(passwordInput.value).then(() => {
+            // Optional: small UX feedback
+            this.innerText = 'Copied!';
+            setTimeout(() => this.innerText = 'Copy', 1500);
+        });
+
+        // Restore original type
+        passwordInput.type = originalType;
     });
 </script>

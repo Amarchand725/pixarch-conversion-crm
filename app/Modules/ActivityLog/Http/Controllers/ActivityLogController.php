@@ -24,11 +24,11 @@ class ActivityLogController extends BaseModuleController
     public function index(Request $request)
     {
         $columns = [
-            'log_name'      => ['label' => 'Log Name', 'html' => true, 'searchable' => 'log_name'], // e.g., default, authentication
-            'event'         => ['label' => 'Event', 'html' => true, 'searchable' => 'event'],       // created, updated, deleted
-            'causer'        => ['label' => 'Performed By', 'html' => true, 'searchable' => false], // user who performed action
+            'log_name'      => ['label' => 'Log Name', 'html' => true, 'searchable' => 'log_name'], 
+            'event'         => ['label' => 'Event', 'html' => true, 'searchable' => 'event'],       
+            'causer'        => ['label' => 'Performed By', 'html' => true, 'searchable' => false], 
             'created_at'    => ['label' => 'Date & Time', 'searchable' => 'created_at'],
-            'action'        => ['label' => 'Action', 'html' => true, 'searchable' => false], // buttons if needed
+            'action'        => ['label' => 'Action', 'html' => true, 'searchable' => false], 
         ];
 
         $query = $this->activityLogRepo->getAll();
