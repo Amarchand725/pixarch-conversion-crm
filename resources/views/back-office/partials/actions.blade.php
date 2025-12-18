@@ -80,8 +80,8 @@
                 type="link"
                 href="javascript:;"
                 btn-class="dropdown-item delete"
-                title="{{ module_label('delete', $singularLabel) }}"
-                label="{{ module_label('delete', $singularLabel) }}"
+                title="{{ module_label('tooltip_delete', $singularLabel) }}"
+                label="{{ module_label('tooltip_delete', $singularLabel) }}"
                 :data-attributes="[
                     'data-del-url' => route($routeInitialize.'.destroy', $model->uuid)
                 ]"

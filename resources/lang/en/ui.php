@@ -8,7 +8,7 @@ return [
     'list_item' => ':module List',
     'status_item' => ':module Status',
     'reschedule_item' => ':module Reschedule',
-    'change_password_item' => ':module Change Password',
+    'change_password_item' => 'Change :module Password',
 
     // Buttons
     'submit' => 'Submit',
