@@ -64,14 +64,15 @@
         right: 20px;
         width: 320px;
         background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(0,0,0,.15);
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        border-radius: 6px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
         display: flex;
         gap: 12px;
-        padding: 12px;
         z-index: 9999;
         animation: slideIn .3s ease;
-    }
+      }
 
     .rt-toast img {
         width: 42px;
@@ -90,6 +91,15 @@
         margin: 4px 0 0;
         font-size: 13px;
         color: #555;
+    }
+    .rt-toast-close {
+      position: absolute;
+      top: 5px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
     }
 
     @keyframes slideIn {
@@ -312,53 +322,66 @@
       }
 
       document.addEventListener('DOMContentLoaded', function () {
-        let countEl = document.getElementById('notif-count')
+        const countEl = document.getElementById('notif-count')
+        const notifContainer = document.querySelector('.notification-scroll')
 
         if (!countEl || typeof Echo === 'undefined') return
 
         Echo.private('App.Models.User.{{ auth()->id() }}')
-            .notification((notification) => {
-                fetch(`/back-office/notifications/latest/${notification.id}`)
-                .then(res => res.text())
-                .then(html => {
-                    // Remove placeholder
-                    let placeholder = document.querySelector('.notification-scroll .no-notifications')
-                    if (placeholder) placeholder.remove()
+          .notification((notification) => {
+            fetch(`/back-office/notifications/latest/${notification.id}`)
+              .then(res => res.text())
+              .then(html => {
 
-                    // Prepend new notification
-                    document.querySelector('.notification-scroll').insertAdjacentHTML('afterbegin', html)
+                // 🔒 Defensive guard (THIS is what we were talking about)
+                if (!notifContainer) return
 
-                    // update counter
-                    let countEl = document.getElementById('notif-count')
-                    countEl.innerText = parseInt(countEl.innerText || 0) + 1
+                // Remove "No notifications" placeholder
+                const placeholder = notifContainer.querySelector('.no-notifications')
+                if (placeholder) placeholder.remove()
 
-                    // show rich popup
-                    showNotificationPopup({
-                      assigner_avatar: notification.assigner_avatar,
-                      title: notification.title,
-                      message: notification.message,
-                    })
+                // Prepend new notification
+                notifContainer.insertAdjacentHTML('afterbegin', html)
+
+                // Update counter
+                countEl.innerText = parseInt(countEl.innerText || 0) + 1
+
+                // Show toast popup
+                showNotificationPopup({
+                    assigner_avatar: notification.assigner_avatar,
+                    title: notification.title,
+                    message: notification.message,
                 })
-            })
+              })
+          })
+    })
+
+    function showNotificationPopup(data) {
+      const div = document.createElement('div')
+      div.className = 'rt-toast'
+
+      // Add close button and content
+      div.innerHTML = `
+          <button class="rt-toast-close">&times;</button>
+          <div class="rt-toast-content d-flex align-items-start">
+              <img src="${data.assigner_avatar}" onerror="this.src='/images/default-avatar.png'" class="me-2 rounded-circle" style="width:32px;height:32px">
+              <div>
+                  <h6>${data.title}</h6>
+                  <p>${data.message}</p>
+              </div>
+          </div>
+      `
+
+      document.body.appendChild(div)
+
+      // Close button click
+      div.querySelector('.rt-toast-close').addEventListener('click', () => {
+          div.remove()
       })
 
-      function showNotificationPopup(data) {
-        const div = document.createElement('div')
-        div.className = 'rt-toast'
-
-        div.innerHTML = `
-            <img src="${data.assigner_avatar}" onerror="this.src='/images/default-avatar.png'">
-            <div>
-                <h6>${data.title}</h6>
-                <p>${data.message}</p>
-            </div>
-        `
-
-        document.body.appendChild(div)
-
-        setTimeout(() => div.remove(), 3000)
-      }
+      // Auto-remove after 5 seconds
+      setTimeout(() => div.remove(), 5000)
+    }
   </script>
-
   </body>
 </html>
