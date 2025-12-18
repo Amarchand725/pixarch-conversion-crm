@@ -196,10 +196,22 @@ if (!function_exists('module_label')) {
                 return __('ui.add_item', ['module' => $moduleName]);
             case 'edit':
                 return __('ui.edit_item', ['module' => $moduleName]);
+            case 'show':
+                return __('ui.show_item', ['module' => $moduleName]);
             case 'list':
                 return __('ui.list_item', ['module' => $moduleName]);
+            case 'status':
+                return __('ui.status_item', ['module' => $moduleName]);
+            case 'reschedule':
+                return __('ui.reschedule_item', ['module' => $moduleName]);
+            case 'password':
+                return __('ui.change_password_item', ['module' => $moduleName]);
             case 'save':
                 return __('ui.save', ['module' => $moduleName]);
+            case 'cancel':
+                return __('ui.cancel', ['module' => $moduleName]);
+            case 'loading':
+                return __('ui.loading', ['module' => $moduleName]);
             case 'delete':
                 return __('ui.delete', ['module' => $moduleName]);
             case 'module_title':
@@ -212,6 +224,8 @@ if (!function_exists('module_label')) {
                 return '';
             case 'tooltip_add':
                 return __('ui.tooltip_add', ['module' => $moduleName]);
+            case 'tooltip_refresh':
+                return __('ui.tooltip_refresh', ['module' => $moduleName]);
             case 'tooltip_edit':
                 return __('ui.tooltip_edit', ['module' => $moduleName]);
             case 'tooltip_delete':

@@ -23,7 +23,7 @@
                             data-bs-dismiss="modal"
                             aria-label="Close"
                         >
-                            Cancel
+                            {{ module_label('cancel', '') }}
                         </button>
                     </div>
                 </div>
@@ -46,18 +46,20 @@
                         <span id="edit-content"></span>
                         <div class="col-12 mt-3 action-btn">
                             <div class="demo-inline-spacing sub-btn">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">
+                                    {{ module_label('save', '') }}
+                                </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                             <div class="demo-inline-spacing loading-btn" style="display: none;">
                                 <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
                                 <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                Loading...
+                                {{ module_label('loading', '') }}
                                 </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                         </div>
@@ -83,18 +85,20 @@
                         <span id="edit-content"></span>
                         <div class="col-12 mt-3 action-btn">
                             <div class="demo-inline-spacing sub-btn">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1">
+                                    {{ module_label('save', '') }}
+                                </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                             <div class="demo-inline-spacing loading-btn" style="display: none;">
                                 <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
                                 <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                Loading...
+                                {{ module_label('loading', '') }}
                                 </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                         </div>
@@ -118,18 +122,20 @@
                         <div id="edit-content"></div>
                         <div class="col-12 mt-3 action-btn">
                             <div class="demo-inline-spacing sub-btn">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1">
+                                    {{ module_label('save', '') }}
+                                </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                             <div class="demo-inline-spacing loading-btn" style="display: none;">
                                 <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
                                 <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                Loading...
+                                {{ module_label('loading', '') }}
                                 </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                         </div>
@@ -155,18 +161,20 @@
                         <span id="edit-content"></span>
                         <div class="col-12 mt-3 action-btn">
                             <div class="demo-inline-spacing sub-btn">
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">
+                                    {{ module_label('save', '') }}
+                                </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                             <div class="demo-inline-spacing loading-btn" style="display: none;">
                                 <button class="btn btn-primary waves-effect waves-light" type="button" disabled="">
                                 <span class="spinner-border me-1" role="status" aria-hidden="true"></span>
-                                Loading...
+                                {{ module_label('loading', '') }}
                                 </button>
                                 <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal" aria-label="Close">
-                                    Cancel
+                                    {{ module_label('cancel', '') }}
                                 </button>
                             </div>
                         </div>

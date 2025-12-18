@@ -3,8 +3,8 @@
         type="button"
         id="assign-btn"
         btn-class="dropdown-item edit-btn"
-        title="{{ $singularLabel }} Status"
-        label="{{ $singularLabel }} Status"
+        title="{{ module_label('status', $singularLabel) }}"
+        label="{{ module_label('status', $singularLabel) }}"
         data-bs-toggle="modal"
         data-bs-target="#create-pop-up-modal-for-file"
         :data-attributes="[

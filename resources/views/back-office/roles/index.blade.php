@@ -15,7 +15,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
-                            <button id="refresh-record" class="btn btn-success mx-2" title="Refresh Records"><i class="ti ti-refresh me-0 ti-xs"></i></button>
+                            <button id="refresh-record" class="btn btn-success mx-2" title="{{ module_label('tooltip_refresh', $pluralLabel) }}"><i class="ti ti-refresh me-0 ti-xs"></i></button>
                         </div>
                     </div>
                 </div>

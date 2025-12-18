@@ -3,8 +3,8 @@
         type="button"
         id="assign-btn"
         btn-class="dropdown-item edit-btn"
-        title="Update {{ $singularLabel }} password"
-        label="Update {{ $singularLabel }} password"
+        title="{{ module_label('password', $singularLabel) }}"
+        label="{{ module_label('password', $singularLabel) }}"
         data-bs-toggle="modal"
         data-bs-target="#create-pop-up-modal-for-file"
         :data-attributes="[

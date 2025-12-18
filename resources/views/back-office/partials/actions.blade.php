@@ -16,8 +16,8 @@
                     type="link"
                     href="#"
                     btn-class="dropdown-item show"
-                    title="{{ $singularLabel }} Details"
-                    label="{{ $singularLabel }} Details"
+                    title="{{ module_label('show', $singularLabel) }}"
+                    label="{{ module_label('show', $singularLabel) }}"
                     data-bs-toggle="modal"
                     data-bs-target="#details-modal"
                     :data-attributes="[
@@ -29,8 +29,8 @@
                     type="link"
                     href="#"
                     btn-class="dropdown-item show"
-                    title="{{ $singularLabel }} Details"
-                    label="{{ $singularLabel }} Details"
+                    title="{{ module_label('show', $singularLabel) }}"
+                    label="{{ module_label('show', $singularLabel) }}"
                     data-bs-toggle="modal"
                     data-bs-target="#details-modal"
                     :data-attributes="[
@@ -45,16 +45,16 @@
                     type="link"
                     href="{{ route($routeInitialize.'.edit', $model->uuid) }}"
                     btn-class="dropdown-item"
-                    title="Edit {{ $singularLabel }}"
-                    label="Edit {{ $singularLabel }}"
+                    title="{{ module_label('edit', $singularLabel) }}"
+                    label="{{ module_label('edit', $singularLabel) }}"
                 />
             @else
                 <x-action-button
                     type="button"
                     id="edit-btn"
                     btn-class="dropdown-item edit-btn"
-                    title="Edit {{ $singularLabel }}"
-                    label="Edit {{ $singularLabel }}"
+                    title="{{ module_label('edit', $singularLabel) }}"
+                    label="{{ module_label('edit', $singularLabel) }}"
                     data-bs-toggle="modal"
                     data-bs-target="#create-pop-up-modal-for-file"
                     :data-attributes="[
@@ -80,8 +80,8 @@
                 type="link"
                 href="javascript:;"
                 btn-class="dropdown-item delete"
-                title="Delete"
-                label="Delete"
+                title="{{ module_label('delete', $singularLabel) }}"
+                label="{{ module_label('delete', $singularLabel) }}"
                 :data-attributes="[
                     'data-del-url' => route($routeInitialize.'.destroy', $model->uuid)
                 ]"

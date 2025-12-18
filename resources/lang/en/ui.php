@@ -4,21 +4,25 @@ return [
     'module_title' => ':module',
     'add_item' => 'Add :module',
     'edit_item' => 'Edit :module',
+    'show_item' => 'Show :module',
     'list_item' => ':module List',
+    'status_item' => ':module Status',
+    'reschedule_item' => ':module Reschedule',
+    'change_password_item' => ':module Change Password',
 
     // Buttons
     'submit' => 'Submit',
     'cancel' => 'Cancel',
     'save' => 'Save :module',
-    'delete' => 'Delete :module',
-    'edit' => 'Edit',
+    'loading' => 'Loading...',
 
     // Placeholders
     'enter_field' => 'Enter :field',
     'select_field' => 'Select :field',
 
     // Tooltips / hover text
-    'tooltip_add' => 'Click to add :module',
-    'tooltip_edit' => 'Click to edit :module',
-    'tooltip_delete' => 'Click to delete :module',
+    'tooltip_add' => 'Add :module',
+    'tooltip_refresh' => 'Click to Refresh :module',
+    'tooltip_edit' => 'Edit :module',
+    'tooltip_delete' => 'Delete :module',
 ];
