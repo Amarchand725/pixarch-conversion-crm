@@ -228,6 +228,8 @@ if (!function_exists('module_label')) {
                 return __('ui.log_out', ['module' => $moduleName]);
             case 'stop_impersonate':
                 return __('ui.stop_impersonate', ['module' => $moduleName]);
+            case 'impersonate':
+                return __('ui.impersonate', ['module' => $moduleName]);
 
             case 'placeholder':
                 if ($field) {

@@ -17,6 +17,7 @@ return [
     'my_profile' => 'My Profile',
     'log_out' => 'Log Out',
     'stop_impersonate' => 'Stop Impersonate',
+    'impersonate' => 'Browsing this user’s account.',
 
     // Buttons
     'submit' => 'Submit',

@@ -79,8 +79,8 @@
 
                                 <!-- Impersonate button -->
                                 @canImpersonate
-                                    <a title="Visit Agent Account" href="{{ route('impersonate', ['id' => $agent->id]) }}" class="btn btn-sm btn-outline-primary mt-3">
-                                        Impersonate
+                                    <a title="{{ module_label('impersonate', '') }}" href="{{ route('impersonate', ['id' => $agent->id]) }}" class="btn btn-sm btn-outline-primary mt-3">
+                                        {{ module_label('tooltip_impersonate', '') }}
                                     </a>
                                 @endCanImpersonate
                             </div>
