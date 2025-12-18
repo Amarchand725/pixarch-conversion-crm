@@ -9,6 +9,9 @@ return [
     'status_item' => ':module Status',
     'reschedule_item' => ':module Reschedule',
     'change_password_item' => 'Change :module Password',
+    //
+    'assign_item' => 'Assign :module',
+    'schedule_item' => 'Schedule :module',
 
     //labels
     'notification' => 'Notification',

@@ -230,6 +230,10 @@ if (!function_exists('module_label')) {
                 return __('ui.stop_impersonate', ['module' => $moduleName]);
             case 'impersonate':
                 return __('ui.impersonate', ['module' => $moduleName]);
+            case 'assign':
+                return __('ui.assign_item', ['module' => $moduleName]);
+            case 'schedule':
+                return __('ui.schedule_item', ['module' => $moduleName]);
 
             case 'placeholder':
                 if ($field) {

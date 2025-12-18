@@ -303,7 +303,7 @@ class MakeModuleCommand extends Command
                     DB::transaction(function () use (&\$response, \$payload) {
                         \$this->{$variable}Repo->storeModel(\$payload);
                     });
-                    return successResponse(\$response, \$this->singularLabel. ' registered successfully.');
+                    return successResponse(\$response, module_message('created', \$this->singularLabel));
                 } catch (Exception \$e) {
                     return response()->json([
                         'status' => false,
@@ -327,7 +327,7 @@ class MakeModuleCommand extends Command
                     DB::transaction(function () use (&\$response, \$payload, \${$variable}) {
                         \$this->{$variable}Repo->updateModel(\${$variable}, \$payload);
                     });
-                    return successResponse([], \$this->singularLabel. ' updated successfully.');
+                    return successResponse(\$response, module_message('updated', \$this->singularLabel));
                 } catch (Exception \$e) {
                     return response()->json([
                         'status' => false,
@@ -348,7 +348,7 @@ class MakeModuleCommand extends Command
                     if(\$this->{$variable}Repo->softDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
-                            'message' => \$this->singularLabel.' Deleted Successfully'
+                            'message' => module_message('deleted', \$this->singularLabel)
                         ]);
                     } else{
                         return response()->json([
@@ -368,7 +368,7 @@ class MakeModuleCommand extends Command
             {
                 try {
                     if(\$this->{$variable}Repo->restoreModel(\${$variable})) {
-                        return redirect()->back()->with('message', 'Record Restored Successfully.');
+                        return redirect()->back()->with('message', module_message('restored', \$this->singularLabel));
                     } else {
                         return false;
                     }
@@ -386,7 +386,7 @@ class MakeModuleCommand extends Command
                     if (\$this->{$variable}Repo->permanentlyDeleteModel(\${$variable})) {
                         return response()->json([
                             'status' => true,
-                            'message' => \$this->singularLabel.' Deleted Successfully'
+                            'message' => module_message('permanently-deleted', \$this->singularLabel)
                         ]);
                     } else{
                         return response()->json([
@@ -406,7 +406,7 @@ class MakeModuleCommand extends Command
             {
                 try {
                     \$this->{$variable}Repo->bulkDelete();
-                    return redirect()->route(strtolower('{$pluralRoute}.index'))->with('success', 'Bulk delete successful.');
+                    return redirect()->route('back-office.{$pluralRoute}.index')->with('success', value: module_message('bulk-deleted', \$this->singularLabel));
                 } catch (Exception \$e) {
                     return back()->withErrors(['error' => \$e->getMessage()]);
                 }
@@ -416,7 +416,7 @@ class MakeModuleCommand extends Command
             {
                 try {
                     \$this->{$variable}Repo->bulkRestore();
-                    return redirect()->route(strtolower('{$pluralRoute}.index'))->with('success', 'Bulk restore successful.');
+                    return redirect()->route('back-office.{$pluralRoute}.index')->with('success', module_message('bulk-restored', \$this->singularLabel));
                 } catch (Exception \$e) {
                     return back()->withErrors(['error' => \$e->getMessage()]);
                 }
