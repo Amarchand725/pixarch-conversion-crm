@@ -46,7 +46,7 @@
                 <div class="col-md-6">
                     <div class="card-header">
                         <h4 class="fw-bold mb-0">
-                            <span class="text-muted fw-light">Home /</span> {{ $title }} 
+                            <span class="text-muted fw-light">Home /</span> {{ module_label('list', $title) }} 
                             <span class="badge rounded-pill px-3 py-2 bg-primary text-white">
                                 {{ $total_leads }} {{ Str::plural($singularLabel, $total_leads) }}
                             </span>

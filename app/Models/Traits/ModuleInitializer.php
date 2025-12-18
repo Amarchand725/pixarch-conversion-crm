@@ -24,7 +24,7 @@ trait ModuleInitializer
         $this->permissionPrefix = Str::snake($name);
         $cleanPrefix = Str::of($this->prefix)->replace('-', ' ')->trim();
         $this->singularLabel = Str::title($cleanPrefix);
-        $this->pluralLabel = Str::title(Str::plural($cleanPrefix)) . ' List';
+        $this->pluralLabel = Str::title(Str::plural($cleanPrefix)) ;
     }
 
     /**

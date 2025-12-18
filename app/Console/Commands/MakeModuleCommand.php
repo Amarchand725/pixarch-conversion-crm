@@ -254,6 +254,7 @@ class MakeModuleCommand extends Command
                 ];
 
                 \$query = \$this->{$variable}Repo->getAll();
+                \$total_count = \$query->count();
 
                 \$dataTable = new \\App\\Services\\DataTableService(
                     model: \$query,

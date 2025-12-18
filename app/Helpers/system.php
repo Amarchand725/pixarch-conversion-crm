@@ -189,7 +189,7 @@ if (!function_exists('activityEventBadgeClass')) {
 if (!function_exists('module_label')) {
     function module_label(string $action, string $module, string $field = null)
     {
-        $moduleName = __('labels.' . $module);
+        $moduleName = __($module);
 
         switch ($action) {
             case 'add':
