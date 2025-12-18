@@ -34,7 +34,7 @@
             <a href="{{ route('back-office.notifications.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-bell"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Notifications List</span>
+                    <span>{{ module_label('list', 'Notifications') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['notifications'] ?? 0 }}
@@ -49,7 +49,7 @@
             <a href="{{ route('back-office.leads.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-user-search"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Leads List</span>
+                    <span>{{ module_label('list', 'Leads') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['leads'] ?? 0 }}
@@ -64,7 +64,7 @@
             <a href="{{ route('back-office.faqs.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-info-circle"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Faq List</span>
+                    <span>{{ module_label('list', 'Faqs') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['faqs'] ?? 0 }}
@@ -79,7 +79,7 @@
             <a href="{{ route('back-office.lead-captures.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-clipboard-list"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Lead Captures List</span>
+                    <span>{{ module_label('list', 'Lead Captures') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['lead_captures'] ?? 0 }}
@@ -94,7 +94,7 @@
             <a href="{{ route('back-office.campaigns.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-rocket"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Campaigns List</span>
+                    <span>{{ module_label('list', 'Campaigns') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['campaigns'] ?? 0 }}
@@ -109,7 +109,7 @@
             <a href="{{ route('back-office.users.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-users"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Agents List</span>
+                    <span>{{ module_label('list', 'Agents') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['users'] ?? 0 }}
@@ -123,7 +123,7 @@
             <a href="{{ route('back-office.roles.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-shield-check"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Roles List</span>
+                    <span>{{ module_label('list', 'Roles') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['roles'] ?? 0 }}
@@ -137,7 +137,7 @@
             <a href="{{ route('back-office.activity-logs.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-activity"></i>
                 <div class="d-flex justify-content-between w-100">
-                    <span>Activity Logs List</span>
+                    <span>{{ module_label('list', 'Activity Logs') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['activity_logs'] ?? 0 }}
@@ -152,7 +152,7 @@
             <a href="{{ route('back-office.meetings.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-calendar"></i>   
                 <div class="d-flex justify-content-between w-100">
-                    <span>Meetings List</span>
+                    <span>{{ module_label('list', 'Meetings') }}</span>
 
                     <span class="badge bg-primary">
                         {{ $sidebarCounts['meetings'] ?? 0 }}
