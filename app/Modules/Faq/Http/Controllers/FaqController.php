@@ -37,6 +37,7 @@ class FaqController extends BaseModuleController
         ];
 
         $query = $this->faqRepo->getAll();
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

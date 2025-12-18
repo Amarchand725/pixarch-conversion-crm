@@ -38,6 +38,7 @@ class LeadCaptureController extends BaseModuleController
         ];
 
         $query = $this->leadCaptureRepo->getAll()->with(['campaign', 'status', 'author']);
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

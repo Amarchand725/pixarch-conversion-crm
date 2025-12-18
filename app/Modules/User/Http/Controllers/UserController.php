@@ -39,6 +39,7 @@ class UserController extends BaseModuleController
 
         // Get query builder from repository (perfect for DataTables)
         $query = $this->userRepo->getAll()->with(['avatar', 'roles', 'statusInfo']); // eager-load status
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

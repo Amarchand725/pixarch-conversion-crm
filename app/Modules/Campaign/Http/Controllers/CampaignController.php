@@ -40,6 +40,7 @@ class CampaignController extends BaseModuleController
         ];
 
         $query = $this->campaignRepo->getAll();
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

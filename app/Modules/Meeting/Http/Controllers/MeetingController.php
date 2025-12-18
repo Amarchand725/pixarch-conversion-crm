@@ -53,6 +53,8 @@ class MeetingController extends BaseModuleController
             $query = $user->meetings()->orderBy('id', 'desc')->with('lead'); // builder
         }
 
+        $total_count = $query->count();
+
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,

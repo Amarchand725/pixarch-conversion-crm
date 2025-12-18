@@ -32,6 +32,7 @@ class ActivityLogController extends BaseModuleController
         ];
 
         $query = $this->activityLogRepo->getAll();
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

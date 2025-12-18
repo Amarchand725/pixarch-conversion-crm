@@ -33,6 +33,7 @@ class RoleController extends BaseModuleController
 
         // Get query builder from repository (perfect for DataTables)
         $query = $this->roleRepo->getAll();
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,

@@ -26,6 +26,7 @@ class NotificationController extends BaseModuleController
         ];
 
         $query = auth()->user()->notifications()->latest();
+        $total_count = $query->count();
 
         $dataTable = new \App\Services\DataTableService(
             model: $query,
