@@ -75,7 +75,7 @@
                                             data-value="business"
                                             checked
                                         />
-                                        <label class="form-check-label" for="select-business">Business</label>
+                                        <label class="form-check-label" for="select-business">Meetings</label>
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                 aria-labelledby="addEventSidebarLabel"
                             >
                                 <div class="offcanvas-header my-1">
-                                    <h5 class="offcanvas-title" id="addEventSidebarLabel">Event Details</h5>
+                                    <h5 class="offcanvas-title" id="addEventSidebarLabel">Meeting Details</h5>
                                     <button
                                         type="button"
                                         class="btn-close text-reset"
@@ -110,7 +110,7 @@
                                 <div class="offcanvas-body pt-0">
                                     <form class="event-form pt-0" id="eventForm" onsubmit="return false">
                                         <div class="mb-3">
-                                            <label class="form-label" for="eventTitle">Title</label>
+                                            <label class="form-label" for="eventTitle">Lead </label>
                                             <input
                                                 type="text"
                                                 class="form-control"
@@ -119,12 +119,6 @@
                                                 placeholder="Event Title"
                                                 readonly
                                             />
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label" for="eventLabel">Label</label>
-                                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel" disabled>
-                                                <option data-label="success" value="Business" selected>Business</option>
-                                            </select>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label" for="eventStartDate">Start Date</label>

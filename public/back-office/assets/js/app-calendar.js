@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Set sidebar title
       if (offcanvasTitle) {
-        offcanvasTitle.innerHTML = 'Event Details';
+        offcanvasTitle.innerHTML = 'Meeting Details';
       }
 
       // Populate fields (readonly)
