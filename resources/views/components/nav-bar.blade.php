@@ -29,7 +29,7 @@
                 <ul class="dropdown-menu dropdown-menu-end py-0">
                     <li class="dropdown-menu-header border-bottom">
                         <div class="dropdown-header d-flex align-items-center py-3">
-                            <h5 class="text-body mb-0 me-auto">Notification</h5>
+                            <h5 class="text-body mb-0 me-auto">{{ module_label('notification', '') }}</h5>
                             <a href="javascript:void(0);"
                                 title="Mark all as read"
                                 class="show text-body text-decoration-none"
@@ -45,7 +45,7 @@
                         @if(count($unreadNotifications) == 0)
                             <li class="dropdown-notifications-list no-notifications">
                                 <div class="text-center p-3">
-                                    <p class="mb-0">No new notifications</p>
+                                    <p class="mb-0">{{ module_label('no_new_notification', '') }}</p>
                                 </div>
                             </li>
                         @else
@@ -116,7 +116,7 @@
                     </div>
                     <li class="dropdown-menu-footer border-top">
                         <a href="{{ route('back-office.notifications.index') }}" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-40 mb-1 align-items-center">
-                            View all notifications
+                            {{ module_label('view_all_notifications', '') }}
                         </a>
                     </li>
                 </ul>
@@ -160,7 +160,7 @@
                     <li>
                         <a class="dropdown-item" href="{{ route('back-office.auth.profile') }}">
                             <i class="ti ti-user-check me-2 ti-sm"></i>
-                            <span class="align-middle">My Profile</span>
+                            <span class="align-middle">{{ module_label('my_profile', '') }}</span>
                         </a>
                     </li>
                     <li>
@@ -169,7 +169,7 @@
                     <li>
                         <a class="dropdown-item" href="{{ route('back-office.auth.logout') }}">
                             <i class="ti ti-logout me-2 ti-sm"></i>
-                            <span class="align-middle">Log Out</span>
+                            <span class="align-middle">{{ module_label('log_out', '') }}</span>
                         </a>
                     </li>
                     <!-- Stop impersonation -->
@@ -180,7 +180,7 @@
                     <li>
                         <a class="dropdown-item" href="{{ route('impersonate.leave') }}">
                             <i class="ti ti-user-check me-2 ti-sm"></i>
-                            <span class="align-middle">Stop Impersonate</span>
+                            <span class="align-middle">{{ module_label('stop_impersonate', '') }}</span>
                         </a>
                     </li>
                     @endImpersonating

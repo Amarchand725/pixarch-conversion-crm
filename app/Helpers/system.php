@@ -216,9 +216,22 @@ if (!function_exists('module_label')) {
                 return __('ui.delete', ['module' => $moduleName]);
             case 'module_title':
                 return __('ui.module_title', ['module' => $moduleName]);
+            case 'notification':
+                return __('ui.notification', ['module' => $moduleName]);
+            case 'no_new_notification':
+                return __('ui.no_new_notification', ['module' => $moduleName]);
+            case 'view_all_notifications':
+                return __('ui.view_all_notifications', ['module' => $moduleName]);
+            case 'my_profile':
+                return __('ui.my_profile', ['module' => $moduleName]);
+            case 'log_out':
+                return __('ui.log_out', ['module' => $moduleName]);
+            case 'stop_impersonate':
+                return __('ui.stop_impersonate', ['module' => $moduleName]);
+
             case 'placeholder':
                 if ($field) {
-                    $fieldName = __('labels.' . $field);
+                    $fieldName = __($field);
                     return __('ui.enter_field', ['field' => $fieldName]);
                 }
                 return '';
@@ -230,6 +243,8 @@ if (!function_exists('module_label')) {
                 return __('ui.tooltip_edit', ['module' => $moduleName]);
             case 'tooltip_delete':
                 return __('ui.tooltip_delete', ['module' => $moduleName]);
+            case 'tooltip_impersonate':
+                return __('ui.tooltip_impersonate', ['module' => $moduleName]);
             default:
                 return '';
         }

@@ -65,13 +65,13 @@
             @endif
         @endcan
         @if($permissionPrefix=='user')
-            @can('impersonate')
+            @can($permissionPrefix.'-impersonate')
                 <x-action-button
                     type="link"
                     href="{{ route('impersonate', ['id' => $model->id]) }}"
                     btn-class="dropdown-item"
-                    title="Impersonate"
-                    label="Impersonate"
+                    title="{{ module_label('tooltip_impersonate', '') }}"
+                    label="{{ module_label('tooltip_impersonate', '') }}"
                 />
             @endcan
         @endif

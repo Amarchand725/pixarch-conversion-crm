@@ -10,6 +10,14 @@ return [
     'reschedule_item' => ':module Reschedule',
     'change_password_item' => 'Change :module Password',
 
+    //labels
+    'notification' => 'Notification',
+    'no_new_notification' => 'No new notifications',
+    'view_all_notifications' => 'View all notifications',
+    'my_profile' => 'My Profile',
+    'log_out' => 'Log Out',
+    'stop_impersonate' => 'Stop Impersonate',
+
     // Buttons
     'submit' => 'Submit',
     'cancel' => 'Cancel',
@@ -25,4 +33,5 @@ return [
     'tooltip_refresh' => 'Click to Refresh :module',
     'tooltip_edit' => 'Edit :module',
     'tooltip_delete' => 'Delete :module',
+    'tooltip_impersonate' => 'Impersonate',
 ];
