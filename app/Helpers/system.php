@@ -239,7 +239,7 @@ if (!function_exists('module_label')) {
 if (!function_exists('module_message')) {
     function module_message(string $type, string $module, string $user = null)
     {
-        $moduleName = __('labels.' . $module);
+        $moduleName = __($module);
         $params = ['module' => $moduleName];
         if ($user) {
             $params['user'] = $user;

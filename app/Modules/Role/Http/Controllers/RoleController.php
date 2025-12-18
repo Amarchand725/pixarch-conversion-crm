@@ -74,7 +74,7 @@ class RoleController extends BaseModuleController
         $payload = $request->validated();
         try {
             $this->roleRepo->storeModel($payload);
-            return redirect()->route(strtolower('Role.index'))->with('success', 'Role created successfully.');
+            return redirect()->route('back-offices.roles.index')->with('success', value: module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -94,7 +94,7 @@ class RoleController extends BaseModuleController
         
         try {
             $this->roleRepo->updateModel($role, $payload);
-            return redirect()->back()->with('message', 'Role updated successfully.');
+            return redirect()->route('back-office.roles.index')->with('message', value: module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage()); 
         }

@@ -83,7 +83,7 @@ class FaqController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload) {
                 $this->faqRepo->storeModel($payload);
             });
-            return successResponse($response, $this->singularLabel. ' registered successfully.');
+            return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -107,7 +107,7 @@ class FaqController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload, $faq) {
                 $this->faqRepo->updateModel($faq, $payload);
             });
-            return successResponse([], $this->singularLabel. ' updated successfully.');
+            return successResponse($response, module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -128,7 +128,7 @@ class FaqController extends BaseModuleController
             if($this->faqRepo->softDeleteModel($faq)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -148,7 +148,7 @@ class FaqController extends BaseModuleController
     {
         try {
             if($this->faqRepo->restoreModel($faq)) {
-                return redirect()->back()->with('message', 'Record Restored Successfully.');
+                return redirect()->back()->with('message', module_message('restored', $this->singularLabel));
             } else {
                 return false;
             }
@@ -166,7 +166,7 @@ class FaqController extends BaseModuleController
             if ($this->faqRepo->permanentlyDeleteModel($faq)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('permanently-deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -186,7 +186,7 @@ class FaqController extends BaseModuleController
     {
         try {
             $this->faqRepo->bulkDelete();
-            return redirect()->route(strtolower('faqs.index'))->with('success', 'Bulk delete successful.');
+            return redirect()->route('back-office.faqs.index')->with('success', value: module_message('bulk-deleted', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -196,7 +196,7 @@ class FaqController extends BaseModuleController
     {
         try {
             $this->faqRepo->bulkRestore();
-            return redirect()->route(strtolower('faqs.index'))->with('success', 'Bulk restore successful.');
+            return redirect()->route('back-office.faqs.index')->with('success', module_message('bulk-restored', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }

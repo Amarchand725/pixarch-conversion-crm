@@ -156,7 +156,7 @@ class LeadController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload) {
                 $response = $this->leadRepo->storeModel($payload);
             });
-            return successResponse($response, $this->singularLabel. ' added successfully.');
+            return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -185,8 +185,8 @@ class LeadController extends BaseModuleController
         $payload['numeric_code'] = $parsed['numeric_code'];
         $payload['iso_code'] = $parsed['iso_code'];
         try {
-            $this->leadRepo->updateModel($lead, $payload);
-            return successResponse([], $this->singularLabel. ' updated successfully.');
+            $response = $this->leadRepo->updateModel($lead, $payload);
+            return successResponse($response, module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -210,7 +210,7 @@ class LeadController extends BaseModuleController
             if($this->leadRepo->softDeleteModel($lead)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -230,7 +230,7 @@ class LeadController extends BaseModuleController
     {
         try {
             if($this->leadRepo->restoreModel($lead)) {
-                return redirect()->back()->with('message', 'Record Restored Successfully.');
+                return redirect()->back()->with('message', module_message('restored', $this->singularLabel));
             } else {
                 return false;
             }
@@ -248,7 +248,7 @@ class LeadController extends BaseModuleController
             if($this->leadRepo->permanentlyDeleteModel($lead)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('permanently-deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -268,7 +268,7 @@ class LeadController extends BaseModuleController
     {
         try {
             $this->leadRepo->bulkDelete();
-            return redirect()->route(strtolower('leads.index'))->with('success', 'Bulk delete successful.');
+            return redirect()->route('back-office.leads.index')->with('success', value: module_message('bulk-deleted', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -278,7 +278,7 @@ class LeadController extends BaseModuleController
     {
         try {
             $this->leadRepo->bulkRestore();
-            return redirect()->route(strtolower('leads.index'))->with('success', 'Bulk restore successful.');
+            return redirect()->route('back-office.leads.index')->with('success', module_message('bulk-restored', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -294,7 +294,7 @@ class LeadController extends BaseModuleController
                 $response = $this->leadRepo->statusModel($lead, $payload);
             });
 
-            return successResponse($response, $this->singularLabel. ' updated action successfully.');
+            return successResponse($response, module_message('status_changed', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
@@ -315,7 +315,7 @@ class LeadController extends BaseModuleController
         $this->importService->import($request->file('file'));
         return response()->json([
             'status' => true,
-            'message' => $this->singularLabel.' imported Successfully'
+            'message' => module_message('imported', $this->singularLabel)
         ]);
     }
 

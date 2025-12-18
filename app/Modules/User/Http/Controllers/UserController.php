@@ -11,6 +11,7 @@ use App\Modules\User\Repositories\Contracts\UserContract;
 use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends BaseModuleController
 {
@@ -100,9 +101,11 @@ class UserController extends BaseModuleController
 
         try {
             $payload['role'] = 'Agent';
-            $response = $this->userRepo->storeModel($payload);
-
-            return successResponse($response, $this->singularLabel. ' registered successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {
+                $this->userRepo->storeModel($payload);
+            });
+            return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -127,8 +130,11 @@ class UserController extends BaseModuleController
         $payload['iso_code'] = $parsed['iso_code'];
 
         try {
-            $this->userRepo->updateModel($user, $payload);
-            return successResponse([], $this->singularLabel. ' updated successfully.');
+            $response = null;
+            DB::transaction(function () use (&$response, $payload, $user) {
+                $this->userRepo->updateModel($user, $payload);
+            });
+            return successResponse($response, module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -149,7 +155,7 @@ class UserController extends BaseModuleController
             if($this->userRepo->softDeleteModel($user)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -169,7 +175,7 @@ class UserController extends BaseModuleController
     {
         try {
             if($this->userRepo->restoreModel($user)) {
-                return redirect()->back()->with('message', 'Record Restored Successfully.');
+                return redirect()->back()->with('message', module_message('restored', $this->singularLabel));
             } else {
                 return false;
             }
@@ -187,7 +193,7 @@ class UserController extends BaseModuleController
             if ($this->userRepo->permanentlyDeleteModel($user)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('permanently-deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -207,7 +213,7 @@ class UserController extends BaseModuleController
     {
         try {
             $this->userRepo->bulkDelete();
-            return redirect()->route(strtolower('users.index'))->with('success', 'Bulk delete successful.');
+            return redirect()->route('back-office.users.index')->with('success', value: module_message('bulk-deleted', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -217,7 +223,7 @@ class UserController extends BaseModuleController
     {
         try {
             $this->userRepo->bulkRestore();
-            return redirect()->route(strtolower('users.index'))->with('success', 'Bulk restore successful.');
+            return redirect()->route('back-office.users.index')->with('success', module_message('bulk-restored', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -237,7 +243,7 @@ class UserController extends BaseModuleController
         
         try {
             $this->userRepo->updateModel($user, ['password' => $request->password]);
-            return successResponse([], 'Password updated successfully.');
+            return successResponse([], module_message('changed_password', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,

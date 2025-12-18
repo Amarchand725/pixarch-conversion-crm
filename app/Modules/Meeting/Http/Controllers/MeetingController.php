@@ -125,7 +125,7 @@ class MeetingController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload) {
                 $this->meetingRepo->storeModel($payload);
             });
-            return successResponse($response, $this->singularLabel. ' scheduled successfully.');
+            return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -154,7 +154,7 @@ class MeetingController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload, $meeting) {
                 $this->meetingRepo->updateModel($meeting, $payload);
             });
-            return successResponse([], $this->singularLabel. ' updated successfully.');
+            return successResponse($response, module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -175,7 +175,7 @@ class MeetingController extends BaseModuleController
             if($this->meetingRepo->softDeleteModel($meeting)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -195,7 +195,7 @@ class MeetingController extends BaseModuleController
     {
         try {
             if($this->meetingRepo->restoreModel($meeting)) {
-                return redirect()->back()->with('message', 'Record Restored Successfully.');
+                return redirect()->back()->with('message', module_message('restored', $this->singularLabel));
             } else {
                 return false;
             }
@@ -213,7 +213,7 @@ class MeetingController extends BaseModuleController
             if ($this->meetingRepo->permanentlyDeleteModel($meeting)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('permanently-deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -233,7 +233,7 @@ class MeetingController extends BaseModuleController
     {
         try {
             $this->meetingRepo->bulkDelete();
-            return redirect()->route(strtolower('meetings.index'))->with('success', 'Bulk delete successful.');
+            return redirect()->route('back-office.meetings.index')->with('success', value: module_message('bulk-deleted', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -243,7 +243,7 @@ class MeetingController extends BaseModuleController
     {
         try {
             $this->meetingRepo->bulkRestore();
-            return redirect()->route(strtolower('meetings.index'))->with('success', 'Bulk restore successful.');
+            return redirect()->route('back-office.meetings.index')->with('success', module_message('bulk-restored', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -270,7 +270,7 @@ class MeetingController extends BaseModuleController
                 $response = $this->meetingRepo->statusModel($meeting, $payload);
             });
 
-            return successResponse($response, $this->singularLabel. ' updated successfully.');
+            return successResponse($response, module_message('status_changed', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,

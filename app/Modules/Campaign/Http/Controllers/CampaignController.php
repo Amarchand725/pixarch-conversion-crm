@@ -92,7 +92,7 @@ class CampaignController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload) {
                 $this->campaignRepo->storeModel($payload);
             });
-            return successResponse($response, $this->singularLabel. ' registered successfully.');
+            return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -118,7 +118,7 @@ class CampaignController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload, $campaign) {
                 $this->campaignRepo->updateModel($campaign, $payload);
             });
-            return successResponse($response, $this->singularLabel. ' updated successfully.');
+            return successResponse($response, module_message('updated', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -139,7 +139,7 @@ class CampaignController extends BaseModuleController
             if($this->campaignRepo->softDeleteModel($campaign)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -159,7 +159,7 @@ class CampaignController extends BaseModuleController
     {
         try {
             if($this->campaignRepo->restoreModel($campaign)) {
-                return redirect()->back()->with('message', 'Record Restored Successfully.');
+                return redirect()->back()->with('message', module_message('restored', $this->singularLabel));
             } else {
                 return false;
             }
@@ -177,7 +177,7 @@ class CampaignController extends BaseModuleController
             if ($this->campaignRepo->permanentlyDeleteModel($campaign)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('permanently-deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
@@ -197,7 +197,7 @@ class CampaignController extends BaseModuleController
     {
         try {
             $this->campaignRepo->bulkDelete();
-            return redirect()->route(strtolower('campaigns.index'))->with('success', 'Bulk delete successful.');
+            return redirect()->route('back-office.campaigns.index')->with('success', value: module_message('bulk-deleted', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -207,7 +207,7 @@ class CampaignController extends BaseModuleController
     {
         try {
             $this->campaignRepo->bulkRestore();
-            return redirect()->route(strtolower('campaigns.index'))->with('success', 'Bulk restore successful.');
+            return redirect()->route('back-office.campaigns.index')->with('success', module_message('bulk-restored', $this->singularLabel));
         } catch (Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);
         }

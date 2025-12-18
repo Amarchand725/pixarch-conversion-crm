@@ -87,7 +87,7 @@ class ActivityLogController extends BaseModuleController
             if($this->activityLogRepo->softDeleteModel($activityLog)) {
                 return response()->json([
                     'status' => true,
-                    'message' => $this->singularLabel.' Deleted Successfully'
+                    'message' => module_message('deleted', $this->singularLabel)
                 ]);
             } else{
                 return response()->json([
