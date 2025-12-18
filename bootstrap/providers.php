@@ -6,4 +6,5 @@ return [
     App\Providers\RouteServiceProvider::class,
     App\Providers\RepositoryServiceProvider::class,
     App\Providers\BroadcastServiceProvider::class,
+    App\Providers\ViewServiceProvider::class,
 ];
