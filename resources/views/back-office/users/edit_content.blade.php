@@ -19,7 +19,7 @@
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="gender" class="form-label fw-semibold">
-            Gender <span class="text-danger">*</span>
+            Gender {{ $model->gender }}<span class="text-danger">*</span>
         </label>
         <select id="gender" name="gender" class="form-select">
             <option value="">Select gender</option>

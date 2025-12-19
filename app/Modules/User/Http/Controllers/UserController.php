@@ -57,6 +57,7 @@ class UserController extends BaseModuleController
 
     public function formatRow($row)
     {
+        $extraActions = [];
         $status = $row->statusInfo?->name ?? 'de-active';
         // pass $row as 'user' for the partial
         $row->agent = view('back-office.partials.avatar', ['user' => $row])->render();

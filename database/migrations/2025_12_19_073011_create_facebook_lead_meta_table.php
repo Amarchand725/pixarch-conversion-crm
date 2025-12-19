@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             // Core relationship
-            $table->foreignId('lead_id')->constrained('leads')->nullOnDelete();
+            $table->foreignId('lead_id')->nullable()->constrained('leads')->nullOnDelete();
 
             // Facebook identifiers
             $table->string('leadgen_id')->unique();

@@ -13,7 +13,7 @@
                     </div>
 
                     <div class="col-12">
-                        <span id="show-content"></span>
+                        <div id="show-content"></div>
                     </div>
 
                     <div class="col-12 mt-3 text-end">

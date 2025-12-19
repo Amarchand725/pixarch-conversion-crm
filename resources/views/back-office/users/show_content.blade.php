@@ -1,4 +1,4 @@
-<table class="table table-flush-spacing">
+<table class="table table-flush-spacing" id="modal-user-table">
     <tr>
         <td class="text-nowrap fw-semibold">Avatar</td>
         <td>

@@ -111,6 +111,7 @@ class LeadController extends BaseModuleController
                             '</span>';
 
         //Adding extra custom actions
+        $extraActions = [];
         $extraActions[] = view($this->pathInitialize.'.custom-actions', [
             'model' => $row,
             'routeInitialize' => $this->routePrefix,

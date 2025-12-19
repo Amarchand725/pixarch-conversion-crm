@@ -29,17 +29,12 @@ $(document).on('click', '.show', function () {
         var modal_label = $(this).attr('title');
 
         $(targeted_modal).find('#modal-label').html(modal_label);
-        var html = '<div class="d-block w-100">' +
-            '<div class="d-block w-100">' +
-            '<div class="d-flex justify-content-center align-items-center" style="height: 20vw;>' +
-            '<div class="demo-inline-spacing">' +
-            '<div class="spinner-border spinner-border-lg text-primary" role="status">' +
-            '<span class="visually-hidden">Loading...</span>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+        var html = `
+        <div class="d-flex justify-content-center align-items-center" style="height: 20vw;">
+            <div class="spinner-border spinner-border-lg text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>`;
         $(targeted_modal).find('#show-content').html(html);
     }
 
@@ -48,7 +43,7 @@ $(document).on('click', '.show', function () {
         url: show_url,
         method: 'GET',
         success: function (response) {
-            if(response.flag){ //used for read single notification
+            if (response.hasOwnProperty('flag') && response.flag) { //used for read single notification
                 if(response.status && response.show){ 
                     // Remove notification from dropdown
                     clicked.closest('.dropdown-notifications-item').remove();

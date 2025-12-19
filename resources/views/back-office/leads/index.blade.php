@@ -404,7 +404,7 @@
             initializeDataTable(pageUrl, columns);
 
             $('#refresh-record').on('click', function(){
-                $('.table').DataTable().ajax.reload();
+                $('.data_table').DataTable().ajax.reload();
             });
         </script>
     @endpush
