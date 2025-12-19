@@ -81,8 +81,6 @@ class MakeModuleCommand extends Command
             "{$this->basePath}/{$module}/Models",
             "{$this->basePath}/{$module}/Repositories/Contracts",
             "{$this->basePath}/{$module}/Repositories/Eloquent",
-            "config/modules",
-            "database/seeders",
         ];
 
         foreach ($paths as $path) {
@@ -555,26 +553,95 @@ class MakeModuleCommand extends Command
         $path = base_path("app/Modules/{$module}/Repositories/Eloquent/{$module}Repository.php");
 
         $stub = <<<PHP
-        <?php
+            <?php
 
-        namespace App\Modules\\{$module}\Repositories\Eloquent;
+            namespace App\Modules\\{$module}\Repositories\Eloquent;
 
-        use App\Repositories\Eloquent\BaseRepository;
-        use App\Modules\\{$module}\Repositories\Contracts\\{$module}Contract;
-        use App\Modules\\{$module}\Models\\{$module};
+            use App\Repositories\Eloquent\BaseRepository;
+            use App\Modules\\{$module}\Repositories\Contracts\\{$module}Contract;
+            use App\Modules\\{$module}\Models\\{$module};
 
-        class {$module}Repository extends BaseRepository implements {$module}Contract
-        {
-            public function __construct({$module} \$model)
+            class {$module}Repository extends BaseRepository implements {$module}Contract
             {
-                parent::__construct(\$model);
+                public function __construct({$module} \$model)
+                {
+                    parent::__construct(\$model);
+                }
             }
-        }
         PHP;
 
+        // Save repository file
         File::put($path, $stub);
+
+        // --- Bindings logic ---
+        $bindingsFile = app_path('Modules/bindings.php');
+
+        // Load existing bindings
+        $bindings = file_exists($bindingsFile) ? require $bindingsFile : [];
+
+        // Prepare fully-qualified class names
+        $contract   = "App\\Modules\\{$module}\\Repositories\\Contracts\\{$module}Contract";
+        $repository = "App\\Modules\\{$module}\\Repositories\\Eloquent\\{$module}Repository";
+
+        // Add or update binding
+        $bindings[$contract] = $repository;
+
+        // Save back to bindings.php using ::class style formatting
+        $content = "<?php\n\nreturn [\n";
+        foreach ($bindings as $key => $value) {
+            $content .= "    \\{$key}::class => \\\{$value}::class,\n";
+        }
+        $content .= "];\n";
+
+        file_put_contents($bindingsFile, $content);
+
         $this->info("📚 Repository created: {$path}");
+        $this->info("🗂 Binding updated: {$contract} => {$repository}");
     }
+
+
+    // protected function createRepository($module)
+    // {
+    //     $path = base_path("app/Modules/{$module}/Repositories/Eloquent/{$module}Repository.php");
+
+    //     $stub = <<<PHP
+    //     <?php
+
+    //     namespace App\Modules\\{$module}\Repositories\Eloquent;
+
+    //     use App\Repositories\Eloquent\BaseRepository;
+    //     use App\Modules\\{$module}\Repositories\Contracts\\{$module}Contract;
+    //     use App\Modules\\{$module}\Models\\{$module};
+
+    //     class {$module}Repository extends BaseRepository implements {$module}Contract
+    //     {
+    //         public function __construct({$module} \$model)
+    //         {
+    //             parent::__construct(\$model);
+    //         }
+    //     }
+    //     PHP;
+
+    //     File::put($path, $stub);
+    //     $this->info("📚 Repository created: {$path}");
+
+    //     $bindingsFile = app_path('Modules/bindings.php');
+
+    //     // Load existing bindings or start with empty array
+    //     $bindings = file_exists($bindingsFile) ? require $bindingsFile : [];
+
+    //     // Add new module binding using ::class constants
+    //     $bindings["App\\Modules\\{$module}\\Repositories\\Contracts\\{$module}Contract"] =
+    //         "App\\Modules\\{$module}\\Repositories\\Eloquent\\{$module}Repository";
+
+    //     // Save back to file in proper PHP syntax
+    //     file_put_contents(
+    //         $bindingsFile,
+    //         "<?php\n\nreturn " . var_export($bindings, true) . ";\n"
+    //     );
+
+    //     $this->info("📚 Bind module bindings file: {$bindingsFile}");
+    // }
 
     protected function createViews(string $module, array $fields = []): void
     {
