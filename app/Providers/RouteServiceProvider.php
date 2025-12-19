@@ -52,6 +52,7 @@ class RouteServiceProvider extends ServiceProvider
                 Route::as('notifications.')->prefix('notifications')->group(base_path('routes/back-office/notification.php'));
                 Route::as('meetings.')->prefix('meetings')->group(base_path('routes/back-office/meeting.php'));
                 Route::as('activity-logs.')->prefix('activity-logs')->group(base_path('routes/back-office/activity-log.php'));
+                Route::as('webhooks.')->prefix('webhooks')->group(base_path('routes/back-office/webhook.php'));
             });
     }
 }

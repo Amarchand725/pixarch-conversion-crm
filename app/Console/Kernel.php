@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\MakeModuleCommand::class,
-        \App\Console\Commands\FetchFacebookLeads::class,
     ];
 
     /**
@@ -23,7 +22,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        // $schedule->command('facebook:fetch-leads')->everyFiveMinutes();
     }
 
     /**

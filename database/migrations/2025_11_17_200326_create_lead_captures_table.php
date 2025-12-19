@@ -17,6 +17,9 @@ return new class extends Migration {
             $table->boolean('faq_status')->default(1)->comment('for faq section enable/disable');
             $table->string('name')->comment('e.g Contact form, facebook lead form');
             $table->string('description')->nullable();
+            $table->string('platform')->default('manual')->comment('facebook, landing_page, manual');
+            $table->string('external_id')->nullable()->comment('facebook form_id, etc.');
+            $table->json('meta')->nullable()->comment('page_id, etc.');
             $table->softDeletes();
             $table->timestamps();
         });
