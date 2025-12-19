@@ -57,7 +57,7 @@ class MakeModuleCommand extends Command
         $base = ['id:increments', 'uuid:uuid'];
 
         if (empty($raw)) {
-            $dynamic = ['author_id:integer', 'status_id:integer', 'name:string'];
+            $dynamic = ['status_id:integer', 'name:string'];
         } else {
             $dynamic = $raw;
             $hasStatus = collect($dynamic)->contains(fn($f) => Str::startsWith($f, 'status:'));
@@ -134,11 +134,6 @@ class MakeModuleCommand extends Command
                     ->logFillable()
                     ->logOnlyDirty();
             }
-                
-            // protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
-            // {
-            //     return \Database\Factories\{$module}Factory::new();
-            // }
 
             public function status()
             {
@@ -589,7 +584,7 @@ class MakeModuleCommand extends Command
         // Save back to bindings.php using ::class style formatting
         $content = "<?php\n\nreturn [\n";
         foreach ($bindings as $key => $value) {
-            $content .= "    \\{$key}::class => \\\{$value}::class,\n";
+            $content .= "    \\{$key}::class => \\$value::class,\n";
         }
         $content .= "];\n";
 
@@ -598,50 +593,6 @@ class MakeModuleCommand extends Command
         $this->info("📚 Repository created: {$path}");
         $this->info("🗂 Binding updated: {$contract} => {$repository}");
     }
-
-
-    // protected function createRepository($module)
-    // {
-    //     $path = base_path("app/Modules/{$module}/Repositories/Eloquent/{$module}Repository.php");
-
-    //     $stub = <<<PHP
-    //     <?php
-
-    //     namespace App\Modules\\{$module}\Repositories\Eloquent;
-
-    //     use App\Repositories\Eloquent\BaseRepository;
-    //     use App\Modules\\{$module}\Repositories\Contracts\\{$module}Contract;
-    //     use App\Modules\\{$module}\Models\\{$module};
-
-    //     class {$module}Repository extends BaseRepository implements {$module}Contract
-    //     {
-    //         public function __construct({$module} \$model)
-    //         {
-    //             parent::__construct(\$model);
-    //         }
-    //     }
-    //     PHP;
-
-    //     File::put($path, $stub);
-    //     $this->info("📚 Repository created: {$path}");
-
-    //     $bindingsFile = app_path('Modules/bindings.php');
-
-    //     // Load existing bindings or start with empty array
-    //     $bindings = file_exists($bindingsFile) ? require $bindingsFile : [];
-
-    //     // Add new module binding using ::class constants
-    //     $bindings["App\\Modules\\{$module}\\Repositories\\Contracts\\{$module}Contract"] =
-    //         "App\\Modules\\{$module}\\Repositories\\Eloquent\\{$module}Repository";
-
-    //     // Save back to file in proper PHP syntax
-    //     file_put_contents(
-    //         $bindingsFile,
-    //         "<?php\n\nreturn " . var_export($bindings, true) . ";\n"
-    //     );
-
-    //     $this->info("📚 Bind module bindings file: {$bindingsFile}");
-    // }
 
     protected function createViews(string $module, array $fields = []): void
     {
@@ -687,13 +638,13 @@ class MakeModuleCommand extends Command
             Route::controller({$controller}::class)->group(function () {
                 Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
                 Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-                Route::post('{id}/restore', 'restore')->name('restore');
-                Route::delete('{id}/force-delete', 'forceDelete')->name('forceDelete');
+                Route::post('{$singular}/restore', 'restore')->name('restore');
+                Route::delete('{$singular}/force-delete', 'forceDelete')->name('forceDelete');
             });
 
             // 🧱 Resource CRUD
             Route::resource('/', {$controller}::class)
-                    ->parameters(['' => '{$module}']);
+                    ->parameters(['' => '{$singular}']);
         });
         PHP;
 
@@ -701,32 +652,4 @@ class MakeModuleCommand extends Command
 
         $this->info("✅ Route file created: routes/{$singular}.php");
     }
-
-    // protected function registerPermissions($module)
-    // {
-    //     $adminRole = Role::where('name','Admin')->first();
-
-    //     $permissions = ['list', 'view', 'create', 'edit', 'delete', 'restore', 'bulk-delete', 'permanent-delete', 'export'];
-
-    //     // Create permissions if they don't exist
-    //     foreach ($permissions as $permission) {
-    //         $underscoreSeparated = explode('-', $permission);
-    //         $label = str_replace('_', ' ', $underscoreSeparated[0]);
-    //         $exists = DB::table('permissions')
-    //             ->where('label', $label)
-    //             ->where('name', $permission)
-    //             ->exists();
-
-    //         if ($exists) {
-    //             continue;
-    //         }
-    //         Permission::create([
-    //             'label' => $label,
-    //             'name' => $permission,
-    //             'guard_name' => 'user',
-    //         ]);
-    //     }
-
-    //     $adminRole->syncPermissions(Permission::where('guard_name', 'user')->get());
-    // }
 }
