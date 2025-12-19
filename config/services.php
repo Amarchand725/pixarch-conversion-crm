@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'facebook' => [
+        'page_token' => env('FB_PAGE_ACCESS_TOKEN'),
+        'verify_token' => env('FB_VERIFY_TOKEN'),
+    ],
 ];

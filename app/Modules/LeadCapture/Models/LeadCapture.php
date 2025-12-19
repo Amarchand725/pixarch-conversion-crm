@@ -16,7 +16,17 @@ class LeadCapture extends Model
 {
     use SoftDeletes, LogsActivity, HasFactory, ModelTrait;
 
-    protected $fillable = ['status_id', 'campaign_id', 'name', 'description'];
+    protected $fillable = [
+        'status_id', 
+        'campaign_id', 
+        'shareable_link', 
+        'faq_status', 
+        'name', 
+        'description', 
+        'platform', 
+        'external_id', 
+        'meta'
+    ];
 
     protected static function booted()
     {
