@@ -638,8 +638,8 @@ class MakeModuleCommand extends Command
             Route::controller({$controller}::class)->group(function () {
                 Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
                 Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
-                Route::post('{$singular}/restore', 'restore')->name('restore');
-                Route::delete('{$singular}/force-delete', 'forceDelete')->name('forceDelete');
+                Route::post('{{$singular}}/restore', 'restore')->name('restore');
+                Route::delete('{{$singular}}/force-delete', 'forceDelete')->name('forceDelete');
             });
 
             // 🧱 Resource CRUD
