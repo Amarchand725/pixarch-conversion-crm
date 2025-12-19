@@ -26,7 +26,7 @@ class ActivityLogController extends BaseModuleController
         $columns = [
             'log_name'      => ['label' => 'Log Name', 'html' => true, 'searchable' => 'log_name'], 
             'event'         => ['label' => 'Event', 'html' => true, 'searchable' => 'event'],       
-            'causer'        => ['label' => 'Performed By', 'html' => true, 'searchable' => false], 
+            'causer_id'        => ['label' => 'Performed By', 'html' => true, 'searchable' => false], 
             'created_at'    => ['label' => 'Date & Time', 'searchable' => 'created_at'],
             'action'        => ['label' => 'Action', 'html' => true, 'searchable' => false], 
         ];
@@ -59,9 +59,9 @@ class ActivityLogController extends BaseModuleController
                     . '">'
                     . ucfirst($eventName)
                     . '</span>';
-  
+        
         // Who did the action
-        $row->causer = optional($row->causer)->id
+        $row->causer_id = optional($row->causer)->id
             ? view('back-office.partials.avatar', ['user' => $row->causer])->render()
             : '-';
 

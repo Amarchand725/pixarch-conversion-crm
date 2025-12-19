@@ -144,6 +144,9 @@
 
                                             <!-- Value Badge stays on same row -->
                                             <span class="badge bg-success text-white">
+                                                {{-- @if($lead->name=='Branden Murphy')
+                                                    @dd($lead);
+                                                @endif --}}
                                                 ${{ number_format($lead->budget) }}
                                             </span>
                                         </div>

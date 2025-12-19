@@ -36,7 +36,6 @@ class LeadController extends BaseModuleController
     public function index(Request $request)
     {
         $statusLeads = $this->leadRepo->getAllCollection();
-
         $columns = [
             'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
             'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],

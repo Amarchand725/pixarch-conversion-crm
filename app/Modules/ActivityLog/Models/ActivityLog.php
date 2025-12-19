@@ -38,11 +38,6 @@ class ActivityLog extends Model
             ->logFillable()
             ->logOnlyDirty();
     }
-        
-    // protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
-    // {
-    //     return \Database\Factories\{ActivityLog}Factory::new();
-    // }
 
     public function status()
     {

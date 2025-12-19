@@ -1,6 +1,6 @@
 @php
-$avatarPath = optional($user->avatar)->path
-    ? asset('storage/' . $user->avatar->path)
+$avatarPath = optional($user?->avatar)?->path
+    ? asset('storage/' . $user?->avatar?->path)
     : asset('back-office/assets/img/avatars/default-avatar.png');
 @endphp
 

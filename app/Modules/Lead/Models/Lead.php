@@ -27,7 +27,7 @@ class Lead extends Model
         'phone', 
         'numeric_code', 
         'iso_code', 
-        'value', 
+        'budget', 
         'pipeline',
         'status', 
         'faq_status',

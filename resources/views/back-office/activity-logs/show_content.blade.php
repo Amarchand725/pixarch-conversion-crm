@@ -57,4 +57,39 @@
         <td class="text-nowrap fw-semibold">Created At</td>
         <td>{{ $model?->created_at ? $model->created_at->format('d, M Y | h:i A') : '-' }}</td>
     </tr>
+
+    <tr>
+        <td class="text-nowrap fw-semibold">Changes</td>
+        <td>
+            @php
+                $properties = $model?->properties ?? [];
+            @endphp
+
+            @if($properties->isNotEmpty())
+                <ul class="list-unstyled mb-0">
+                    {{-- Show old vs new for updates --}}
+                    @if(isset($properties['old']))
+                        @foreach($properties['old'] as $key => $oldValue)
+                            <li>
+                                <strong>{{ ucfirst($key) }}:</strong> 
+                                <span class="text-muted">{{ $oldValue }}</span> 
+                                <i class="fas fa-arrow-right mx-1"></i> 
+                                <span>{{ $properties['attributes'][$key] ?? '-' }}</span>
+                            </li>
+                        @endforeach
+                    @else
+                        {{-- For created events, just show new attributes --}}
+                        @foreach($properties['attributes'] ?? [] as $key => $value)
+                            <li>
+                                <strong>{{ ucfirst($key) }}:</strong> {{ $value }}
+                            </li>
+                        @endforeach
+                    @endif
+                </ul>
+            @else
+                <span>-</span>
+            @endif
+        </td>
+    </tr>
+
 </table>

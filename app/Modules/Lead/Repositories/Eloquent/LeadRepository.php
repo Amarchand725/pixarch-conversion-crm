@@ -39,6 +39,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         // -----------------------------------
         // AGENT: Assigned leads + Pool leads
         // -----------------------------------
+        
         else {
 
             // Leads assigned to this agent
