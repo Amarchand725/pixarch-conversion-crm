@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Traits\ModelTrait;
 use App\Models\Traits\NotifiesUsers;
 use App\Models\User;
+use App\Services\PhoneNumberService;
 
 class Lead extends Model
 {
@@ -48,6 +49,15 @@ class Lead extends Model
     protected $casts = [
         'fields' => 'array',
     ];
+
+    public function setPhoneAttribute($value)
+    {
+        $data = PhoneNumberService::parse($value); // returns array
+
+        $this->attributes['phone'] = $data['e164'];         // string
+        $this->attributes['numeric_code'] = $data['numeric_code']; // string
+        $this->attributes['iso_code'] = $data['iso_code'];        // string
+    }
 
     // Tell Laravel where to find the factory
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory

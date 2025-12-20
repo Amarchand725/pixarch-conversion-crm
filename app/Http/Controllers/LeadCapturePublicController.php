@@ -50,6 +50,7 @@ class LeadCapturePublicController extends BaseModuleController
         $payload = $request->validated();
 
         $parsed = $phoneService->parse($request->phone);
+        $payload['phone'] = $parsed['e164'];
         $payload['numeric_code'] = $parsed['numeric_code'];
         $payload['iso_code'] = $parsed['iso_code'];
 

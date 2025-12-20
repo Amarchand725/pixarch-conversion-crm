@@ -21,7 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Custom validation rule for international phone numbers
         Validator::extend('intl_phone', function ($attribute, $value) {
             try {
                 PhoneNumberService::parse($value);
@@ -31,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
-        Validator::replacer('intl_phone', function ($message, $attribute, $rule, $parameters) {
-            return 'Enter a valid phone number with country code. Example: +14155552671';
+        Validator::replacer('intl_phone', function () {
+            return 'Enter a valid phone number. Example: +1 (599) 477-2974';
         });
     }
 }

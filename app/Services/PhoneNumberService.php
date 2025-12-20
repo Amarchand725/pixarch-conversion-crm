@@ -27,10 +27,11 @@ class PhoneNumberService
      */
     public static function parse(string $phoneNumber): array
     {
+        $clean = preg_replace('/[^+\d]/', '', $phoneNumber); // remove spaces, parentheses, etc.
         $phoneUtil = PhoneNumberUtil::getInstance();
 
         try {
-            $number = $phoneUtil->parse($phoneNumber, null);
+            $number = $phoneUtil->parse($clean, null);
 
             if (!$phoneUtil->isValidNumber($number)) {
                 throw new \Exception('Invalid phone number');
@@ -41,7 +42,6 @@ class PhoneNumberService
                 'numeric_code' => '+' . $number->getCountryCode(),
                 'iso_code' => $phoneUtil->getRegionCodeForNumber($number),
             ];
-
         } catch (NumberParseException $e) {
             throw new \Exception('Invalid phone number format');
         }

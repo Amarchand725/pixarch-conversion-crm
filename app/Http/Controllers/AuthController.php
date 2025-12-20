@@ -78,15 +78,6 @@ class AuthController extends Controller
         $leadActivities = null;
         if (!$isAdmin) {
             $leadQuery->where('assignee_id', $agentId);
-            // $leadActivities = $leadQuery->get()
-            // ->map(function($log) {
-            //     return [
-            //         'type' => 'lead_assigned', // you can also make dynamic using $log->action
-            //         'description' => $log->description ?? "Lead '{$log->lead?->name}' updated",
-            //         'related_user' => $log->assignee,
-            //         'created_at' => $log->created_at,
-            //     ];
-            // });
         }
 
         // 2️⃣ Meeting Activities
@@ -149,9 +140,9 @@ class AuthController extends Controller
         $model = auth()->user();
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'phone'    => [
+            'phone' => [
                 'nullable',
-                'regex:/^\(\d{3}\)\s-\s\d{8}$/',
+                'intl_phone', // validates full international number
                 Rule::unique('users', 'phone')->ignore($model),
             ],
             'gender' => ['required', Rule::in(GenderEnum::cases())],

@@ -222,7 +222,7 @@
                                                                 </div>
 
                                                                 <div class="col-lg-8 col-md-8">
-                                                                    <input type="tel" value="{{ old('phone', auth()->user()->phone) }}" class="form-control phoneNumber" id="phone" name="phone" placeholder="Enter phone number">
+                                                                    <input type="text" value="{{ old('phone', auth()->user()->phone) }}" class="form-control phone-input" id="phone" name="phone" placeholder="Enter phone number">
                                                                     <span id="phone_error" class="text-danger error"></span>
                                                                 </div>
                                                             </div>

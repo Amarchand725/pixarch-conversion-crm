@@ -190,49 +190,50 @@
     <script src="{{ asset('back-office/assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('back-office') }}/assets/custom/ajax-gateway.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('back-office/assets/js') }}/libphonenumber-js.min.js"></script>
     
     <script>
         var btn = $('#scrollTop');
 
-        $(document).on('keyup', '.phone-input', function() {
-          var phone = $(this).val();
-          var formattedPhone = formatInternationalPhoneNumber(phone);
-          $(this).val(formattedPhone);
+        $(document).on('input', '.phone-input', function () {
+          let value = $(this).val();
+
+          // Keep only digits and +
+          value = value.replace(/[^+\d]/g, '');
+
+          // Convert 00 → +
+          if (value.startsWith('00')) {
+            value = '+' + value.substring(2);
+          }
+
+          // Auto prepend + if missing
+          if (value && !value.startsWith('+')) {
+            value = '+' + value;
+          }
+
+          // Enforce max digits (E.164 allows max 15 digits)
+          let digitsOnly = value.replace(/\D/g, '');
+          if (digitsOnly.length > 15) {
+            digitsOnly = digitsOnly.substring(0, 15);
+            value = '+' + digitsOnly; // keep + sign
+          }
+
+          // Format using libphonenumber-js
+          try {
+            let parsed = libphonenumber.parsePhoneNumber(value);
+            if (parsed) {
+              $(this).val(parsed.formatInternational()); // e.g., +92 345 3762 725
+            }
+          } catch (e) {
+            // keep raw value if invalid
+            $(this).val(value);
+          }
         });
-
-        function formatInternationalPhoneNumber(phone) {
-          // Remove everything except digits and plus sign
-          phone = phone.replace(/[^+\d]/g, '');
-
-          // Ensure it starts with '+', if user starts with 00, replace with '+'
-          if (phone.startsWith('00')) {
-              phone = '+' + phone.substring(2);
-          }
-
-          // Limit total digits to 15 (excluding the +)
-          if (phone.startsWith('+')) {
-              var plus = '+';
-              var digits = phone.substring(1, 16); // max 15 digits
-              phone = plus + digits;
-          } else {
-              phone = phone.substring(0, 15); // just in case user removed +
-          }
-
-          // Optional: Add a space after country code (1-3 digits)
-          var match = phone.match(/^\+(\d{1,3})(\d*)$/);
-          if (match) {
-              var countryCode = match[1];
-              var number = match[2];
-              phone = '+' + countryCode + (number ? ' ' + number : '');
-          }
-
-          return phone;
-        }
 
         // Initialize Bootstrap tooltips
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'))
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-            new bootstrap.Tooltip(tooltipTriggerEl)
+          new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
         $(window).scroll(function() {

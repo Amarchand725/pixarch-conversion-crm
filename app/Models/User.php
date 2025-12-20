@@ -14,6 +14,7 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Models\Traits\LogsModelActivity;
 use App\Modules\Campaign\Models\Campaign;
 use App\Modules\Lead\Models\Lead;
+use App\Services\PhoneNumberService;
 
 class User extends Authenticatable
 {
@@ -69,6 +70,15 @@ class User extends Authenticatable
             'phone_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function setPhoneAttribute($value)
+    {
+        $data = PhoneNumberService::parse($value); // returns array
+
+        $this->attributes['phone'] = $data['e164'];         // string
+        $this->attributes['numeric_code'] = $data['numeric_code']; // string
+        $this->attributes['iso_code'] = $data['iso_code'];        // string
     }
 
     protected static function booted()
