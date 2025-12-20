@@ -92,7 +92,7 @@ class LeadController extends BaseModuleController
             $row->assignee_to = '-';
         }
 
-        $label = $this->singularLabel.' Details';
+        $label = module_label('show', $this->singularLabel);
         $row->name = '
             <a href="#" class="show fw-semibold cursor-pointer"
                 data-show-url="'.$row->show_url.'"

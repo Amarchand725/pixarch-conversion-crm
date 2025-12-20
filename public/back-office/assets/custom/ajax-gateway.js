@@ -26,8 +26,7 @@ $(document).on('click', '.show', function () {
     if(targeted_modal=='#'){
         dropdown = clicked.closest('.dropdown-menu');
     }else{
-        var modal_label = $(this).attr('title');
-
+        var modal_label = clicked.attr('title');    
         $(targeted_modal).find('#modal-label').html(modal_label);
         var html = `
         <div class="d-flex justify-content-center align-items-center" style="height: 20vw;">
@@ -38,7 +37,7 @@ $(document).on('click', '.show', function () {
         $(targeted_modal).find('#show-content').html(html);
     }
 
-    var show_url = $(this).attr('data-show-url');
+    var show_url = clicked.attr('data-show-url');
     $.ajax({
         url: show_url,
         method: 'GET',

@@ -38,6 +38,19 @@
             .drag-item {
                 user-select: none;
             }
+            .history-scroll {
+                max-height: 320px;
+                overflow-y: auto;
+            }
+            .history-scroll thead th {
+                position: sticky;
+                top: 0;
+                background: #fff;
+                z-index: 1;
+            }
+            .nav-tabs .nav-link {
+                padding: 6px 12px;
+            }
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -134,8 +147,8 @@
                                                         data-show-url="{{ route($routeInitialize.'.show', $lead->uuid) }}"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#details-modal"
-                                                        title="View {{ $singularLabel }} Details"
-                                                        label="View {{ $singularLabel }} Details"
+                                                        title="{{ module_label('show', $singularLabel) }}"
+                                                        label="{{ module_label('show', $singularLabel) }}"
                                                         >
                                                         {{ $lead->name ?? '' }}
                                                     </a>
@@ -144,9 +157,6 @@
 
                                             <!-- Value Badge stays on same row -->
                                             <span class="badge bg-success text-white">
-                                                {{-- @if($lead->name=='Branden Murphy')
-                                                    @dd($lead);
-                                                @endif --}}
                                                 ${{ number_format($lead->budget) }}
                                             </span>
                                         </div>
@@ -270,7 +280,7 @@
         @endif
     </div>
     <!-- Modals -->
-    <x-modals size="modal-xl" />
+    <x-modals/>
     <!--/ Modals -->
     @push('js')
         <!-- Page JS -->
