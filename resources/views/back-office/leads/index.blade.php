@@ -38,19 +38,7 @@
             .drag-item {
                 user-select: none;
             }
-            .history-scroll {
-                max-height: 320px;
-                overflow-y: auto;
-            }
-            .history-scroll thead th {
-                position: sticky;
-                top: 0;
-                background: #fff;
-                z-index: 1;
-            }
-            .nav-tabs .nav-link {
-                padding: 6px 12px;
-            }
+            
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">

@@ -65,7 +65,7 @@ class LeadCapturePublicController extends BaseModuleController
                 $payload['status_id'] = $status_id; //default
                 $payload['assignee_id'] = LeadAssigner::getNextAgent($campaignAgents, $payload['iso_code']); //rol-robbin agent id
                 $payload['author'] = null; //default
-                $payload['source_id'] = $this->source->where('name', 'website')->value('id');
+                $payload['source_id'] = $this->source->where('name', 'Landing Page')->value('id');
                 $payload['lead_capture_id'] = $lead_capture_id;
                 $payload['status'] = 'open'; //default
                 $payload['pipeline'] = 'paid social - leads'; //default

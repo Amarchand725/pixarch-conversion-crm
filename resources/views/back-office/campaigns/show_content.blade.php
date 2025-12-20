@@ -17,11 +17,11 @@
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Start Date</td>
-        <td>{{ $model->start_date??'-' }}</td>
+        <td>{{ getDateFormat($model->start_date) ?? '' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">End Date</td>
-        <td>{{ $model->end_date??'-' }}</td>
+        <td>{{ getDateFormat($model->end_date) ?? '' }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Description</td>

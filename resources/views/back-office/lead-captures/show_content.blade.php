@@ -1,11 +1,11 @@
 <table class="table table-flush-spacing">
     <tr>
-        <td class="text-nowrap fw-semibold">Campaign Name</td>
-        <td>{{ ucfirst($model?->campaign?->name ?? '-') }}</td>
-    </tr>
-    <tr>
         <td class="text-nowrap fw-semibold">Form Name</td>
         <td>{{ $model->name ?? '-' }}</td>
+    </tr>
+    <tr>
+        <td class="text-nowrap fw-semibold">Campaign Name</td>
+        <td>{{ ucfirst($model?->campaign?->name ?? '-') }}</td>
     </tr>
     <tr>
         <td class="text-nowrap fw-semibold">Shareable Link</td>
@@ -29,7 +29,7 @@
                 $status = $model?->status;
             @endphp 
             <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status->name)) ?? 'bg-light text-dark' }}">
-                {{ strtoupper($status->name) }}
+                {{ strtoupper($status->name) ? '-' }}
             </span>
         </td>
     </tr>

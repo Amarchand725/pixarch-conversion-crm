@@ -281,7 +281,7 @@ class LeadRepository extends BaseRepository implements LeadContract
             $amount = $payload['amount'] ?? 0;
         }
 
-        $logStatus['description'] = $payload['description'] ?? 'Status updated via drag & drop';
+        $logStatus['description'] = $payload['description'] ?? $model?->lastStatusLog?->description ??  'Status updated via drag & drop';
         $logStatus['amount'] = $amount;
         $logStatus['status_id'] = $payload['status_id'];
         $logStatus['assignee_id'] = $assignee_id;

@@ -310,12 +310,19 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
                 modal.find('#edit-content').html(response);
             }
 
+            // ----- Initialize Select2 for all selects inside fields-wrapper -----
+            $('#fields-wrapper select').each(function () {
+                $(this).select2({
+                    dropdownParent: $(this).closest('.field-item'),
+                    width: '100%',
+                });
+            });
+
             // ---------- Lead Capture form initialization ----------
            if (
                 modal.find('#fields-wrapper').length &&
                 (typeof response.flag !== 'undefined' && response.flag === true)
             ) {
-
                 // Reset wrapper and index
                 fieldIndex = 0;
                 $('#fields-wrapper').html('');
@@ -325,16 +332,6 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
                     existingFields.forEach((field, i) => renderField(field, i));
                     fieldIndex = existingFields.length;
                 }
-
-                // ----- Initialize Select2 for all selects inside fields-wrapper -----
-                $('#fields-wrapper select').each(function () {
-                    $(this).select2({
-                        dropdownParent: $(this).closest('.field-item'),
-                        width: '100%',
-                    });
-                });
-
-                // Optional: Initialize event listeners if needed (remove/change handlers already delegated)
             }
             // ------------------------------------------------------
         },
