@@ -43,7 +43,8 @@
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/typeahead-js/typeahead.css" />
     <!-- Vendor -->
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" />
-
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/toastr/toastr.css') }}">
     <!-- Page CSS -->
     <!-- Page -->
     <link rel="stylesheet" href="{{ asset('back-office') }}/assets/vendor/css/pages/page-auth.css" />
@@ -105,6 +106,9 @@
 
     <!-- Main JS -->
     <script src="{{ asset('back-office') }}/assets/js/main.js"></script>
+    <!-- Toastr JS -->
+    <script src="{{ asset('back-office/assets/vendor/libs/toastr/toastr.js') }}"></script>
+    <script src="{{ asset('back-office') }}/assets/custom/ajax-gateway.js"></script>
 
     <!-- Page JS -->
     <script src="{{ asset('back-office') }}/assets/js/pages-auth.js"></script>

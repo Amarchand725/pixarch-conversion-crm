@@ -211,7 +211,7 @@ $(document).on('submit', '.ajax-form', function(e) {
     const form = $(this);
     const action = form.attr('action');
     const method = form.data('method') || 'POST';
-
+    
     // Clear previous errors
     form.find('.error').text('');
     form.find('.is-invalid').removeClass('is-invalid');
@@ -236,8 +236,9 @@ $(document).on('submit', '.ajax-form', function(e) {
             // Show success message
             toastr.success(res.message || 'Saved successfully');
 
-            // Optional: reset form
-            // form.trigger('reset');
+            if(form.data('type') === 'login' && res.route){
+                window.location.href = res.route;
+            }
         },
         error: (xhr) => {
             form.find('.sub-btn').show();
