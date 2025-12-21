@@ -2,43 +2,7 @@
     @section('title', ($title ?? '').' - '. config('app.name', '100 KEYS UAE'))
     @push('css')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-        <style>
-            .status-row-wrapper {
-                width: 100%;
-            }
-
-            .status-row {
-                display: flex;
-                white-space: nowrap;
-                overflow-x: auto; /* horizontal scroll */
-                padding-bottom: 10px;
-            }
-
-            .status-card {
-                flex-shrink: 0;
-                min-width: 33.333%; /* col-md-4 width for 3 visible cards */
-                max-width: 33.333%;
-                margin-right: 1rem;
-            }
-
-            .task-column {
-                max-height: 300px; /* vertical scroll if many items */
-                overflow-y: auto;
-            }
-
-            .task-card {
-                cursor: move;
-            }
-
-            .sortable-ghost {
-                opacity: 0.4;
-            }
-
-            .drag-item {
-                user-select: none;
-            }            
-        </style>
+        <link rel="stylesheet" href="{{ asset('back-office') }}/assets/css/lead-custom.css" />
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card mb-4">
