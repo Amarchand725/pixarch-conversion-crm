@@ -153,6 +153,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
             $model->toFill($payload, ['attendee_id']);
             $model->save();
         }else{
+            $payload['attendee_id'] = $payload['attendee_id'] ?? auth()->user()->id;
             if (!empty($payload['start_date_time']) && !empty($payload['attendee_id'])) {
                 //attendee user
                 $attendee_id = $payload['attendee_id'] ?? auth()->user()->id;

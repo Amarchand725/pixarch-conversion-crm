@@ -141,7 +141,23 @@ class MeetingController extends BaseModuleController
         $agent_status_id = $this->status->where('model', 'User')->where('name', 'active')->value('id');
         $lead_status_id = $this->status->where('model', 'Lead')->where('name', 'active')->value('id');
         $agents = $this->agent->where('status_id',$agent_status_id)->get();
-        $leads = $this->lead->get();
+        
+        
+        $user = auth()->user();
+
+        // If Admin → fetch all meetings
+        if ($user->hasRole('Admin')) {
+            $leads = $this->lead->get();
+        } 
+        // Else → fetch only meetings where user is attendee
+        else {
+            $leads = $user->leads()
+                ->orderByDesc('entity_relationships.created_at')
+                ->get()
+                ->unique('id')
+                ->values();
+        }
+        
         $model = $this->meetingRepo->showModel($meeting);
         return (string) view($this->pathInitialize.'.edit_content', get_defined_vars());
     }
@@ -284,13 +300,14 @@ class MeetingController extends BaseModuleController
     {
         $user = auth()->user();
 
+        $status_id = $this->status->where('model', 'Meeting')->where('name', 'Upcoming')->value('id');
         // If Admin → fetch all meetings
         if ($user->hasRole('Admin')) {
-            $meetings = Meeting::with('lead', 'attendees')->get();
+            $meetings = Meeting::with('lead', 'attendees')->where('status_id', $status_id)->get();
         } 
         // Else → fetch only meetings where user is attendee
         else {
-            $meetings = $user->meetings()->with('lead', 'attendees')->get();
+            $meetings = $user->meetings()->with('lead', 'attendees')->where('status_id', $status_id)->get();
         }
 
         // Map for FullCalendar

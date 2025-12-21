@@ -22,6 +22,7 @@
         <input type="datetime-local" class="form-control" value="{{ old('end_date_time', $model->start_date_time ?? '') }}" name="end_date_time">
         <span id="end_date_time_error" class="text-danger error">{{ $errors->first('end_date_time') }}</span>
     </div>
+    @if(auth()->user()->hasAnyRole(['admin', 'lead']))
     <div class="col-12 col-md-6">
         <label for="attendee_id" class="form-label">Meeting Attendee <span class="text-danger">*</span></label>
         <select class="form-select" name="attendee_id">
@@ -32,6 +33,7 @@
         </select>
         <span id="attendee_id_error" class="text-danger error">{{ $errors->first('attendee_id') }}</span>
     </div>
+    @endif
     <div class="col-12 col-md-6">
         <label for="status_id" class="form-label fw-semibold">
             Status

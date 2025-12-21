@@ -193,6 +193,7 @@ class LeadRepository extends BaseRepository implements LeadContract
 
     public function statusModel(Model $model, array $payload){
         $assignee_id = $payload['assignee_id'] ?? $model->lastStatusLog?->assignee_id;
+        $payload['attendee_id'] = $payload['attendee_id'] ?? auth()->user()->id;
 
         if($model?->lastStatusLog?->status?->name == 'pool' && !auth()->user()->hasRole('Admin')){
             $model->assignees()->attach(auth()->id());

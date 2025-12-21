@@ -35,7 +35,7 @@ class MeetingRequest extends FormRequest
                 'after_or_equal:now',
                 'after_or_equal:start_date_time',
             ],
-            'attendee_id' => ['nullable', 'exists:users,id', 'required_with:start_date_time,end_date_time'],
+            'attendee_id' => ['nullable', 'exists:users,id'],
         ];
     }
 

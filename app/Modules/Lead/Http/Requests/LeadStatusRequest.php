@@ -38,9 +38,42 @@ class LeadStatusRequest extends FormRequest
                 'after_or_equal:start_date_time',
                 'required_with:start_date_time'
             ],
-            'attendee_id' => ['nullable', 'exists:users,id', 'required_with:start_date_time,end_date_time'],
+            'attendee_id' => ['nullable', 'exists:users,id'],
             'time_zone' => ['nullable', 'string'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $lead = $this->route('lead');
+
+            // If status is changed → allow update, skip extra checks
+            if ($this->filled('status_id') && $this->status_id != $lead?->lastStatusLog->status_id) {
+                return;
+            }
+
+            // Otherwise, require at least one other field
+            $otherFields = [
+                'assignee_id',
+                'amount',
+                'description',
+                'start_date_time',
+                'end_date_time',
+                'attendee_id',
+            ];
+
+            $hasOtherChange = collect($otherFields)->some(
+                fn ($field) => $this->filled($field)
+            );
+
+            if (!$hasOtherChange) {
+                $validator->errors()->add(
+                    'general',
+                    'No changes found.'
+                );
+            }
+        });
     }
 
     public function prepareForValidation()

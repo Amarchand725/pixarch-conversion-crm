@@ -25,7 +25,6 @@ class MeetingStatusRequest extends FormRequest
         ];
 
         if ($action === 'status') {
-
             $rules = array_merge($rules, [
                 'status_id'   => ['required', 'exists:statuses,id'],
                 'description' => ['required', 'string'],
@@ -36,7 +35,7 @@ class MeetingStatusRequest extends FormRequest
             $rules = array_merge($rules, [
                 'start_date_time' => ['required', 'date'],
                 'end_date_time'   => ['required', 'date', 'after_or_equal:start_date_time'],
-                'attendee_id'     => ['required', 'exists:users,id'],
+                // 'attendee_id'     => ['required', 'exists:users,id'],
             ]);
         }
 

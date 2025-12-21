@@ -62,11 +62,16 @@ class RolePermissionSeeder extends Seeder
             $limitedPermissions = [
                 'lead-list', 
                 'lead-view', 
+                'lead-status',
+                'lead-note',
                 'notification-list', 
                 'notification-view', 
                 'meeting-list', 
                 'meeting-view', 
                 'meeting-status',
+                'meeting-create',
+                'meeting-edit',
+                'meeting-reschedule',
             ];
 
             // Assign only these permissions to Lead & Agent
@@ -91,7 +96,7 @@ class RolePermissionSeeder extends Seeder
             'role-view',
             'role-edit',
             'role-delete',
-            'role-restore',
+            // 'role-restore',
 
             // User management
             'user-list',
@@ -99,7 +104,7 @@ class RolePermissionSeeder extends Seeder
             'user-view',
             'user-edit',
             'user-delete',
-            'user-restore',
+            // 'user-restore',
             'user-status',
             'user-direct_permission',
             'user-impersonate',
@@ -109,7 +114,7 @@ class RolePermissionSeeder extends Seeder
             'permission-list',
             'permission-view',
             'permission-delete',
-            'permission-restore',
+            // 'permission-restore',
 
             // Status management
             'status-list',
@@ -117,19 +122,19 @@ class RolePermissionSeeder extends Seeder
             'status-view',
             'status-edit',
             'status-delete',
-            'status-restore',
+            // 'status-restore',
 
             // Country management
             'country-list',
             'country-view',
             'country-delete',
-            'country-restore',
+            // 'country-restore',
 
             // State management
             'state-list',
             'state-view',
             'state-delete',
-            'state-restore',
+            // 'state-restore',
 
             // Lead management
             'lead-list',
@@ -137,7 +142,7 @@ class RolePermissionSeeder extends Seeder
             'lead-create',
             'lead-edit',
             'lead-delete',
-            'lead-restore',
+            // 'lead-restore',
             'lead-status',
             'lead-assign',
             'lead-assignees',
@@ -151,13 +156,13 @@ class RolePermissionSeeder extends Seeder
             'source-view',
             'source-edit',
             'source-delete',
-            'source-restore',
+            // 'source-restore',
 
             // Log Activity management
             'log_activity-list',
             'log_activity-view',
             'log_activity-delete',
-            'log_activity-restore',
+            // 'log_activity-restore',
 
             // Attachment management
             'attachment-list',
@@ -165,7 +170,7 @@ class RolePermissionSeeder extends Seeder
             'attachment-view',
             'attachment-edit',
             'attachment-delete',
-            'attachment-restore',
+            // 'attachment-restore',
             'attachment-download',
 
             //Campaign management
@@ -174,7 +179,7 @@ class RolePermissionSeeder extends Seeder
             'campaign-view',
             'campaign-edit',
             'campaign-delete',
-            'campaign-restore',
+            // 'campaign-restore',
             'campaign-status',
 
             //Lead Capture management
@@ -183,7 +188,7 @@ class RolePermissionSeeder extends Seeder
             'lead_capture-view',
             'lead_capture-edit',
             'lead_capture-delete',
-            'lead_capture-restore',
+            // 'lead_capture-restore',
             'lead_capture-status',
 
             //Faq management
@@ -192,7 +197,7 @@ class RolePermissionSeeder extends Seeder
             'faq-view',
             'faq-edit',
             'faq-delete',
-            'faq-restore',
+            // 'faq-restore',
             'faq-status',
 
             //Notification management
@@ -211,7 +216,7 @@ class RolePermissionSeeder extends Seeder
             'meeting-view',
             'meeting-edit',
             'meeting-delete',
-            'meeting-restore',
+            // 'meeting-restore',
             'meeting-status',
             'meeting-reschedule',
         ];
