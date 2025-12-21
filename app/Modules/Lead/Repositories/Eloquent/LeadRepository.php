@@ -13,9 +13,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\SendsModelNotifications;
 
 class LeadRepository extends BaseRepository implements LeadContract
 {
+    use SendsModelNotifications;
+
     public function __construct(Lead $model)
     {
         parent::__construct($model);
@@ -117,22 +120,13 @@ class LeadRepository extends BaseRepository implements LeadContract
             }
 
             if ($assignees && $assignees->count()) {
-                foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner_avatar =  $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has assigned you a lead';
-                    $model->notifyUser(
-                        $user,
-                        $assigner_avatar,
-                        $title,
-                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
-                        $link,
-                        'lead_assigned'
-                    );
-                }
+                $this->sendNotification(
+                    $model,
+                    $model->assignees,
+                    ucfirst(auth()->user()->name) . ' has assigned you a lead',
+                    "{$model->name} ({$model->email}) - {$model->pipeline}",
+                    'lead_assigned'
+                );
             }
         }else{
             $model->assignees()->sync([auth()->id()]);
@@ -166,23 +160,13 @@ class LeadRepository extends BaseRepository implements LeadContract
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
             if ($assignees && $assignees->count()) {
-                foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has assigned you a lead';
-                    $model->notifyUser(
-                        $user,
-                        $assigner_avatar,
-                        $title,
-                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
-                        $link,
-                        'lead_assigned'
-                    );
-                }
+                $this->sendNotification(
+                    $model,
+                    $model->assignees,
+                    ucfirst(auth()->user()->name) . ' has assigned you a lead',
+                    "{$model->name} ({$model->email}) - {$model->pipeline}",
+                    'lead_assigned'
+                );
             }
         }else{
             $model->assignees()->sync([auth()->id()]);
@@ -201,80 +185,9 @@ class LeadRepository extends BaseRepository implements LeadContract
         }
 
         // 🟢 If status is "meeting"
-
         if (!empty($payload['start_date_time']) && !empty($payload['attendee_id'])) {
-            //attendee user
-            $attendee_id = $payload['attendee_id'] ?? auth()->user()->id;
-
-            $serverTz = $payload['time_zone'] ?? config('app.timezone');
-            // Convert payload to server timezone before comparing
-            $payload['start_date_time'] = Carbon::parse($payload['start_date_time'])->setTimezone($serverTz);
-            $payload['end_date_time'] = Carbon::parse($payload['end_date_time'])->setTimezone($serverTz);
-
-            $conflict = Meeting::whereHas('attendees', function ($q) use ($attendee_id) {
-                    $q->where('user_id', $attendee_id);
-                })
-                ->where(function ($q) use ($payload) {
-                    $q->whereBetween('start_date_time', [$payload['start_date_time'], $payload['end_date_time']])
-                    ->orWhereBetween('end_date_time', [$payload['start_date_time'], $payload['end_date_time']]);
-                })
-                ->where(function ($q) use ($payload) {
-                    $q->where(function ($q2) use ($payload) {
-                        $q2->where('start_date_time', '<', $payload['end_date_time'])
-                        ->where('end_date_time', '>', $payload['start_date_time']);
-                    });
-                })
-                ->exists();
-
-            if ($conflict) {
-                throw new \Exception('Attendee already has a meeting scheduled during this time.');
-            }
-
-            //adding meeting status
-            $payload['time_zone'] = config('app.timezone');
-            
-            // 🗓️ 2. Create or update meeting for this lead
-            $meeting = $model->meetings()->make();
-            $meeting->toFill($payload, ['attendee_id']);
-            $meeting->save();
-
-            $meeting->status_id = Status::where('model', "Meeting")->where('name', 'Upcoming')->first()->id ?? null;
-
-            $meeting->status_id = Status::where('model', 'Meeting')
-                ->where('name', 'Upcoming')
-                ->value('id');
-
-            $meeting->save();
-            
-            // 👥 3. Attach attendee(s) via pivot table in meeting_users
-            $meeting->attendees()->sync([$attendee_id]);
-            
-            DB::commit();
-            
+            $meeting = $this->meetingSchedule($model, $payload);
             $logStatus['meeting_id'] = $meeting->id;
-
-            // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
-            $attendees = $meeting->attendees; // belongsTo
-
-            if ($attendees && $attendees->count()) {
-                foreach ($attendees as $attendee) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has scheduled a meeting for you';
-                    $model->notifyUser(
-                        $attendee,
-                        $assigner_avatar,
-                        $title,
-                        "Your meeting for '{$lead->name}' lead on {$meeting->start_date_time}",
-                        $link,
-                        'meeting_scheduled'
-                    );
-                }
-            }
         }
 
         $amount = $model->budget;
@@ -298,6 +211,7 @@ class LeadRepository extends BaseRepository implements LeadContract
             $model->save();
         }
 
+        //notify assignee only if changed
         if($log && $model->lastStatusLog?->assignee_id != $assignee_id){
             //assign new agent lead.
             $model->assignees()->sync([$assignee_id]);
@@ -306,71 +220,118 @@ class LeadRepository extends BaseRepository implements LeadContract
             $assignees = $model->assignees; // belongsTo
 
             if ($assignees && $assignees->count() && auth()->user()->id != $assignee_id) {
-                foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has assigned you a lead';
-                    $model->notifyUser(
-                        $user,
-                        $assigner_avatar,
-                        $title,
-                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
-                        $link,
-                        'lead_status_updated'
-                    );
-                }
+                $this->sendNotification(
+                $model,
+                $model->assignees,
+                ucfirst(auth()->user()->name) . ' has assigned you a lead',
+                "{$model->name} ({$model->email}) - {$model->pipeline}",
+                'lead_status_updated'
+                );
             }
         }elseif($log && $model->lastStatusLog?->status_id != $payload['status_id'] && auth()->user()->id != $model->lastStatusLog?->assignee_id && statusName('Lead', $payload['status_id']) != 'pool'){
             // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
             $assignees = $model->assignees; // belongsTo
 
             if ($assignees && $assignees->count()) {
-                foreach ($assignees as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has updated status of your lead';
-                    $model->notifyUser(
-                        $user,
-                        $assigner_avatar,
-                        $title,
-                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
-                        $link,
-                        'lead_status_updated'
-                    );
-                }
+                $this->sendNotification(
+                    $model,
+                    $model->assignees,
+                    ucfirst(auth()->user()->name) . ' has updated status of your lead',
+                    "{$model->name} ({$model->email}) - {$model->pipeline}",
+                    'lead_status_updated'
+                );
             }
         }elseif(statusName('Lead', $payload['status_id']) == 'pool'){
             $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
             $agents = User::where('id', '!=', auth()->user()->id)->where('status_id', $status_id)->get();
             if ($agents && $agents->count() > 0) {
-                foreach ($agents as $user) {
-                    $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                    $lead = $model ?? 'N/A';
-                    $assigner = auth()->user();
-                    $assigner_avatar = $assigner?->avatar?->path
-                                        ? asset('storage/' . $assigner->avatar->path)
-                                        : asset('back-office/assets/img/avatars/default-avatar.png');
-                    $title = ucfirst($assigner->name).' has added a lead to the pool';
-                    $model->notifyUser(
-                        $user,
-                        $assigner_avatar,
-                        $title,
-                        "{$lead->name} ({$lead->email}) - $lead->pipeline",
-                        $link,
-                        'lead_added_to_pool'
-                    );
-                }
+                $this->sendNotification(
+                    $model,
+                    $agents,
+                    ucfirst(auth()->user()->name) . ' has added a lead to the pool',
+                    "{$model->name} ({$model->email}) - {$model->pipeline}",
+                    'lead_added_to_pool'
+                );
             }
         }
 
         return response()->json(['success' => true]);
+    }
+
+    public function meetingSchedule(Lead $model, array $payload)
+    {
+        //attendee user
+        $attendee_id = $payload['attendee_id'];
+
+        $serverTz = $payload['time_zone'] ?? config('app.timezone');
+        // Convert payload to server timezone before comparing
+        $payload['start_date_time'] = Carbon::parse($payload['start_date_time'])->setTimezone($serverTz);
+        $payload['end_date_time'] = Carbon::parse($payload['end_date_time'])->setTimezone($serverTz);
+
+        $conflict = Meeting::whereHas('attendees', function ($q) use ($attendee_id) {
+                $q->where('user_id', $attendee_id);
+            })
+            ->where(function ($q) use ($payload) {
+                $q->whereBetween('start_date_time', [$payload['start_date_time'], $payload['end_date_time']])
+                ->orWhereBetween('end_date_time', [$payload['start_date_time'], $payload['end_date_time']]);
+            })
+            ->where(function ($q) use ($payload) {
+                $q->where(function ($q2) use ($payload) {
+                    $q2->where('start_date_time', '<', $payload['end_date_time'])
+                    ->where('end_date_time', '>', $payload['start_date_time']);
+                });
+            })
+            ->exists();
+
+        if ($conflict) {
+            throw new \Exception('Attendee already has a meeting scheduled during this time.');
+        }
+
+        //adding meeting status
+        $payload['time_zone'] = config('app.timezone');
+        
+        // 🗓️ 2. Create or update meeting for this lead
+        $meeting = $model->meetings()->make();
+        $meeting->toFill($payload, ['attendee_id']);
+        $meeting->save();
+
+        $meeting->status_id = Status::where('model', "Meeting")->where('name', 'Upcoming')->first()->id ?? null;
+
+        $meeting->status_id = Status::where('model', 'Meeting')
+            ->where('name', 'Upcoming')
+            ->value('id');
+
+        $meeting->save();
+        
+        // 👥 3. Attach attendee(s) via pivot table in meeting_users
+        $meeting->attendees()->sync([$attendee_id]);
+        
+        // $logStatus['meeting_id'] = $meeting->id;
+
+        // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
+        $attendees = $meeting->attendees; // belongsTo
+
+        if ($attendees && $attendees->count()) {
+            if(auth()->user()->id==$attendee_id){ //self-meeting
+                $admin = User::role('Admin')->first();
+                $this->sendNotification(
+                    $model,
+                    [$admin],
+                    ucfirst(auth()->user()->name) . ' has scheduled a meeting',
+                    "Meeting scheduled for '{$model->name}' lead on {$meeting->start_date_time}",
+                    'meeting_scheduled'
+                );
+            }else{ //meeting for another user
+                $this->sendNotification(
+                    $model,
+                    $attendees,
+                    ucfirst(auth()->user()->name) . ' has scheduled a meeting for you',
+                    "Your meeting for '{$model->name}' lead on {$meeting->start_date_time}",
+                    'meeting_scheduled'
+                );
+            }
+        }
+
+        return $meeting;
     }
 }

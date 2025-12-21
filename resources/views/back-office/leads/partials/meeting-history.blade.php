@@ -10,7 +10,6 @@
     @forelse ($model->meetings as $meeting)
         <tr>
             <td>
-                {{ ucfirst($meeting?->attendees()->first()?->name) ?? '-' }}
                 @php $attendee = $meeting?->attendees()->first(); @endphp 
                 @php
                     $avatarPath = optional($attendee->avatar)->path

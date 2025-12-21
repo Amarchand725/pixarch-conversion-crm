@@ -8,11 +8,13 @@ use App\Repositories\Eloquent\BaseRepository;
 use App\Modules\Meeting\Repositories\Contracts\MeetingContract;
 use App\Modules\Meeting\Models\Meeting;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Traits\SendsModelNotifications;
 
 class MeetingRepository extends BaseRepository implements MeetingContract
 {
+    use SendsModelNotifications;
+
     public function __construct(Meeting $model)
     {
         parent::__construct($model);
@@ -65,20 +67,13 @@ class MeetingRepository extends BaseRepository implements MeetingContract
         $attendees = $model->attendees; // belongsTo
 
         if ($attendees && $attendees->count()) {
-            foreach ($attendees as $attendee) {
-                $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $lead->uuid;                     
-                $assigner = auth()->user();
-                $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
-                $title = ucfirst($assigner->name).' has rescheduled your meeting';
-                $model->notifyUser(
-                    $attendee,
-                    $assigner_avatar,
-                    $title,
-                    "Your meeting for '{$lead->name}' lead on {$model->start_date_time}",
-                    $link,
-                    'meeting_scheduled'
-                );
-            }
+            $this->sendNotification(
+                $model?->lead,
+                $attendees,
+                ucfirst(auth()->user()->name) . ' has scheduled a meeting for you',
+                "Your meeting for '{$model->name}' lead on {$model->start_date_time}",
+                'meeting_scheduled'
+            );
         }
 
         return $model;
@@ -129,20 +124,13 @@ class MeetingRepository extends BaseRepository implements MeetingContract
         $attendees = $model->attendees; // belongsTo
 
         if ($attendees && $attendees->count()) {
-            foreach ($attendees as $attendee) {
-                $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $lead->uuid;                     
-                $assigner = auth()->user();
-                $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
-                $title = ucfirst($assigner->name).' has rescheduled your meeting';
-                $model->notifyUser(
-                    $attendee,
-                    $assigner_avatar,
-                    $title,
-                    "Your meeting for '{$lead->name}' lead on {$model->start_date_time}",
-                    $link,
-                    'meeting_scheduled'
-                );
-            }
+            $this->sendNotification(
+                $model?->lead,
+                $attendees,
+                ucfirst(auth()->user()->name) . ' has rescheduled your meeting',
+                "Your meeting for '{$model->name}' lead on {$model->start_date_time}",
+                'meeting_scheduled'
+            );
         }
 
         return $model;
@@ -195,28 +183,18 @@ class MeetingRepository extends BaseRepository implements MeetingContract
                 
                 // 👥 3. Attach attendee(s) via pivot table in meeting_users
                 $model->attendees()->sync([$attendee_id]);
-                
-                DB::commit();
 
                 // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
                 $attendees = $model->attendees; // belongsTo
 
                 if ($attendees && $attendees->count()) {
-                    foreach ($attendees as $attendee) {
-                        $link = rtrim(env('FULL_APP_URL'), '/') . '/leads/' . $model->uuid;                     
-                        $lead = $model ?? 'N/A';
-                        $assigner = auth()->user();
-                        $assigner_avatar = $assigner?->avatar?->path ?? asset('back-office/assets/img/avatars/default-avatar.png');
-                        $title = ucfirst($assigner->name).' has rescheduled your meeting';
-                        $model->notifyUser(
-                            $attendee,
-                            $assigner_avatar,
-                            $title,
-                            "Your meeting for '{$lead->name}' lead on {$model->start_date_time}",
-                            $link,
-                            'meeting_scheduled'
-                        );
-                    }
+                    $this->sendNotification(
+                        $model?->lead,
+                        $attendees,
+                        ucfirst(auth()->user()->name) . ' has rescheduled your meeting',
+                        "Your meeting for '{$model->name}' lead on {$model->start_date_time}",
+                        'meeting_rescheduled'
+                    );
                 }
             }
         }
