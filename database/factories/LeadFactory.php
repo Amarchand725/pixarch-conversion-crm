@@ -5,6 +5,8 @@ use App\Models\Source;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Modules\Lead\Models\Lead;
 use App\Modules\LeadCapture\Models\LeadCapture;
+use App\Services\PhoneNumberService;
+use Exception;
 
 class LeadFactory extends Factory
 {
@@ -17,7 +19,25 @@ class LeadFactory extends Factory
      */
     public function definition(): array
     {
-        $phone_number = fake()->phoneNumber();
+        $parsed = null;
+
+        while (!$parsed) {
+            try {
+                // mix faker + known mobile rules
+                $country = fake()->randomElement(['PK', 'US', 'IN']);
+
+                $rawPhone = match ($country) {
+                    'PK' => '+92' . fake()->numberBetween(3000000000, 3999999999),
+                    'US' => '+1' . fake()->numberBetween(2000000000, 9999999999),
+                    'IN' => '+91' . fake()->randomElement([6,7,8,9]) . fake()->numberBetween(100000000, 999999999),
+                };
+
+                $parsed = PhoneNumberService::parse($rawPhone);
+
+            } catch (Exception $e) {
+                $parsed = null; // retry
+            }
+        }
 
         return [
             'uuid'            => $this->faker->uuid(),
@@ -25,9 +45,9 @@ class LeadFactory extends Factory
             'lead_capture_id' => $this->faker->randomElement(LeadCapture::pluck('id')->toArray()),
             'name'            => $this->faker->name(),
             'email'           => $this->faker->safeEmail(),
-            'phone'           => $phone_number,
-            'numeric_code' => $phone_number ? fake()->randomElement(['1', '44', '91', '61', '81']) : null,
-            'iso_code' => $phone_number ? fake()->randomElement(['US', 'GB', 'IN', 'AU', 'JP']) : null,
+            'phone' => $parsed['e164'],
+            'numeric_code' => $parsed['numeric_code'],
+            'iso_code' => $parsed['iso_code'],
             'budget' => $this->faker->numberBetween(0, 100),
             'pipeline' => $this->faker->randomElement(['paid social - leads', 'sales pipeline']),
             'status' => $this->faker->randomElement(['open', 'lost', 'won', 'abandoned']),
