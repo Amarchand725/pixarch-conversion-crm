@@ -236,7 +236,7 @@ $(document).on('submit', '.ajax-form', function(e) {
             // Show success message
             toastr.success(res.message || 'Saved successfully');
 
-            if(form.data('type') === 'login' && res.route){
+            if(form.data('mode') === 'redirect' && res.route){
                 window.location.href = res.route;
             }
         },

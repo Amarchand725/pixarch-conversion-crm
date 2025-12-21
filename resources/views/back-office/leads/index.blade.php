@@ -37,8 +37,7 @@
 
             .drag-item {
                 user-select: none;
-            }
-            
+            }            
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -127,7 +126,7 @@
                                             <div class="d-flex align-items-center gap-2">
                                                 <img class="rounded-circle"
                                                     src="{{ optional($lead->assignees->first()?->avatar)->path
-                                                            ? asset('back-office/assets/' . $lead->assignees->first()->avatar->path)
+                                                            ? asset('storage/' . $lead->assignees->first()->avatar->path)
                                                             : asset('back-office/assets/img/avatars/default-avatar.png') }}"
                                                     width="36" height="36" alt="Avatar" title="{{ $lead?->assignees->first()->name ?? '' }}">
                                                 <span class="fw-semibold">
@@ -145,12 +144,13 @@
 
                                             <!-- Value Badge stays on same row -->
                                             <span class="badge bg-success text-white">
-                                                ${{ number_format($lead->budget) }}
+                                                {{ config('app.currency_symbol') }}{{ number_format($lead->budget) }}
                                             </span>
                                         </div>
 
                                         <!-- Action Icons + Toggle -->
                                         <div class="d-flex gap-1">
+                                            @if(auth()->user()->can('lead-assign'))
                                             <x-action-button
                                                 type="button"
                                                 id="assign-btn"
@@ -165,7 +165,9 @@
                                                     'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'assign', 'lead' => $lead->uuid])
                                                 ]"
                                             />
+                                            @endif
 
+                                            @if(auth()->user()->can('lead-note'))
                                             <x-action-button
                                                 type="button"
                                                 id="note-btn"
@@ -180,7 +182,9 @@
                                                     'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'note', 'lead' => $lead->uuid])
                                                 ]"
                                             />
+                                            @endif
 
+                                            @if(auth()->user()->can('meeting-create'))
                                             <x-action-button
                                                 type="button"
                                                 id="meeting-btn"
@@ -195,7 +199,9 @@
                                                     'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'meeting', 'lead' => $lead->uuid])
                                                 ]"
                                             />
+                                            @endif
 
+                                            @if(auth()->user()->can('lead-status'))
                                             <x-action-button
                                                 type="button"
                                                 id="status-btn"
@@ -210,6 +216,7 @@
                                                     'data-edit-url' => route($routeInitialize.'.action.edit', ['action' => 'status', 'lead' => $lead->uuid])
                                                 ]"
                                             />
+                                            @endif
 
                                             <!-- Toggle More Info -->
                                             <button class="btn btn-outline-secondary btn-sm ms-auto toggle-more-info" type="button">

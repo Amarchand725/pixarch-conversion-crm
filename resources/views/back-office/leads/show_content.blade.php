@@ -6,6 +6,7 @@
             Lead Details
         </button>
     </li>
+    @if(auth()->user()->can('lead-history'))  
     <li class="nav-item">
         <button class="nav-link"
                 data-bs-toggle="tab"
@@ -13,6 +14,8 @@
             History
         </button>
     </li>
+    @endif
+    @if(auth()->user()->can('lead-meetings'))
     <li class="nav-item">
         <button class="nav-link"
                 data-bs-toggle="tab"
@@ -20,6 +23,7 @@
             Meetings
         </button>
     </li>
+    @endif
 </ul>
 
 <div class="tab-content">
@@ -29,15 +33,19 @@
         </div>
     </div>
 
+    @if(auth()->user()->can('lead-history'))
     <div class="tab-pane fade" id="tab-history">
         <div class="history-scroll">
             @include('back-office.leads.partials.lead-history', ['model' => $model])
         </div>
     </div>
+    @endif
 
+    @if(auth()->user()->can('lead-meetings'))
     <div class="tab-pane fade" id="tab-meetings">
         <div class="history-scroll">
             @include('back-office.leads.partials.meeting-history', ['model' => $model])
         </div>
     </div>
+    @endif
 </div>

@@ -19,7 +19,9 @@
                             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                                 <div class="container">
                                     <!-- Add role form -->
-                                    <form action="{{ route('back-office.roles.update', $role->uuid) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form">
+                                    {{-- <form action="{{ route('back-office.roles.update', $role->uuid) }}" method="POST" class="pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="create-form">
+                                        @csrf --}}
+                                    <form class="ajax-form pt-0 fv-plugins-bootstrap5 fv-plugins-framework" id="" data-mode="redirect" action="{{ route('back-office.roles.update', $role->uuid) }}" data-method="POST">
                                         @csrf
                                         @method('PUT')
 
@@ -55,7 +57,7 @@
 
                                         <div class="col-12 mt-3 action-btn">
                                             <div class="demo-inline-spacing sub-btn">
-                                                <button type="submit" class="btn btn-primary me-sm-3 me-1 submitBtn">Submit</button>
+                                                <button type="submit" class="btn btn-primary me-sm-3 me-1">Submit</button>
                                                 <a href="{{ route('back-office.roles.index') }}" class="btn btn-label-secondary btn-reset"> Cancel</a>
                                             </div>
                                             <div class="demo-inline-spacing loading-btn" style="display: none;">

@@ -3,23 +3,29 @@
     <!-- LEFT SIDE TABS -->
     <div class="col-md-3 border-end">
         <div class="nav flex-column nav-pills">
-
+            @if(auth()->user()->can('lead-assign'))
             <a class="nav-link {{ $action=='assign'?'active':'' }}" data-bs-toggle="pill" href="#assignTab">
                 <i class="bi bi-person-fill me-1"></i> Assign
             </a>
+            @endif
 
+            @if(auth()->user()->can('lead-note'))
             <a class="nav-link {{ $action=='note'?'active':'' }}" data-bs-toggle="pill" href="#noteTab">
                 <i class="bi bi-sticky me-1"></i> Note
             </a>
+            @endif
 
+            @if(auth()->user()->can('meeting-create'))
             <a class="nav-link {{ $action=='meeting'?'active':'' }}" data-bs-toggle="pill" href="#meetingTab">
                 <i class="bi bi-calendar-event me-1"></i> Meeting
             </a>
+            @endif
 
+            @if(auth()->user()->can('lead-status'))
             <a class="nav-link {{ $action=='status'?'active':'' }}" data-bs-toggle="pill" href="#statusTab">
                 <i class="bi bi-list-check me-1"></i> Status
             </a>
-
+            @endif
         </div>
     </div>
 
@@ -27,6 +33,7 @@
     <div class="col-md-9">
         <div class="tab-content">
             <!-- ASSIGN -->
+            @if(auth()->user()->can('lead-assign'))
             <div class="tab-pane fade {{ $action=='assign'?'show active':'' }}" id="assignTab">
                 <div class="mb-3">
                     <label for="assignee_id" class="form-label">Lead Assignee</label>
@@ -38,8 +45,10 @@
                     <span id="assignee_id_error" class="text-danger error">{{ $errors->first('assignee_id') }}</span>
                 </div>
             </div>
+            @endif
 
             <!-- NOTE -->
+            @if(auth()->user()->can('lead-note'))
             <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
                 <div class="mb-3">
                     <label for="description" class="form-label">Add Note</label>
@@ -47,8 +56,10 @@
                     <span id="description_error" class="text-danger error">{{ $errors->first('description') }}</span>
                 </div>
             </div>
+            @endif
 
             <!-- MEETING -->
+            @if(auth()->user()->can('meeting-create'))
             <div class="tab-pane fade {{ $action=='meeting'?'show active':'' }}" id="meetingTab">
                 <div class="mb-3">
                     <label for="start_date_time" class="form-label">Start Date & Time</label>
@@ -71,8 +82,10 @@
                     <span id="attendee_id_error" class="text-danger error">{{ $errors->first('attendee_id') }}</span>
                 </div>
             </div>
+            @endif
 
             <!-- STATUS -->
+            @if(auth()->user()->can('lead-status'))
             <div class="tab-pane fade {{ $action=='status'?'show active':'' }}" id="statusTab">
                 <div class="mb-3">
                     <label for="status_id" class="form-label fw-semibold">
@@ -92,6 +105,7 @@
                     <span id="amount_error" class="text-danger error">{{ $errors->first('amount') }}</span>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>

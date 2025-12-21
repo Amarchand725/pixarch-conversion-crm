@@ -93,7 +93,12 @@ class RoleController extends BaseModuleController
         
         try {
             $this->roleRepo->updateModel($role, $payload);
-            return redirect()->route('back-office.roles.index')->with('message', value: module_message('updated', $this->singularLabel));
+            // return redirect()->route('back-office.roles.index')->with('message', value: module_message('updated', $this->singularLabel));
+            return response()->json([
+                'status' => 'success',
+                'message' => module_message('updated', $this->singularLabel),
+                'route' => route('back-office.roles.index')
+            ]);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage()); 
         }

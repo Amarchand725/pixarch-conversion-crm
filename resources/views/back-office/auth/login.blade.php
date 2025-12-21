@@ -5,7 +5,7 @@
 
     <h4 class="mb-1 pt-2">Welcome to  {{ config('app.name', 'Laravel') }}👋</h4>
     <p class="mb-4">Sign-in to your account</p>
-    <form class="ajax-form" id="" data-type="login" action="{{ route('login') }}" data-method="POST">
+    <form class="ajax-form" id="" data-mode="redirect" action="{{ route('login') }}" data-method="POST">
         @csrf
         
         <div class="mb-3">

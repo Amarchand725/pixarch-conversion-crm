@@ -141,6 +141,9 @@ class RolePermissionSeeder extends Seeder
             'lead-status',
             'lead-assign',
             'lead-assignees',
+            'lead-history',
+            'lead-meetings',
+            'lead-note',
 
             // Source management
             'source-list',
