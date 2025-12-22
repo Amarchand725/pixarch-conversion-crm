@@ -35,7 +35,8 @@ class MeetingStatusRequest extends FormRequest
             $rules = array_merge($rules, [
                 'start_date_time' => ['required', 'date'],
                 'end_date_time'   => ['required', 'date', 'after_or_equal:start_date_time'],
-                // 'attendee_id'     => ['required', 'exists:users,id'],
+                'attendee_id'     => ['nullable', 'exists:users,id'],
+                'description' => ['nullable', 'string'],
             ]);
         }
 

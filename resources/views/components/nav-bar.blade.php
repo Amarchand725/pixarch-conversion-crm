@@ -49,7 +49,7 @@
                                 </div>
                             </li>
                         @else
-                            <div class="notification-scroll">
+                            <div class="">
                                 @foreach ($unreadNotifications as $notification)
                                     <li class="dropdown-notifications-list scrollable-container">
                                         <ul class="list-group list-group-flush">

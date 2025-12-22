@@ -1,4 +1,4 @@
-<li class="dropdown-notifications-list scrollable-container">
+<li class="dropdown-notifications-list">
     <ul class="list-group list-group-flush">
         <li class="list-group-item list-group-item-action dropdown-notifications-item">
             <div class="d-flex">

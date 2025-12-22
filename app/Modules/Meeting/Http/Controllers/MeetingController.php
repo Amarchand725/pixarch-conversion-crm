@@ -280,7 +280,7 @@ class MeetingController extends BaseModuleController
     public function updateStatus(MeetingStatusRequest $request, Meeting $meeting)
     {
         $payload = $request->validated();
-
+        
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload, $meeting) {

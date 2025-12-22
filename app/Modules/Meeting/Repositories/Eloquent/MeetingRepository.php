@@ -127,7 +127,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
             $this->sendNotification(
                 $model?->lead,
                 $attendees,
-                ucfirst(auth()->user()->name) . ' has rescheduled your meeting',
+                ucfirst(auth()->user()->name) . ' has scheduled a meeting for you',
                 "Your meeting for '{$model->name}' lead on {$model->start_date_time}",
                 'meeting_scheduled'
             );
@@ -144,7 +144,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
             $payload['attendee_id'] = $payload['attendee_id'] ?? auth()->user()->id;
             if (!empty($payload['start_date_time']) && !empty($payload['attendee_id'])) {
                 //attendee user
-                $attendee_id = $payload['attendee_id'] ?? auth()->user()->id;
+                $attendee_id = $payload['attendee_id'];
 
                 $serverTz = $payload['time_zone'] ?? config('app.timezone');
                 // Convert payload to server timezone before comparing
