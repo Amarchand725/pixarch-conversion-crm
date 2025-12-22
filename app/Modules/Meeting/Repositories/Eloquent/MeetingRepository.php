@@ -66,7 +66,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
         // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
         $attendees = $model->attendees; // belongsTo
 
-        if ($attendees && $attendees->count()) {
+        if ($attendees && $attendees->count() && !empty($model->lead)) {
             $this->sendNotification(
                 $model?->lead,
                 $attendees,
@@ -123,7 +123,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
         // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
         $attendees = $model->attendees; // belongsTo
 
-        if ($attendees && $attendees->count()) {
+        if ($attendees && $attendees->count() && !empty($model->lead)) {
             $this->sendNotification(
                 $model?->lead,
                 $attendees,
@@ -187,7 +187,7 @@ class MeetingRepository extends BaseRepository implements MeetingContract
                 // ✅ MANUAL NOTIFICATION RIGHT AFTER SAVE
                 $attendees = $model->attendees; // belongsTo
 
-                if ($attendees && $attendees->count()) {
+                if ($attendees && $attendees->count() && !empty($model->lead)) {
                     $this->sendNotification(
                         $model?->lead,
                         $attendees,
