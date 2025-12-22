@@ -8,6 +8,21 @@
         </a>
     </div>
 
+    <!-- Welcome Message (Desktop only, 2 lines) -->
+    <div class="d-none d-md-flex flex-column me-auto" style="max-width: 500px;">
+        <!-- First line: Name + Role -->
+        <div class="fw-semibold text-primary text-truncate" 
+            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            Welcome, 
+        </div>
+
+        <!-- Second line: Last login -->
+        <div class="text-muted text-truncate" 
+            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.95rem;">
+            {{ Auth::user()?->name }} ({{ Auth::user()?->roles()?->first()?->name ?? 'No Role' }})
+        </div>
+    </div>
+
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <ul class="navbar-nav flex-row align-items-center ms-auto">
             @php 

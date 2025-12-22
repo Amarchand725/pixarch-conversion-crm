@@ -53,60 +53,8 @@
 
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="{{ asset('back-office/assets/vendor/libs/toastr/toastr.css') }}">
+    
     <!-- Page CSS -->
-    <style>
-      a.dropdown-toggle::after {
-        display: none !important;
-      }
-      .rt-toast {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 320px;
-        background: #fff;
-        border: 1px solid #ddd;
-        padding: 10px 15px;
-        border-radius: 6px;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-        display: flex;
-        gap: 12px;
-        z-index: 9999;
-        animation: slideIn .3s ease;
-      }
-
-    .rt-toast img {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .rt-toast h6 {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .rt-toast p {
-        margin: 4px 0 0;
-        font-size: 13px;
-        color: #555;
-    }
-    .rt-toast-close {
-      position: absolute;
-      top: 5px;
-      right: 8px;
-      background: none;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    </style>
     @stack('css')
 
     <!-- Helpers -->
@@ -365,7 +313,7 @@
       })
 
       // Auto-remove after 5 seconds
-      setTimeout(() => div.remove(), 5000)
+      setTimeout(() => div.remove(), 3000)
     }
   </script>
   </body>

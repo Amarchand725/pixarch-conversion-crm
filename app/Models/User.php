@@ -45,7 +45,8 @@ class User extends Authenticatable
         'weight',
         'two_factor',
         'notification',
-        'status_id'
+        'status_id',
+        'last_login_at'
     ];
 
     /**
