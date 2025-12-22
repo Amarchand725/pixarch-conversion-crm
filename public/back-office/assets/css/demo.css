@@ -11,7 +11,7 @@
   height: 64px;
 }
 
-.app-brand-logo.demo {
+/* .app-brand-logo.demo {
   -ms-flex-align: center;
   align-items: center;
   -ms-flex-pack: center;
@@ -20,14 +20,48 @@
   display: flex;
   width: 95px;
   height: 38px;
-}
+} */
 
-.app-brand-logo.demo svg {
-  /* width: 35px;
-  height: 24px; */
+/* .app-brand-logo.demo svg {
   width: 95px;
   height: 38px;
+} */
+
+/* OPEN sidebar */
+.app-brand-logo.demo {
+    width: 95px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* COLLAPSED sidebar (Vuexy default class) */
+.layout-menu-collapsed .app-brand-logo.demo {
+    width: 32px !important;
+    height: 32px !important;
+}
+
+.logo-mini {
+    display: none;
+}
+
+.layout-menu-collapsed .logo-full {
+    display: none;
+}
+
+.layout-menu-collapsed .logo-mini {
+    display: block;
+}
+.logo-full svg,
+.logo-mini svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+.app-brand-logo {
+    transition: width 0.3s ease;
+}
+/* COLLAPSED sidebar (Vuexy default class) */
 
 .app-brand-text.demo {
   font-size: 1.375rem;

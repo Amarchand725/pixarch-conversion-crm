@@ -1,10 +1,20 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
         <a href="{{ route('back-office.auth.dashboard') }}" class="app-brand-link">
-            <span class="app-brand-logo demo">
+            {{-- <span class="app-brand-logo demo">
                 <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
             </span>
-            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', '100KEYS UAE') }}</span>
+            <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', '100KEYS UAE') }}</span> --}}
+
+            <span class="app-brand-logo demo">
+                <x-application-logo class="logo-full" />
+                <x-favicon class="logo-mini" />
+            </span>
+
+            <span class="app-brand-text demo menu-text fw-bold ms-2">
+                {{ config('app.name') }}
+            </span>
+
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
