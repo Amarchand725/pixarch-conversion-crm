@@ -29,7 +29,7 @@
                 $status = $model?->status;
             @endphp 
             <span class="badge rounded-pill px-3 py-2 {{ badgeClass(strtolower($status->name)) ?? 'bg-light text-dark' }}">
-                {{ strtoupper($status->name) ? '-' }}
+                {{ strtoupper($status->name) ?? '-' }}
             </span>
         </td>
     </tr>
@@ -76,23 +76,44 @@
 
     @if($model->fields->isNotEmpty())
         <tr>
-            <td class="text-nowrap fw-semibold">Form Fields</td>
-            <td>
-                <ul class="list-unstyled mb-0">
-                    @foreach($model->fields as $field)
-                        <li>
-                            <strong>{{ $field->label }}</strong> 
-                            (Type: {{ ucfirst($field->type) }} 
-                            @if($field->required) | Required @endif
-                            @if($field->type === 'select' && !empty($field->options))
-                                | Options: {{ is_array($field->options) ? implode(', ', $field->options) : $field->options }}
-                            @endif)
-                        </li>
-                    @endforeach
-                </ul>
+            <td colspan="2" class="fw-bold text-uppercase bg-light text-center">Form Fields</td>
+        </tr>
+        <tr>
+            <td style="padding:0;" colspan="2">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Label</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($model->fields as $field)
+                                <tr>
+                                    <td style="word-break:break-word; padding-left: 8px">
+                                        {{ Illuminate\Support\Str::upper(str_replace('_',' ',subject: $field->label)) }}
+                                    </td>
+                                    <td>{{ ucfirst($field->type) }}</td>
+                                    <td>{{ $field->required ? 'Yes' : 'No' }}</td>
+                                    <td>
+                                        @if($field->type === 'select' && !empty($field->options))
+                                            {{ is_array($field->options) ? implode(', ', $field->options) : $field->options }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </td>
         </tr>
-    @endif
+        @endif
+
 </table>
 
 <script>

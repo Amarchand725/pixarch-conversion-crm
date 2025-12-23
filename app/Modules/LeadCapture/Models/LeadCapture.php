@@ -25,7 +25,9 @@ class LeadCapture extends Model
         'description', 
         'platform', 
         'external_id', 
-        'meta'
+        'meta',
+        'created_at',
+        'updated_at',
     ];
 
     protected static function booted()

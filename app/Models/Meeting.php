@@ -20,6 +20,8 @@ class Meeting extends Model
         'start_date_time',
         'end_date_time',
         'description',
+        'created_at',
+        'updated_at',
     ];   
 
     protected static function booted()

@@ -54,9 +54,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    // Fields that should be hidden when model is converted to array/JSON
     protected $hidden = [
         'password',
-        'remember_token',
+        'remember_token', // optional
+        'api_token',      // optional
     ];
 
     /**

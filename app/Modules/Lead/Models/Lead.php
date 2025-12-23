@@ -32,6 +32,8 @@ class Lead extends Model
         'pipeline',
         'status', 
         'faq_status',
+        'created_at',
+        'updated_at',
         'fields'
     ];
 

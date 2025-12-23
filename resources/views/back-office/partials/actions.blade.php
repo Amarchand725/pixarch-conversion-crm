@@ -1,5 +1,5 @@
 <div class="dropdown">
-    <a class="dropdown-toggle text-body" data-bs-toggle="dropdown" style="--bs-dropdown-item-padding-y:0;">
+    <a class="dropdown-toggle text-body cursor-pointer" data-bs-toggle="dropdown" style="--bs-dropdown-item-padding-y:0;">
         <i class="ti ti-dots-vertical ti-sm"></i>
     </a>
 

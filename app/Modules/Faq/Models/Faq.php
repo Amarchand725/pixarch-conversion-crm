@@ -15,7 +15,14 @@ class Faq extends Model
 {
     use SoftDeletes, LogsActivity, ModelTrait, HasFactory;
 
-    protected $fillable = ['status_id', 'question', 'answer', 'order'];
+    protected $fillable = [
+        'status_id', 
+        'question', 
+        'answer', 
+        'order',
+        'created_at',
+        'updated_at',
+    ];
 
     protected static function booted()
     {
