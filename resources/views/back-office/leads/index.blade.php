@@ -17,28 +17,30 @@
                         </h4>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="dt-buttons btn-group flex-wrap float-end mt-4">
-                        <button id="refresh-record" class="btn btn-success mx-2" title="{{ module_label('tooltip_refresh', $pluralLabel) }}"><i class="ti ti-refresh me-0 ti-xs"></i></button>
-                    
-                        @can($permissionPrefix.'-create')
-                            <x-action-button
-                                type="button"
-                                id="add-btn"
-                                btn-class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
-                                title="{{ module_label('tooltip_add', $singularLabel) }}"
-                                label="{{ module_label('tooltip_add', module: $singularLabel) }}"
-                                icon="ti ti-plus me-0 me-sm-1 ti-xs"
-                                data-bs-toggle="modal"
-                                data-bs-target="#create-pop-up-modal-for-file"
-                                :data-attributes="[
-                                    'data-url' => route($routeInitialize.'.store'),
-                                    'data-create-url' => route($routeInitialize.'.create')
-                                ]"
-                            />
-                        @endcan
+                @if(request('view') == 'list') 
+                    <div class="col-md-4">
+                        <div class="dt-buttons btn-group flex-wrap float-end mt-4">
+                            <button id="refresh-record" class="btn btn-success mx-2" title="{{ module_label('tooltip_refresh', $pluralLabel) }}"><i class="ti ti-refresh me-0 ti-xs"></i></button>
+                        
+                            @can($permissionPrefix.'-create')
+                                <x-action-button
+                                    type="button"
+                                    id="add-btn"
+                                    btn-class="btn btn-primary add-btn mb-3 mb-md-0 mx-2"
+                                    title="{{ module_label('tooltip_add', $singularLabel) }}"
+                                    label="{{ module_label('tooltip_add', module: $singularLabel) }}"
+                                    icon="ti ti-plus me-0 me-sm-1 ti-xs"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#create-pop-up-modal-for-file"
+                                    :data-attributes="[
+                                        'data-url' => route($routeInitialize.'.store'),
+                                        'data-create-url' => route($routeInitialize.'.create')
+                                    ]"
+                                />
+                            @endcan
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>  
         </div>
 
