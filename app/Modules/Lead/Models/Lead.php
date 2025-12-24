@@ -69,7 +69,8 @@ class Lead extends Model
 
     public function assignees()
     {
-        return $this->morphToMany(User::class, 'model', 'entity_relationships');
+        return $this->morphToMany(User::class, 'model', 'entity_relationships')
+                ->withTimestamps();
     }
 
     public function statusLogs()
