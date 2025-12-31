@@ -28,6 +28,14 @@ class PhoneNumberService
     public static function parse(string $phoneNumber): array
     {
         $clean = preg_replace('/[^+\d]/', '', $phoneNumber); // remove spaces, parentheses, etc.
+        
+        // ✅ FIX: add default country if missing
+        if (!str_starts_with($clean, '+')) {
+            if (strlen($clean) === 10) {
+                $clean = '+1' . $clean; // assume US
+            }
+        }
+        
         $phoneUtil = PhoneNumberUtil::getInstance();
 
         try {

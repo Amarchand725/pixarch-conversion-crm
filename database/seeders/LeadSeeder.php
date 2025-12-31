@@ -36,7 +36,7 @@ class LeadSeeder extends Seeder
         }
 
         // Create 50 leads
-        $leads = Lead::factory()->count(50)->create();
+        $leads = Lead::factory()->count(5)->create();
 
         foreach ($leads as $lead) {
             // Pick a random status for this lead
