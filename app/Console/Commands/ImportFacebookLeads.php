@@ -49,7 +49,12 @@ class ImportFacebookLeads extends Command
 
             // 3️⃣ Dispatch job for each lead
             foreach ($leads as $lead) {
-                ProcessFacebookLead::dispatch($lead['id'], $formId, $pageId);
+                ProcessFacebookLead::dispatch(
+                    $lead['id'], 
+                    $formId, 
+                    $pageId, 
+                    $lead // pass prefetched data here
+                );
             }
         }
 
