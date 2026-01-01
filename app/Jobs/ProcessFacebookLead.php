@@ -96,6 +96,13 @@ class ProcessFacebookLead implements ShouldQueue
             }
         }
 
+        if ($phone && empty($digits)) {
+            logger()->warning("Facebook lead phone could not be parsed", [
+                'leadgen_id' => $this->leadgenId,
+                'raw_phone' => $phone,
+            ]);
+        }
+
         $status_id = Status::where('model', 'Lead')->where('name', 'created')->value('id');
 
         $leadCapture = LeadCapture::firstOrCreate(
