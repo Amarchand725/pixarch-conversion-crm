@@ -17,7 +17,7 @@ class PermissionActionsMiddleware
         'index' => 'list',
         'store' => 'create',
         'show' => 'view',
-        'update' => 'edit',
+        'edit' => 'edit',
         'destroy' => 'delete',
 
         // Common extended CRUD actions
