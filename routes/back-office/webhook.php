@@ -7,6 +7,7 @@ Route::group([
     'middleware' => ['web']
 ], function () {
     Route::controller(FacebookWebhookController::class)->group(function () {
-        Route::post('webhooks/facebook', 'handle')->name('webhooks.facebook');
+        // Route::post('webhooks/facebook', 'handle')->name('webhooks.facebook');
+        Route::match(['get', 'post'], 'facebook', 'handle');
     });
 });
