@@ -34,7 +34,7 @@ class LeadReportController extends BaseModuleController
 
         // 3. Build agent-wise lead counts
         $agentLeads = $agents->map(function($agent) use ($leadStages) {
-            $data = ['name' => $agent->name, 'email' => $agent->email];
+            $data = ['name' => $agent->name, 'email' => $agent->email, 'uuid' => $agent->uuid];
 
             // Count leads per stage
             foreach ($leadStages as $stage) {
@@ -64,6 +64,7 @@ class LeadReportController extends BaseModuleController
         
         $totals['conversion'] = '-'; // optional, or calculate overall conversion
         $agents = $agentLeads;
+        
         return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
     }
 }

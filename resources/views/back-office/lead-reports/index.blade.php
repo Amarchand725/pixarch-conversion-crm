@@ -30,8 +30,14 @@
                         @foreach($agents as $agent)
                             <tr>
                                 <td class="fw-bold">
-                                    <a href="#">
-                                        {{ $agent['name'] }}
+                                    <a href="#" class="show fw-semibold cursor-pointer"
+                                        data-show-url="{{ route('back-office.users.show', $agent['uuid']) }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#details-modal"
+                                        title="Agent Details"
+                                        label="Agent Details"
+                                        >
+                                        {{ $agent['name'] }} ({{ $agent['email'] }})
                                     </a>
                                 </td>
                                 @foreach($leadStages as $stage)
