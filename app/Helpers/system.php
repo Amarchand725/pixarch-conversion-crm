@@ -273,18 +273,3 @@ function statusName($model, $status_id){
     $status = Status::where('model', $model)->where('id', $status_id)->first();
     return $status ? $status->name : null;
 }
-
-// @php
-// $module = 'users';
-// $field = 'name';
-// @endphp
-
-// <h1>{{ module_label('module_title', $module) }}</h1>
-// <input type="text" placeholder="{{ module_label('placeholder', $module, $field) }}">
-// <button title="{{ module_label('tooltip_add', $module) }}">{{ module_label('add', $module) }}</button>
-
-// @if(session('success'))
-//     <div class="alert alert-success">
-//         {{ module_message('created', $module) }}
-//     </div>
-// @endif

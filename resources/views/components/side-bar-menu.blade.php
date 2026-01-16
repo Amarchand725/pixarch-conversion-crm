@@ -84,6 +84,21 @@
         </li>
         @endcan
 
+        @can('lead_report-list')
+        <li class="menu-item {{ request()->is('back-office/lead-reports') || request()->is('back-office/lead-reports/*')?'active open':'' }}">
+            <a href="{{ route('back-office.lead-reports.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-user-search"></i>
+                <div class="d-flex justify-content-between w-100">
+                    <span>{{ module_label('list', 'Lead Reports') }}</span>
+
+                    <span class="badge bg-primary">
+                        {{ $sidebarCounts['lead Reports'] ?? 0 }}
+                    </span>
+                </div>
+            </a>
+        </li>
+        @endcan
+
         @can('user-list')
         <li class="menu-item {{ request()->is('back-office/users') || request()->is('back-office/users/*')?'active open':'' }}">
             <a href="{{ route('back-office.users.index') }}" class="menu-link">

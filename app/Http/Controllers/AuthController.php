@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use App\Enum\GenderEnum;
 use App\Models\LogEntityStatus;
 use App\Models\Meeting;
+use App\Services\LicenseService;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,18 @@ class AuthController extends Controller
         $this->leadRepo = $leadRepo;
     }
     public function dashboard(){
+        // Check if trial expired
+        // if (!LicenseService::canWrite()) {
+        //     $trialExpired = true;
+        //     $trialDaysLeft = 0;
+        // } elseif (LicenseService::isTrialActive()) {
+        //     $trialExpired = false;
+        //     $trialDaysLeft = LicenseService::trialDaysLeft();
+        // } else {
+        //     $trialExpired = false;
+        //     $trialDaysLeft = 0;
+        // }
+        
         $title = Auth::user()->name . "'s Dashboard";
         // Get all leads grouped by status
         $statusLeads = $this->leadRepo->getAllCollection();
