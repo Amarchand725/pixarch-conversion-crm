@@ -1,4 +1,4 @@
-function initializeDataTable(pageUrl, columns) {
+function initializeDataTable(pageUrl, columns, disableSearch = false) {
     const tableClass = '.data_table';
 
     if ($.fn.DataTable.isDataTable(tableClass)) {
@@ -9,6 +9,7 @@ function initializeDataTable(pageUrl, columns) {
         processing: true,
         serverSide: true,
         ordering: true,
+        searching: !disableSearch,
         ajax: {
             url: pageUrl + "?loaddata=yes",
             type: "GET"

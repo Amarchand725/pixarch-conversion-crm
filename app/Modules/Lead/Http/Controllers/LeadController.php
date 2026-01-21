@@ -40,7 +40,6 @@ class LeadController extends BaseModuleController
             'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
             'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
             'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
-            // 'pipeline' => ['label' => 'Pipeline', 'searchable' => 'pipeline'],
             'budget_amount' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
             'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
