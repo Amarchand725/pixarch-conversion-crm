@@ -30,7 +30,7 @@ class LeadReportController extends BaseModuleController
         $leadStages = $this->leadStatus->where("model", "Lead")->get();
     
         $columns = [
-            'name' => ['label' => 'Agent Name', 'html' => true, 'searchable' => 'name']
+            'name' => ['label' => 'Agent Name', 'html' => true, 'searchable' => false]
         ];
 
         foreach($leadStages as $stage){
