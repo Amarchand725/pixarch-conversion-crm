@@ -15,11 +15,23 @@ class ImportFacebookLeads extends Command
     {
         $pageId = config('services.facebook.page_id');
         $pageAccessToken = config('services.facebook.page_token');
-
+        $adAccountId = 'act_' . config('services.facebook.ad_account_id');
+        
         // 1️⃣ Get all forms for the page
-        $formsResponse = Http::get("https://graph.facebook.com/v19.0/{$pageId}/forms", [
-            'access_token' => $pageAccessToken,
-        ]);
+        // $formsResponse = Http::get("https://graph.facebook.com/v19.0/{$pageId}/leadgen_data", [
+        //     'access_token' => $pageAccessToken,
+        // ]);
+
+        
+
+        // 1️⃣ Get all lead forms from Ad Account
+        $formsResponse = Http::get(
+            "https://graph.facebook.com/v19.0/{$adAccountId}/leadgen_data",
+            [
+                'access_token' => $pageAccessToken,
+                'fields' => 'id,name,created_time'
+            ]
+        );
 
         if (!$formsResponse->successful()) {
             $this->error("Failed to fetch forms: " . $formsResponse->body());
@@ -28,7 +40,7 @@ class ImportFacebookLeads extends Command
 
         $forms = $formsResponse->json()['data'] ?? [];
         $this->info("Found " . count($forms) . " forms on page {$pageId}");
-
+        
         foreach ($forms as $form) {
             $formId = $form['id'];
             $this->info("Fetching leads for form {$formId}...");
