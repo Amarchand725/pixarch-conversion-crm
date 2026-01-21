@@ -150,6 +150,9 @@ class RolePermissionSeeder extends Seeder
             'lead-meetings',
             'lead-note',
 
+            // Lead Report management
+            'lead_report-list',
+
             // Source management
             'source-list',
             'source-create',

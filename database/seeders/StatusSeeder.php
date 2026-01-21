@@ -36,6 +36,7 @@ class StatusSeeder extends Seeder
             ['model' => 'Lead', 'name' => 'hot client'],
             ['model' => 'Lead', 'name' => 'sales closed'],
             ['model' => 'Lead', 'name' => 'pool'],
+            ['model' => 'Lead', 'name' => 'trash'],
 
             //Meeting
             ['model' => 'Meeting', 'name' => 'Upcoming'],

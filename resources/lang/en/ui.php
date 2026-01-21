@@ -5,7 +5,7 @@ return [
     'add_item' => 'Add :module',
     'edit_item' => 'Edit :module',
     'show_item' => 'Show :module',
-    'list_item' => ':module List',
+    'list_item' => ':module',
     'status_item' => ':module Status',
     'reschedule_item' => ':module Reschedule',
     'change_password_item' => 'Change :module Password',

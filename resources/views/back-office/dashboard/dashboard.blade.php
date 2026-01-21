@@ -2,6 +2,15 @@
     @section('title', ($title ?? '').' - '. config('app.name', '100Keys UAE'))
 
     <div class="container-xxl flex-grow-1 container-p-y">
+        {{-- @if($trialDaysLeft > 0)
+            <div class="alert alert-info text-center">
+                Trial active: {{ $trialDaysLeft }} day{{ $trialDaysLeft > 1 ? 's' : '' }} left.
+            </div>
+        @elseif($trialExpired)
+            <div class="alert alert-danger text-center">
+                Trial expired. Please contact vendor to activate CRM.
+            </div>
+        @endif --}}
         <!-- Leads Section -->
         <h4 class="fw-bold py-3">Leads</h4>
         <div class="row g-4">
