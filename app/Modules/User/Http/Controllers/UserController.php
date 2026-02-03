@@ -102,7 +102,6 @@ class UserController extends BaseModuleController
         $payload['iso_code'] = $parsed['iso_code'];
         
         try {
-            $payload['role'] = 'Agent';
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
                 $this->userRepo->storeModel($payload);

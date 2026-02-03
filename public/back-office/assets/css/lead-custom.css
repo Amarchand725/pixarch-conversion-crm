@@ -32,3 +32,8 @@
 .drag-item {
     user-select: none;
 }            
+
+#lead-notes-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+}

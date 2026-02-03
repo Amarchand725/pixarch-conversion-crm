@@ -1,4 +1,18 @@
 <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+        <label for="role" class="form-label fw-semibold">
+            Role <span class="text-danger">*</span>
+        </label>
+        <select id="role" name="role" class="form-select">
+            <option value="" selected>Select role</option>
+            @foreach ($roles as $role)
+                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                    {{ ucwords($role->name) }}
+                </option>
+            @endforeach
+        </select>
+        <span id="role_error" class="text-danger error">{{ $errors->first('role') }}</span>
+    </div>
     <!-- Name Input -->
     <div class="col-12 col-md-6">
         <label for="name" class="form-label fw-semibold">

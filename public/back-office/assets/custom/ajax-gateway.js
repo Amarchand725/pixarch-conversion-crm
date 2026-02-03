@@ -164,8 +164,10 @@ $("form.submitBtnWithFileUpload").on('submit', function (e) {
             
             if (response.success == true) {
                 toastr.success(response.message, 'Success', { timeOut: 1000 });
-
-                if (response.route !== undefined) {
+                
+                if(response.data.route !== undefined){
+                    window.location.href = response.data.route;
+                }else if (response.route !== undefined) {
                     window.location.href = response.route;
                 }else{
                     var oTable = $('.data_table').dataTable();

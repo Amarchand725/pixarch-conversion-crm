@@ -255,7 +255,7 @@ class LeadRepository extends BaseRepository implements LeadContract
             }
         }
 
-        return response()->json(['success' => true]);
+        return ['status'=>true];
     }
 
     public function meetingSchedule(Lead $model, array $payload)

@@ -294,7 +294,8 @@ class LeadController extends BaseModuleController
             DB::transaction(function () use (&$response, $payload, $lead) {        
                 $response = $this->leadRepo->statusModel($lead, $payload);
             });
-
+            $response['route'] = route($this->routePrefix . '.index');
+            
             return successResponse($response, module_message('status_changed', $this->singularLabel));
         } catch (Exception $e) {
             return response()->json([
@@ -327,6 +328,8 @@ class LeadController extends BaseModuleController
         ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
         ->whereHas('status', fn($q) => $q->where('name', 'active'))
         ->get();
+
+        $notes = $lead->statusLogs;
 
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
     }
