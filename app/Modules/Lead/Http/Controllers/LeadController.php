@@ -10,6 +10,7 @@ use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
+use App\Services\LeadImportService;
 use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,10 +21,10 @@ class LeadController extends BaseModuleController
     protected $leadStatus;
     protected $sourceRepo;
     protected $userRepo;
-    protected $importService;
 
     public function __construct(
-        protected LeadContract $leadRepo
+        protected LeadContract $leadRepo,
+        protected LeadImportService $importService
     ){
         $this->leadStatus = new Status();
         $this->sourceRepo = new Source();
@@ -314,7 +315,7 @@ class LeadController extends BaseModuleController
             'file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
 
-        $this->importService->import($request->file('file'));
+        $this->importService->importFromCsv($request->file('file'));
         return response()->json([
             'status' => true,
             'message' => module_message('imported', $this->singularLabel)
