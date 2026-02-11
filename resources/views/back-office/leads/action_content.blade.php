@@ -49,10 +49,9 @@
 
             <!-- NOTE -->
             @if(auth()->user()->can('lead-note'))
-                {{-- Existing Notes --}}
-                
                 <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
-                    @if(isset($notes) && $notes->count() && $action=='note')
+                    {{-- Existing Notes --}}
+                    @if(isset($notes) && $notes->count())
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Previous Notes</label>
 
