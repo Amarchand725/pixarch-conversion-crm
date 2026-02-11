@@ -50,7 +50,7 @@
             <!-- NOTE -->
             @if(auth()->user()->can('lead-note'))
                 {{-- Existing Notes --}}
-                @if(isset($notes) && $notes->count())
+                @if(isset($notes) && $notes->count() && $action=='note')
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Previous Notes</label>
 
