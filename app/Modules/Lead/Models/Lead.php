@@ -52,14 +52,14 @@ class Lead extends Model
         'fields' => 'array',
     ];
 
-    public function setPhoneAttribute($value)
-    {
-        $data = PhoneNumberService::parse($value); // returns array
+    // public function setPhoneAttribute($value)
+    // {
+    //     $data = PhoneNumberService::parse($value); // returns array
 
-        $this->attributes['phone'] = $data['e164'];         // string
-        $this->attributes['numeric_code'] = $data['numeric_code']; // string
-        $this->attributes['iso_code'] = $data['iso_code'];        // string
-    }
+    //     $this->attributes['phone'] = $data['e164'];         // string
+    //     $this->attributes['numeric_code'] = $data['numeric_code']; // string
+    //     $this->attributes['iso_code'] = $data['iso_code'];        // string
+    // }
 
     // Tell Laravel where to find the factory
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory

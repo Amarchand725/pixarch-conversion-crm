@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class LeadController extends BaseModuleController
 {  
     protected $leadStatus;
-    protected $sourceRepo;
+    protected $sourceRepo; 
     protected $userRepo;
 
     public function __construct(
@@ -309,17 +309,25 @@ class LeadController extends BaseModuleController
      /**
      * Upload Excel and import leads
      */
+    public function importForm(Request $request)
+    {
+        return (string) view($this->pathInitialize.'.import_content', get_defined_vars());
+    }
+     /**
+     * Upload Excel and import leads
+     */
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
-
+        
+        $response = [];
         $this->importService->importFromCsv($request->file('file'));
-        return response()->json([
-            'status' => true,
-            'message' => module_message('imported', $this->singularLabel)
-        ]);
+
+        $response['route'] = route($this->routePrefix . '.index');
+        $response['status'] = true; 
+        return successResponse($response, module_message('created', $this->singularLabel));
     }
 
     public function actionEdit($action, Lead $lead)

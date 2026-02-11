@@ -12,7 +12,8 @@ Route::group([
         Route::post('{lead}/restore', 'restore')->name('restore');
         Route::delete('{lead}/force-delete', 'forceDelete')->name('forceDelete');
         Route::post('{lead}/update-status', 'updateStatus')->name('update-status');
-        Route::post('import-data', 'import')->name('import');
+        Route::get('import-form', 'importForm')->name('import-form');
+        Route::post('import-data', 'import')->name('import-data');
 
         Route::get('action/edit/{action}/{lead?}', 'actionEdit')->name('action.edit');
     });
