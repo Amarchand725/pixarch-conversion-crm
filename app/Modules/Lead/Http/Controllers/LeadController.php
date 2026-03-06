@@ -48,16 +48,16 @@ class LeadController extends BaseModuleController
 
         $user = auth()->user();
 
-        // If Admin → fetch all meetings
+        // If Admin → fetch all leads
         if ($user->hasRole('Admin')) {
             $query = $this->leadRepo->getAll(); // builder
         } 
-        // Else → fetch only meetings where user is attendee
+        // Else → fetch only leads where user is attached
         else {
-            $query = $user->leads(); // builder
+            $query = $user->leads()->distinct('leads.id');
         }
 
-        $total_leads = $query->count();
+        $total_leads = $query->count('leads.id');
         
         $dataTable = new \App\Services\DataTableService(
             model: $query,
