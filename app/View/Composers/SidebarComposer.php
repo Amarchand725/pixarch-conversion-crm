@@ -27,12 +27,10 @@ class SidebarComposer
                 $leadCount = Lead::count();
                 $meetingCount = Meeting::count();
             } else {
-                $leadCount = $user->leads()->count();
-                // $leadCount = $user->leads()
-                // ->whereHas('latestStatus', function ($q) {
-                //     $q->whereNotIn('name', ['pool', 'trash']);
-                // })
-                // ->count();
+                // $leadCount = $user->leads()->count();
+                $leadCount = $user->leads()
+                    ->distinct('model_id')
+                    ->count('model_id');
                 $meetingCount = $user->meetings()->count();
             }
 
