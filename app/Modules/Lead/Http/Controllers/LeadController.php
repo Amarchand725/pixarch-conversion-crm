@@ -338,7 +338,9 @@ class LeadController extends BaseModuleController
         ->whereHas('status', fn($q) => $q->where('name', 'active'))
         ->get();
 
-        $notes = $lead->statusLogs;
+        $notes = $lead->statusLogs()
+        ->whereNotNull('description')
+        ->get();
 
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
     }
