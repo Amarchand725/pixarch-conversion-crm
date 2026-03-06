@@ -61,6 +61,11 @@ class Lead extends Model
     //     $this->attributes['iso_code'] = $data['iso_code'];        // string
     // }
 
+    public function latestStatus()
+    {
+        return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
+    }
+
     // Tell Laravel where to find the factory
     protected static function newFactory(): \Illuminate\Database\Eloquent\Factories\Factory
     {

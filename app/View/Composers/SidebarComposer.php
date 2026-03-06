@@ -28,6 +28,11 @@ class SidebarComposer
                 $meetingCount = Meeting::count();
             } else {
                 $leadCount = $user->leads()->count();
+                // $leadCount = $user->leads()
+                // ->whereHas('latestStatus', function ($q) {
+                //     $q->whereNotIn('name', ['pool', 'trash']);
+                // })
+                // ->count();
                 $meetingCount = $user->meetings()->count();
             }
 
