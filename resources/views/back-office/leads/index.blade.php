@@ -23,15 +23,16 @@
                             <button id="refresh-record" class="btn btn-success mx-2" title="{{ module_label('tooltip_refresh', $pluralLabel) }}"><i class="ti ti-refresh me-0 ti-xs"></i></button>
                             <x-action-button
                                 type="button"
-                                id="import-btn"
-                                btn-class="btn btn-success mb-3 mb-md-0 mx-2"
+                                id="add-btn"
+                                btn-class="btn btn-success add-btn mb-3 mb-md-0 mx-2"
                                 title="Import Leads"
                                 label="Import Leads"
                                 icon="ti ti-upload me-0 me-sm-1 ti-xs"
                                 data-bs-toggle="modal"
-                                data-bs-target="#import-leads-modal"
+                                 data-bs-target="#create-pop-up-modal-for-file"
                                 :data-attributes="[ 
                                     'data-url' => route($routeInitialize.'.import-data'), 
+                                    'data-create-url' => route($routeInitialize.'.import-form')
                                 ]"
                             />
                             @can($permissionPrefix.'-create')
@@ -87,31 +88,6 @@
         @endif
     </div>
 
-    <div class="modal fade" id="import-leads-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form id="import-leads-form" action="{{ route($routeInitialize.'.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title">Import Leads</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="lead-file" class="form-label">Select CSV/XLSX file</label>
-                            <input type="file" name="file" id="lead-file" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Import</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     <!-- Modals -->
     <x-modals/>
     <!--/ Modals -->

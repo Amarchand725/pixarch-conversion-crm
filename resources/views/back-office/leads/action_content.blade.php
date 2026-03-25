@@ -49,31 +49,31 @@
 
             <!-- NOTE -->
             @if(auth()->user()->can('lead-note'))
-                {{-- Existing Notes --}}
-                @if(isset($notes) && $notes->count())
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Previous Notes</label>
-
-                        <div id="lead-notes-wrapper"
-                            class="border rounded p-2 bg-light"
-                            style="max-height:220px; overflow-y:auto;">
-
-                            @foreach($notes as $note)
-                                <div class="mb-2 p-2 bg-white rounded shadow-sm">
-                                    <div class="small text-muted mb-1">
-                                        <strong>{{ $note->author->name ?? 'System' }}</strong>
-                                        • {{ $note->created_at->diffForHumans() }}
-                                    </div>
-                                    <div class="text-break">
-                                        {{ $note->description }}
-                                    </div>
-                                </div>
-                            @endforeach
-
-                        </div>
-                    </div>
-                @endif
                 <div class="tab-pane fade {{ $action=='note'?'show active':'' }}" id="noteTab">
+                    {{-- Existing Notes --}}
+                    @if(isset($notes) && $notes->count())
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Previous Notes</label>
+
+                            <div id="lead-notes-wrapper"
+                                class="border rounded p-2 bg-light"
+                                style="max-height:220px; overflow-y:auto;">
+
+                                @foreach($notes as $note)
+                                    <div class="mb-2 p-2 bg-white rounded shadow-sm">
+                                        <div class="small text-muted mb-1">
+                                            <strong>{{ $note->author->name ?? 'System' }}</strong>
+                                            • {{ $note->created_at->diffForHumans() }}
+                                        </div>
+                                        <div class="text-break">
+                                            {{ $note->description }}
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                            </div>
+                        </div>
+                    @endif
                     <div class="mb-3">
                         <label for="description" class="form-label">Add Note</label>
                         <textarea class="form-control" name="description" rows="5" placeholder="Enter note..."></textarea>

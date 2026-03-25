@@ -52,13 +52,18 @@ class Lead extends Model
         'fields' => 'array',
     ];
 
-    public function setPhoneAttribute($value)
-    {
-        $data = PhoneNumberService::parse($value); // returns array
+    // public function setPhoneAttribute($value)
+    // {
+    //     $data = PhoneNumberService::parse($value); // returns array
 
-        $this->attributes['phone'] = $data['e164'];         // string
-        $this->attributes['numeric_code'] = $data['numeric_code']; // string
-        $this->attributes['iso_code'] = $data['iso_code'];        // string
+    //     $this->attributes['phone'] = $data['e164'];         // string
+    //     $this->attributes['numeric_code'] = $data['numeric_code']; // string
+    //     $this->attributes['iso_code'] = $data['iso_code'];        // string
+    // }
+
+    public function latestStatus()
+    {
+        return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
     }
 
     // Tell Laravel where to find the factory

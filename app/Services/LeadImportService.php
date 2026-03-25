@@ -9,97 +9,136 @@ use Illuminate\Support\Facades\DB;
 
 class LeadImportService
 {
-    protected int $chunkSize = 500;
+    protected int $chunkSize = 200;
 
-    /**
-     * Import leads from CSV file
-     *
-     * @param string $filePath
-     * @return array
-     */
     public function importFromCsv(string $filePath): array
     {
         if (!file_exists($filePath)) {
-            throw new \Exception("File not found: $filePath");
+            throw new \Exception("File not found: {$filePath}");
         }
+
+        set_time_limit(0);
 
         $handle = fopen($filePath, 'r');
 
-        // Read headers
         $headers = fgetcsv($handle);
-        $headers = array_map('strtolower', $headers);
+        $headers = array_map(function ($header) {
+            return str_replace(' ', '_', strtolower(trim($header)));
+        }, $headers);
 
         $totalInserted = 0;
         $duplicates = 0;
 
-        // Preload existing emails to avoid duplicates
-        $existingEmails = DB::table('leads')->pluck('email')->map(fn($e) => strtolower($e))->toArray();
+        // Email hash map (O(1) lookup)
+        $existingEmails = Lead::pluck('email')
+            ->mapWithKeys(fn ($e) => [strtolower($e) => true])
+            ->toArray();
+    
+        // Cache lookups
+        $sources = Source::pluck('id', 'name')->toArray();
+        $statuses = Status::where('model', 'Lead')
+            ->pluck('id', 'name')
+            ->toArray();
 
         $rows = [];
+
         while (($data = fgetcsv($handle)) !== false) {
-            $row = array_combine($headers, $data);
-            $rows[] = array_map('trim', $row);
+            $rows[] = array_map('trim', array_combine($headers, $data));
+
+            if (count($rows) >= $this->chunkSize) {
+                $this->processChunk(
+                    $rows,
+                    $sources,
+                    $statuses,
+                    $existingEmails,
+                    $totalInserted,
+                    $duplicates
+                );
+                $rows = [];
+            }
         }
+        
+        // Process remaining rows
+        if (!empty($rows)) {
+            $this->processChunk(
+                $rows,
+                $sources,
+                $statuses,
+                $existingEmails,
+                $totalInserted,
+                $duplicates
+            );
+        }
+
         fclose($handle);
-
-        // Process in chunks
-        $chunks = array_chunk($rows, $this->chunkSize);
-
-        foreach ($chunks as $chunk) {
-            DB::transaction(function () use ($chunk, &$existingEmails, &$totalInserted, &$duplicates) {
-                foreach ($chunk as $row) {
-                    $email = strtolower($row['email'] ?? '');
-
-                    // Skip duplicates
-                    if (empty($email) || in_array($email, $existingEmails)) {
-                        $duplicates++;
-                        continue;
-                    }
-
-                    // Source mapping
-                    $source = isset($row['source']) ? Source::where('name', $row['source'])->first() : null;
-
-                    // Create Lead
-                    $lead = Lead::create([
-                        'source_id' => $source->id ?? null,
-                        'name' => $row['name'] ?? $row['opportunity_name'] ?? null,
-                        'phone' => $row['phone'] ?? null,
-                        'email' => $email,
-                        'value' => $row['lead_value'] ?? null,
-                        'pipeline' => $row['pipeline'] ?? null,
-                        'status' => $row['status'] ?? null,
-                        'created_at' => $row['created_on'] ?? now(),
-                        'updated_at' => $row['updated_on'] ?? now(),
-                    ]);
-
-                    // Status log
-                    if (isset($row['stage'])) {
-                        $status = Status::where('model', 'Lead')
-                            ->where('name', $row['stage'])
-                            ->first();
-
-                        $logData = [
-                            'status_id' => $status->id ?? null,
-                            'notes' => $row['notes'] ?? null,
-                            'model_id' => $lead->id,
-                            'model_type' => $lead->getMorphClass(),
-                        ];
-
-                        $log = $lead->statusLogs()->firstOrNew();
-                        $log->toFill($logData);
-                        $log->save();
-                    }
-
-                    // Add email to existing to avoid duplicates in this run
-                    $existingEmails[] = $email;
-                    $totalInserted++;
-                }
-            });
-        }
 
         return [
             'inserted' => $totalInserted,
             'duplicates' => $duplicates,
         ];
+    }
+
+    protected function processChunk(
+        array $rows,
+        array $sources,
+        array $statuses,
+        array &$existingEmails,
+        int &$totalInserted,
+        int &$duplicates
+    ): void {
+        DB::transaction(function () use (
+            $rows,
+            $sources,
+            $statuses,
+            &$existingEmails,
+            &$totalInserted,
+            &$duplicates
+        ) {
+            foreach ($rows as $row) {
+                $email = strtolower($row['email'] ?? '');
+
+                if (!$email || isset($existingEmails[$email])) {
+                    $duplicates++;
+                    continue;
+                }
+
+                if(empty($sources[$row['source']])) {
+                    $row['source'] = Source::firstOrCreate(['name' => $row['source'] ?? 'Unknown'])->id;
+                }else{
+                    $row['source'] = $sources[$row['source']] ?? null;
+                }
+
+                $lead = Lead::create([
+                    'source_id' => $row['source'],
+                    'name' => $row['name']
+                        ?? $row['opportunity_name']
+                        ?? 'N/A',
+                    'phone' => $row['phone'] ?? null,
+                    'email' => $email,
+                    'budget' => $row['lead_value'] ?? null,
+                    'pipeline' => $row['pipeline'] ?? null,
+                    'status' => $row['status'] ?? null,
+                    'created_at' => $row['created_on'] ?? now(),
+                    'updated_at' => $row['updated_on'] ?? now(),
+                ]);
+
+                if (!empty($row['stage'])) {
+                    $status_id = Status::where('model', 'Lead')->where('name', $row['stage'])->value('id'); 
+                    $lead->statusLogs()->create([
+                        'assignee_id' => auth()->id(),
+                        'status_id' => $status_id ?? null,
+                        'amount' => $row['lead_value'] ?? 0,
+                        'description' => $row['notes'] ?? null,
+                        'model_id' => $lead->id,
+                        'model_type' => $lead->getMorphClass(),
+                    ]);
+                }
+
+                $lead->assignees()->sync([auth()->id()]);
+
+                $existingEmails[$email] = true;
+                $totalInserted++;
+            }
+        });
     }
 }

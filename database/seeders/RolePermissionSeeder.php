@@ -142,6 +142,7 @@ class RolePermissionSeeder extends Seeder
             'lead-create',
             'lead-edit',
             'lead-delete',
+            'lead-import',
             // 'lead-restore',
             'lead-status',
             'lead-assign',

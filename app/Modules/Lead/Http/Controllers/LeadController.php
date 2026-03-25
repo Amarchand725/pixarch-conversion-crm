@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 class LeadController extends BaseModuleController
 {  
     protected $leadStatus;
-    protected $sourceRepo;
+    protected $sourceRepo; 
     protected $userRepo;
 
     public function __construct(
@@ -48,16 +48,16 @@ class LeadController extends BaseModuleController
 
         $user = auth()->user();
 
-        // If Admin → fetch all meetings
+        // If Admin → fetch all leads
         if ($user->hasRole('Admin')) {
             $query = $this->leadRepo->getAll(); // builder
         } 
-        // Else → fetch only meetings where user is attendee
+        // Else → fetch only leads where user is attached
         else {
-            $query = $user->leads(); // builder
+            $query = $user->leads()->distinct('leads.id');
         }
 
-        $total_leads = $query->count();
+        $total_leads = $query->count('leads.id');
         
         $dataTable = new \App\Services\DataTableService(
             model: $query,
@@ -309,17 +309,25 @@ class LeadController extends BaseModuleController
      /**
      * Upload Excel and import leads
      */
+    public function importForm(Request $request)
+    {
+        return (string) view($this->pathInitialize.'.import_content', get_defined_vars());
+    }
+     /**
+     * Upload Excel and import leads
+     */
     public function import(Request $request)
     {
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
-
+        
+        $response = [];
         $this->importService->importFromCsv($request->file('file'));
-        return response()->json([
-            'status' => true,
-            'message' => module_message('imported', $this->singularLabel)
-        ]);
+
+        $response['route'] = route($this->routePrefix . '.index');
+        $response['status'] = true; 
+        return successResponse($response, module_message('created', $this->singularLabel));
     }
 
     public function actionEdit($action, Lead $lead)
@@ -330,7 +338,9 @@ class LeadController extends BaseModuleController
         ->whereHas('status', fn($q) => $q->where('name', 'active'))
         ->get();
 
-        $notes = $lead->statusLogs;
+        $notes = $lead->statusLogs()
+        ->whereNotNull('description')
+        ->get();
 
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
     }
