@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\ProcessFacebookLead;
+use App\Models\FacebookLeadMeta;
+use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -36,14 +38,26 @@ class FacebookSyncAllLeads extends Command
                 ]);
 
                 $data = $response->json();
-                dd($data);  
+                
+                // foreach ($data['data'] ?? [] as $lead) {
+                //     ProcessFacebookLead::dispatch(
+                //         $lead['id'],
+                //         $form['id'],
+                //         $pageId,
+                //         $lead
+                //     );
+                // }
                 foreach ($data['data'] ?? [] as $lead) {
-                    ProcessFacebookLead::dispatch(
-                        $lead['id'],
-                        $form['id'],
-                        $pageId,
-                        $lead
-                    );
+
+                    if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
+
+                        ProcessFacebookLead::dispatch(
+                            app(LeadContract::class),
+                            $lead['id'],
+                            $form['id'],
+                            $pageId
+                        );
+                    }
                 }
 
                 $url = $data['paging']['next'] ?? null;
