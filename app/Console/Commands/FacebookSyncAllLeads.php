@@ -30,7 +30,7 @@ class FacebookSyncAllLeads extends Command
             $this->info("Syncing Form: {$form['name']}");
 
             $url = "https://graph.facebook.com/v17.0/{$form['id']}/leads";
-            dd($url);
+            
             do {
                 $response = Http::get($url, [
                     'access_token' => $token,
@@ -38,7 +38,7 @@ class FacebookSyncAllLeads extends Command
                 ]);
 
                 $data = $response->json();
-                
+                dd($data);    
                 // foreach ($data['data'] ?? [] as $lead) {
                 //     ProcessFacebookLead::dispatch(
                 //         $lead['id'],
