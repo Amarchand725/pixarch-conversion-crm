@@ -38,7 +38,7 @@ class FacebookSyncAllLeads extends Command
                 ]);
 
                 $data = $response->json();
-                dd($data);    
+                
                 // foreach ($data['data'] ?? [] as $lead) {
                 //     ProcessFacebookLead::dispatch(
                 //         $lead['id'],
@@ -48,7 +48,7 @@ class FacebookSyncAllLeads extends Command
                 //     );
                 // }
                 foreach ($data['data'] ?? [] as $lead) {
-
+                    dd($lead);
                     if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
 
                         ProcessFacebookLead::dispatch(
