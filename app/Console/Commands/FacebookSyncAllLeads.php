@@ -25,7 +25,7 @@ class FacebookSyncAllLeads extends Command
         );
         
         $forms = $formsResponse->json('data') ?? [];
-        
+        dd($forms);
         foreach ($forms as $form) {
             $this->info("Syncing Form: {$form['name']}");
 
