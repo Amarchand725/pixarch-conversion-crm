@@ -7,6 +7,7 @@ use App\Models\FacebookLeadMeta;
 use App\Modules\Lead\Repositories\Contracts\LeadContract;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class FacebookSyncAllLeads extends Command
 {
@@ -48,6 +49,8 @@ class FacebookSyncAllLeads extends Command
                 //     );
                 // }
                 foreach ($data['data'] ?? [] as $lead) {
+                    Log::info("Lead Data: " . json_encode($lead));  
+                    
                     if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
 
                         ProcessFacebookLead::dispatch(
