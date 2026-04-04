@@ -23,8 +23,6 @@ class FacebookSyncAllLeads extends Command
             "https://graph.facebook.com/v17.0/{$pageId}/leadgen_forms",
             ['access_token' => $token]
         );
-
-        dd($formsResponse->json());
         
         $forms = $formsResponse->json('data') ?? [];
         
