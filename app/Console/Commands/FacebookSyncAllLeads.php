@@ -25,12 +25,12 @@ class FacebookSyncAllLeads extends Command
         );
         
         $forms = $formsResponse->json('data') ?? [];
-        dd($forms);
+        
         foreach ($forms as $form) {
             $this->info("Syncing Form: {$form['name']}");
 
             $url = "https://graph.facebook.com/v17.0/{$form['id']}/leads";
-            
+            dd($url);
             do {
                 $response = Http::get($url, [
                     'access_token' => $token,
