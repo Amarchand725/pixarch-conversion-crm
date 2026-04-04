@@ -18,11 +18,13 @@ class FacebookSyncAllLeads extends Command
         $token  = config('services.facebook.page_token');
         $pageId = config('services.facebook.page_id');
 
+        dd($token, $pageId);
         // 1. Get all forms
         $formsResponse = Http::get(
             "https://graph.facebook.com/v17.0/{$pageId}/leadgen_forms",
             ['access_token' => $token]
         );
+        
         $forms = $formsResponse->json('data') ?? [];
         
         foreach ($forms as $form) {
