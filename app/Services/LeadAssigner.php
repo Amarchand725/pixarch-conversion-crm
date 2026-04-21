@@ -12,6 +12,7 @@ class LeadAssigner
         $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
         
         // Get all active agents
+        $agents = [];
         if($campaignAgents instanceof \Illuminate\Support\Collection && $campaignAgents->isNotEmpty()){
             $agents = $campaignAgents; // use campaign-specific agents
         } else {
@@ -25,7 +26,7 @@ class LeadAssigner
             ->get();
         }
 
-        if ($agents->isEmpty()) { //default to Admins if no agents found
+        if (empty($agents)) { //default to Admins if no agents found
             $agents = User::whereHas('roles', function ($q) {
                 $q->where('name', 'Admin');
             })
@@ -46,7 +47,7 @@ class LeadAssigner
             return $todayCount < $agent->daily_capacity;
         })->values();
 
-        if ($eligibleAgents->isEmpty()) {
+        if (empty($eligibleAgents)) {
             // If all reached limit, fallback to all agents
             $eligibleAgents = $agents;
         }

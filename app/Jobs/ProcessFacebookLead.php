@@ -15,6 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ProcessFacebookLead implements ShouldQueue
 {
@@ -42,11 +43,14 @@ class ProcessFacebookLead implements ShouldQueue
     {
         // 1️⃣ Check if lead already exists
         $existing = FacebookLeadMeta::where('leadgen_id', $this->leadgenId)->first();
+        
         if ($existing) return;
 
         // 2️⃣ Use prefetched data if available, else fetch from FB API
         $data = $this->prefetchedData;
+        
         if (!$data) {
+            Log::info('Facebook Data not loaded');
             $pageAccessToken = config('services.facebook.page_token');
             $response = Http::get("https://graph.facebook.com/v19.0/{$this->leadgenId}", [
                 'fields' => 'created_time,field_data',
@@ -54,10 +58,11 @@ class ProcessFacebookLead implements ShouldQueue
             ]);
 
             if (!$response->successful()) {
-                logger()->error("Facebook Lead API failed", [
-                    'leadgen_id' => $this->leadgenId,
-                    'response' => $response->body(),
-                ]);
+                Log::info('Facebook Lead API Failed');
+                // logger()->error("Facebook Lead API failed", [
+                //     'leadgen_id' => $this->leadgenId,
+                //     'response' => $response->body(),
+                // ]);
                 return;
             }
 
@@ -65,7 +70,7 @@ class ProcessFacebookLead implements ShouldQueue
         }
 
         $fieldData = $data['field_data'] ?? [];
-
+        
         // Map fields
         $mapped = [];
         foreach ($fieldData as $field) {

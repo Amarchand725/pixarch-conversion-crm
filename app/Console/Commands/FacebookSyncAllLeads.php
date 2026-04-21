@@ -28,35 +28,39 @@ class FacebookSyncAllLeads extends Command
         $forms = $formsResponse->json('data') ?? [];
         
         foreach ($forms as $form) {
-            $this->info("Syncing Form: {$form['name']}");
+            if($form['name'] !== '05/09/2025') {    //skipping this form as it has too much data and is causing timeouts. Will handle separately.
+                $this->info("Syncing Form: {$form['name']}");
 
-            $url = "https://graph.facebook.com/v17.0/{$form['id']}/leads";
-            
-            do {
-                $response = Http::get($url, [
-                    'access_token' => $token,
-                    'limit' => 100,
-                ]);
+                $url = "https://graph.facebook.com/v17.0/{$form['id']}/leads";
+                
+                do {
+                    $response = Http::get($url, [
+                        'access_token' => $token,
+                        'limit' => 100,
+                    ]);
 
-                $data = $response->json();
-                $counter = 1;
-                foreach ($data['data'] ?? [] as $lead) {
-                    Log::info("Lead Data: ".$counter++);  
+                    $data = $response->json();
                     
-                    if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
-                        Log::info("Condition true");
-                        ProcessFacebookLead::dispatch(
-                            app(LeadContract::class),
-                            $lead['id'],
-                            $form['id'],
-                            $pageId
-                        );
+                    $counter = 1;
+                    foreach ($data['data'] ?? [] as $lead) {
+                        Log::info("Lead Data: ".$counter++);  
+                        
+                        if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
+                            Log::info("Condition true");
+                            
+                            ProcessFacebookLead::dispatch(
+                                app(LeadContract::class),
+                                $lead['id'],
+                                $form['id'],
+                                $pageId
+                            );
+                        }
                     }
-                }
 
-                $url = $data['paging']['next'] ?? null;
+                    $url = $data['paging']['next'] ?? null;
 
-            } while ($url);
+                } while ($url);
+            }
         }
 
         $this->info('All leads synced successfully.');
