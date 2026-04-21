@@ -43,12 +43,10 @@ class ProcessFacebookLead implements ShouldQueue
     {
         // 1️⃣ Check if lead already exists
         $existing = FacebookLeadMeta::where('leadgen_id', $this->leadgenId)->first();
-        
         if ($existing) return;
 
         // 2️⃣ Use prefetched data if available, else fetch from FB API
         $data = $this->prefetchedData;
-        
         if (!$data) {
             Log::info('Facebook Data not loaded');
             $pageAccessToken = config('services.facebook.page_token');
@@ -70,7 +68,7 @@ class ProcessFacebookLead implements ShouldQueue
         }
 
         $fieldData = $data['field_data'] ?? [];
-        
+
         // Map fields
         $mapped = [];
         foreach ($fieldData as $field) {
