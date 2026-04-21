@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Jobs\ProcessFacebookLead;
+use App\Modules\Lead\Repositories\Contracts\LeadContract;
 
 class FacebookWebhookController extends Controller
 {
@@ -57,7 +58,7 @@ class FacebookWebhookController extends Controller
 
                 if ($leadgenId && $formId && $pageId) {
                     // Dispatch a job to fetch full lead and save
-                    ProcessFacebookLead::dispatch($leadgenId, $formId, $pageId);
+                    ProcessFacebookLead::dispatch( app(LeadContract::class), $leadgenId, $formId, $pageId);
                 }
             }
         }
