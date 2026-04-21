@@ -39,12 +39,12 @@ class FacebookSyncAllLeads extends Command
                 ]);
 
                 $data = $response->json();
-                
+                $counter = 1;
                 foreach ($data['data'] ?? [] as $lead) {
-                    Log::info("Lead Data: " . json_encode($lead));  
+                    Log::info("Lead Data: ".$counter++);  
                     
                     if (!FacebookLeadMeta::where('leadgen_id', $lead['id'])->exists()) {
-
+                        Log::info("Condition true");
                         ProcessFacebookLead::dispatch(
                             app(LeadContract::class),
                             $lead['id'],

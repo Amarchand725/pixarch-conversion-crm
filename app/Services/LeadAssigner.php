@@ -12,7 +12,7 @@ class LeadAssigner
         $status_id = Status::where('model', 'User')->where('name', 'active')->value('id');
         
         // Get all active agents
-        if(!empty($campaignAgents) && $campaignAgents->isNotEmpty()){
+        if($campaignAgents instanceof \Illuminate\Support\Collection && $campaignAgents->isNotEmpty()){
             $agents = $campaignAgents; // use campaign-specific agents
         } else {
             $agents = User::whereHas('roles', function ($q) {
