@@ -26,7 +26,7 @@ class FacebookSyncAllLeads extends Command
         );
         
         $forms = $formsResponse->json('data') ?? [];
-        
+        dd($forms);
         foreach ($forms as $form) {
             $this->info("Syncing Form: {$form['name']}");
 
@@ -40,14 +40,6 @@ class FacebookSyncAllLeads extends Command
 
                 $data = $response->json();
                 
-                // foreach ($data['data'] ?? [] as $lead) {
-                //     ProcessFacebookLead::dispatch(
-                //         $lead['id'],
-                //         $form['id'],
-                //         $pageId,
-                //         $lead
-                //     );
-                // }
                 foreach ($data['data'] ?? [] as $lead) {
                     Log::info("Lead Data: " . json_encode($lead));  
                     
