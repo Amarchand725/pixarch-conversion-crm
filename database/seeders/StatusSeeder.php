@@ -28,13 +28,13 @@ class StatusSeeder extends Seeder
             //Lead
             ['model' => 'Lead', 'name' => 'created'],
             ['model' => 'Lead', 'name' => 'assigned'],
-            ['model' => 'Lead', 'name' => 'no contacted'],
+            ['model' => 'Lead', 'name' => 'no contact'],
             ['model' => 'Lead', 'name' => 'contact established'],
             ['model' => 'Lead', 'name' => 'junk'],
             ['model' => 'Lead', 'name' => 'potential'],
             ['model' => 'Lead', 'name' => 'follow up'],
             ['model' => 'Lead', 'name' => 'hot client'],
-            ['model' => 'Lead', 'name' => 'sales closed'],
+            ['model' => 'Lead', 'name' => 'sale closed'],
             ['model' => 'Lead', 'name' => 'pool'],
             ['model' => 'Lead', 'name' => 'trashed'],
 

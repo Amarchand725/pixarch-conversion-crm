@@ -28,11 +28,16 @@ class ImportOpportunities extends Command
             $row = array_combine($headers, $data);
             $row = array_change_key_case($row, CASE_LOWER); // make all keys lowercase
             $row = array_map('trim', $row); // trim spaces from keys
+
+            $phone = $row['phone'] ?? '';
+            if (is_numeric($phone) && str_contains((string)$phone, 'E')) {
+                $phone = (string) sprintf('%.0f', $phone);
+            }
             
             Opportunity::create([
                 'opportunity_name' => $row['opportunity name'],
                 'contact_name' => $row['contact name'],
-                'phone' => $row['phone'],
+                'phone' => $phone,
                 'email' => $row['email'],
                 // 'pipeline' => $row['pipeline'] ?? 'Paid Social', // default to 'Paid Social' if pipeline is missing
                 'pipeline' => 'Paid Social', // default to 'Paid Social' if pipeline is missing

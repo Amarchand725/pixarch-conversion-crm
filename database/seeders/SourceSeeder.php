@@ -15,7 +15,7 @@ class SourceSeeder extends Seeder
         $sources = [    
             ['name' => 'Manual'],
             ['name' => 'Landing Page'],
-            ['name' => 'Facebook Ads'],
+            ['name' => 'Facebook'],
         ];
 
         // Insert the sources into the database

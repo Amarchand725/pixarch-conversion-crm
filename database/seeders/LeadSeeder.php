@@ -14,13 +14,13 @@ class LeadSeeder extends Seeder
         $statusNames = [
             'created',
             'assigned',
-            'no contacted',
+            'no contact',
             'contact established',
             'junk',
             'potential',
             'follow up',
             'hot client',
-            'sales closed',
+            'sale closed',
             'pool',
         ];
 

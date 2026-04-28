@@ -53,7 +53,7 @@ class LeadReportController extends BaseModuleController
             }
 
             $totalLeads = collect($leadStages)->sum(fn($stage) => $agent->{$stage->name});
-            $converted = $agent->{'sales closed'} ?? 0;
+            $converted = $agent->{'sale closed'} ?? 0;
             $agent->conversion = $totalLeads > 0 ? round(($converted / $totalLeads) * 100, 2) . '%' : '0%';
 
             return $agent; // keep as object

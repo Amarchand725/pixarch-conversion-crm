@@ -132,7 +132,7 @@ function badgeClass(string $status): string
     $statusColors = [
         'created'             => 'bg-primary text-white',
         'assigned'            => 'bg-info text-white',
-        'no contacted'        => 'bg-secondary text-white',
+        'no contact'        => 'bg-secondary text-white',
         'contact established' => 'bg-warning text-white',
         'junk'                => 'bg-danger text-white',
         'potential'           => 'bg-success text-white',

@@ -227,18 +227,18 @@ class UserSeeder extends Seeder
                 'email_verified_at' => now(),
                 'phone_verified_at' => now(),
             ],
-            [
-                'status_id' => 1,
-                "name" => "Mujahid Ghani",
-                'username' => Str::slug("Mujahid Ghani"),
-                "phone" => null,
-                "email" => null,
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
+            // [
+            //     'status_id' => 1,
+            //     "name" => "Mujahid Ghani",
+            //     'username' => Str::slug("Mujahid Ghani"),
+            //     "phone" => null,
+            //     "email" => null,
+            //     'role' => 'AGENT',
+            //     'gender' => 'M',
+            //     'doj' => fake()->date(),
+            //     'email_verified_at' => now(),
+            //     'phone_verified_at' => now(),
+            // ],
         ];
 
         foreach ($users as $data) {
