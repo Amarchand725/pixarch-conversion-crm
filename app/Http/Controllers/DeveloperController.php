@@ -125,7 +125,7 @@ class DeveloperController extends Controller
     {
         // $assignees = DB::table('opportunities')->get(['id', 'assigned'])->groupBy('assigned');
         $assignees = DB::table('opportunities')
-        ->where('assigned', '!=', 'Amarchand Khan')
+        // ->where('assigned', '!=', 'Amarchand Khan')
         ->whereNotNull('assigned')
         ->where('assigned', '!=', '')
         ->select('assigned')
