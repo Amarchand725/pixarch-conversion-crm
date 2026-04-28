@@ -95,7 +95,7 @@ class DeveloperController extends Controller
                     if(!empty($assignee)){
                         $assigneeId = $assignee->id;
                     }else{
-                        $assigneeId = auth()->id();
+                        $assigneeId = User::where('email', 'digital@100keys.ae')->value('id'); // assign to default user if not found
                     }
                     $status = Status::where('model', 'Lead')->where('name', $row->stage)->first();
                     $logStatus['status_id'] = !empty($status) ? $status->id : null;
