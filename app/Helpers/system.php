@@ -273,3 +273,22 @@ function statusName($model, $status_id){
     $status = Status::where('model', $model)->where('id', $status_id)->first();
     return $status ? $status->name : null;
 }
+
+if (!function_exists('formatAmount')) {
+    function formatAmount($value)
+    {
+        if ($value >= 1000000000) {
+            return number_format($value / 1000000000, 1) . 'B';
+        }
+
+        if ($value >= 1000000) {
+            return number_format($value / 1000000, 1) . 'M';
+        }
+
+        if ($value >= 1000) {
+            return number_format($value / 1000, 1) . 'K';
+        }
+
+        return (string) $value;
+    }
+}
