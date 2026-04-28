@@ -12,6 +12,11 @@ use App\Services\PhoneNumberService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Nette\Utils\Random;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCredentialsMail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends BaseModuleController
 {
@@ -104,7 +109,7 @@ class UserController extends BaseModuleController
         try {
             $response = null;
             DB::transaction(function () use (&$response, $payload) {
-                $this->userRepo->storeModel($payload);
+                $response = $this->userRepo->storeModel($payload);
             });
             return successResponse($response, module_message('created', $this->singularLabel));
         } catch (Exception $e) {
@@ -246,6 +251,31 @@ class UserController extends BaseModuleController
         try {
             $this->userRepo->updateModel($user, ['password' => $request->password]);
             return successResponse([], module_message('changed_password', $this->singularLabel));
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function sendCredentials(Request $request)
+    {
+        $users = $this->userRepo->getAll()->whereNotNull('email')->get();
+
+        try {
+            foreach ($users as $user) {
+                if (!empty($user->email)) {
+                    $plainPassword = Random::generate(10);
+                    $user->password = Hash::make($plainPassword); // Generate a random password
+                    $user->save();
+                    Mail::to($user->email)->send(new UserCredentialsMail($user, $plainPassword));
+                }
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'Credentials email sent successfully.'
+            ]);
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,

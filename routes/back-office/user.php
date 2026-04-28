@@ -9,6 +9,7 @@ Route::group([
     Route::controller(UserController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
+        Route::get('send-credentials', 'sendCredentials')->name('sendCredentials');
         Route::post('{user}/restore', 'restore')->name('restore');
         Route::delete('{user}/force-delete', 'forceDelete')->name('forceDelete');
 

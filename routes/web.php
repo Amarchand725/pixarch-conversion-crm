@@ -18,8 +18,10 @@ Route::controller(LeadCapturePublicController::class)->group(function () {
 });
 
 Route::controller(DeveloperController::class)->group(function () {
-Route::get('/exported-contacts', 'exportedContacts')->name('exported-contacts');
-    Route::get('/exported-opportunities', 'exportedOpportunities')->name('export-opportunities');
+    // Route::get('/exported-contacts', 'exportedContacts')->name('exported-contacts');
+    Route::get('/import-opportunities', 'importOpportunities')->name('import-opportunities');
+    Route::get('/import-opportunities', 'importOpportunities')->name('import-opportunities');
+    Route::get('/get-opportunities-assignee', 'getOpportunitiesAssignee')->name('get-opportunities-assignee');
 });
 
 Route::impersonate();

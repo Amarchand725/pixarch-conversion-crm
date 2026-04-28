@@ -8,6 +8,9 @@ use App\Modules\User\Repositories\Contracts\UserContract;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCredentialsMail;
+use Illuminate\Support\Facades\Log;
 
 class UserRepository extends BaseRepository implements UserContract
 {
@@ -20,9 +23,12 @@ class UserRepository extends BaseRepository implements UserContract
     {
         $model = $this->model;
         $model->toFill($payload, ['avatar', 'role']);
-        $model->password = Hash::make($payload['password']);
 
+        $plainPassword = $payload['password']; // keep original password
+        
+        $model->password = Hash::make($payload['password']);
         $model->save();
+
         //uploading avatar image
         if (isset($payload['avatar']) && $payload['avatar'] instanceof \Illuminate\Http\UploadedFile) {
             $model->avatar_id = FileUploader::uploadFile($payload['avatar'], $model, 'avatars', size: 64)?->id;
@@ -32,6 +38,19 @@ class UserRepository extends BaseRepository implements UserContract
         if (!empty($payload['role'])) {
             // You can pass role name or role ID, depending on how you send it
             $model->syncRoles([$payload['role']]); 
+        }
+
+        // send email
+        try {
+            Mail::to($model->email)->send(
+                new UserCredentialsMail($model, $plainPassword)
+            );
+        } catch (\Throwable $e) {
+            Log::error('Credential email failed', [
+                'user_id' => $model->id,
+                'email' => $model->email,
+                'error' => $e->getMessage(),
+            ]);
         }
         
         return $model;

@@ -56,7 +56,7 @@ class DeveloperController extends Controller
         return 'Successfully inserted '.$totalInserted.' records and duplicated: '. $duplicates;
     }
 
-    public function exportedOpportunities()
+    public function importOpportunities()
     {
         $chunkSize = 500;
         $totalInserted = 0;
@@ -91,9 +91,15 @@ class DeveloperController extends Controller
                         'updated_at' => $row->updated_on,
                     ]);
 
+                    $assignee = User::where('name', $row->assigned)->first();
+                    if(!empty($assignee)){
+                        $assigneeId = $assignee->id;
+                    }else{
+                        $assigneeId = auth()->id();
+                    }
                     $status = Status::where('model', 'Lead')->where('name', $row->stage)->first();
                     $logStatus['status_id'] = !empty($status) ? $status->id : null;
-                    // $logStatus['assignee_id'] = $payload['assignee_id'];
+                    $logStatus['assignee_id'] = $assigneeId;
                     $logStatus['notes'] = $row->notes;
                     $logStatus['model_id'] = $model->id;
                     $logStatus['model_type'] = $model->getMorphClass();
@@ -102,9 +108,9 @@ class DeveloperController extends Controller
                     $log->toFill($logStatus);
                     $log->save();
 
-                    // if (!empty($payload['assignee_id'])) {
-                    //     $model->assignees()->sync([$payload['assignee_id']]);
-                    // }
+                    if (!empty($assigneeId)) {
+                        $model->assignees()->sync($assigneeId);
+                    }
 
                     // add to existing emails to avoid duplicates in this run
                     $existingEmails[] = $email;
@@ -113,5 +119,21 @@ class DeveloperController extends Controller
         });
 
         return 'Successfully inserted '.$totalInserted.' records and duplicated: '. $duplicates;
+    }
+
+    public function getOpportunitiesAssignee()
+    {
+        // $assignees = DB::table('opportunities')->get(['id', 'assigned'])->groupBy('assigned');
+        $assignees = DB::table('opportunities')
+        ->where('assigned', '!=', 'Amarchand Khan')
+        ->whereNotNull('assigned')
+        ->where('assigned', '!=', '')
+        ->select('assigned')
+        ->groupBy('assigned')
+        ->get();
+
+        // return $assignees;
+        $assignedNames = $assignees->pluck('assigned')->toArray();
+        return $assignedNames;
     }
 }
