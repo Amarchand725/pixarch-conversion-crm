@@ -21,12 +21,12 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             CountrySeeder::class,
             RolePermissionSeeder::class,
-            UserSeeder::class,
             StatusSeeder::class,
-            CampaignSeeder::class,
-            LeadCaptureSeeder::class,
-            LeadSeeder::class,
-            FaqSeeder::class,
+            UserSeeder::class,
+            // CampaignSeeder::class,
+            // LeadCaptureSeeder::class,
+            // LeadSeeder::class,
+            // FaqSeeder::class,
         ]);
     }
 }
