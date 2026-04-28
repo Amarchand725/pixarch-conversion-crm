@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
                 'username' => Str::slug("SHAHRUKH SALMAN QAYYUM SALMAN ZUBERI"),
                 "phone" => "+971588019773",
                 "email" => "shahrukh@100keys.ae",
-                'role' => 'ADMIN',
+                'role' => 'AGENT',
                 'gender' => 'M',
                 'doj' => fake()->date(),
                 'email_verified_at' => now(),
