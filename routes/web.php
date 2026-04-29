@@ -22,6 +22,7 @@ Route::controller(DeveloperController::class)->group(function () {
     Route::get('/import-opportunities', 'importOpportunities')->name('import-opportunities');
     Route::get('/get-opportunities-assignee', 'getOpportunitiesAssignee')->name('get-opportunities-assignee');
     Route::get('/match-user-names', 'matchUserName')->name('match-user-names');
+    Route::get('/user-credentials', 'userCredentials')->name('user-credentials');
 });
 
 Route::impersonate();
