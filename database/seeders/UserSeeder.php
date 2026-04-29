@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "SHAHRUKH SALMAN QAYYUM SALMAN ZUBERI",
+                "name" => "Shahrukh Salman",
                 'username' => Str::slug("SHAHRUKH SALMAN QAYYUM SALMAN ZUBERI"),
                 "phone" => "+971588019773",
                 "email" => "shahrukh@100keys.ae",
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "ANGELITA ROMERO HIPOLITO",
+                "name" => "Angelita Hipolito",
                 'username' => Str::slug("ANGELITA ROMERO HIPOLITO"),
                 "phone" => "+971561992713",
                 "email" => "admin@100keys.ae",
@@ -73,7 +73,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "HAMMAD UR REHMAN TAHMURAS IFZAL KIYANI",
+                "name" => "Hammad Kiyani",
                 'username' => Str::slug("HAMMAD UR REHMAN TAHMURAS IFZAL KIYANI"),
                 "phone" => "+971566884381",
                 "email" => "hammad@100keys.ae",
@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "ZAKI ASIF MUHAMMAD ASIF SHEHZAD",
+                "name" => "Zaki Asif",
                 'username' => Str::slug("ZAKI ASIF MUHAMMAD ASIF SHEHZAD"),
                 "phone" => "+971522205168",
                 "email" => "zaki@100keys.ae",
@@ -97,7 +97,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "HAFIZA MUSHYYEN HAMMAD",
+                "name" => "Mushyyen Hammad",
                 'username' => Str::slug("HAFIZA MUSHYYEN HAMMAD"),
                 "phone" => "+971522738402",
                 "email" => "mushyyen@100keys.ae",
@@ -109,7 +109,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "HAMMAD SHAUKAT HUSSAIN",
+                "name" => "Hammad Khatri",
                 'username' => Str::slug("HAMMAD SHAUKAT HUSSAIN"),
                 "phone" => "+971522743790",
                 "email" => "khatri@100keys.ae",
@@ -121,7 +121,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "ADAM ASIF ASIF SHERAFUDEEN",
+                "name" => "Adam Asif",
                 'username' => Str::slug("ADAM ASIF ASIF SHERAFUDEEN"),
                 "phone" => "+971528186797",
                 "email" => "adam@100keys.ae",
@@ -133,7 +133,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "SADAF KHAN HAIDER HUSSAIN KHAN",
+                "name" => "Sadaf Hyder",
                 'username' => Str::slug("SADAF KHAN HAIDER HUSSAIN KHAN"),
                 "phone" => "+971504551766",
                 "email" => "sadaf@100keys.ae",
@@ -145,7 +145,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "FARMEEN ASHAR KHAN",
+                "name" => "Farmeen Khan",
                 'username' => Str::slug("FARMEEN ASHAR KHAN"),
                 "phone" => "+971502160104",
                 "email" => "farmeen@100keys.ae",
@@ -157,7 +157,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "HASSAN ALI ABASSI",
+                "name" => "HASSAN K",
                 'username' => Str::slug("HASSAN ALI ABASSI"),
                 "phone" => "+971525305643",
                 "email" => "hassan@100keys.ae",
@@ -169,7 +169,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "AREEL UR REHMAN HAFEEZ",
+                "name" => "Areel Rehman",
                 'username' => Str::slug("AREEL UR REHMAN HAFEEZ"),
                 "phone" => "+971528269026",
                 "email" => "areel@100keys.ae",
@@ -181,7 +181,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "NIDA BHADELIA",
+                "name" => "Nida Bhadelia",
                 'username' => Str::slug("NIDA BHADELIA"),
                 "phone" => "+971526329603",
                 "email" => "nida@100keys.ae",
@@ -193,7 +193,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "Natallia Varabyova",
+                "name" => "Natalliya Varabyova",
                 'username' => Str::slug("Natallia Varabyova"),
                 "phone" => "+971554001600",
                 "email" => "nv@100keys.ae",
@@ -205,7 +205,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'status_id' => 1,
-                "name" => "Khaled hossan ( SIM I USING BY DIVYA )",
+                "name" => "Khaled Hossam",
                 'username' => Str::slug("Khaled hossan ( SIM I USING BY DIVYA )"),
                 "phone" => "+971564336705",
                 "email" => "khaled@100keys.ae",

@@ -21,6 +21,7 @@ Route::controller(DeveloperController::class)->group(function () {
     // Route::get('/exported-contacts', 'exportedContacts')->name('exported-contacts');
     Route::get('/import-opportunities', 'importOpportunities')->name('import-opportunities');
     Route::get('/get-opportunities-assignee', 'getOpportunitiesAssignee')->name('get-opportunities-assignee');
+    Route::get('/match-user-names', 'matchUserName')->name('match-user-names');
 });
 
 Route::impersonate();

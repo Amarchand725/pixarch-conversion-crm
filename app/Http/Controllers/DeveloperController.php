@@ -71,15 +71,24 @@ class DeveloperController extends Controller
 
         // cache related tables (VERY important)
         $sources = Source::pluck('id', 'name')->toArray();
-        $users = User::pluck('id', 'name')->toArray();
         $defaultUserId = User::where('email', 'digital@100keys.ae')->value('id');
+        
+        // $users = User::pluck('name')->toArray();
+        $users = User::get()
+            ->mapWithKeys(function ($user) {
+                return [
+                    strtolower(trim(preg_replace('/\s+/u', ' ', $user->name))) => $user->id
+                ];
+            })
+            ->toArray();
+
         $statuses = Status::where('model', 'Lead')
             ->get()
             ->mapWithKeys(function ($status) {
                 return [strtolower(trim($status->name)) => $status->id];
             })
             ->toArray();
-        
+
         DB::table('opportunities')
             ->orderBy('id')
             ->chunk($chunkSize, function ($rows) use (
@@ -129,7 +138,9 @@ class DeveloperController extends Controller
                     ]);
 
                     // assign user (no query inside loop)
-                    $assigneeId = $users[$row->assigned] ?? $defaultUserId;
+                    $userKey = strtolower(trim(preg_replace('/\s+/u', ' ', $row->assigned)));
+
+                    $assigneeId = $users[$userKey] ?? $defaultUserId;
 
                     // status lookup from cache
                     $stageKey = strtolower(trim(preg_replace('/\s+/', ' ', $row->stage)));
@@ -159,76 +170,35 @@ class DeveloperController extends Controller
         return 'Successfully inserted '.$totalInserted.' records and duplicated: '.$duplicates;
     }
 
-    // public function importOpportunities()
-    // {
-    //     $chunkSize = 500;
-    //     $totalInserted = 0;
-    //     $duplicates = 0;
-    //     $existingEmails = DB::table('leads')->pluck('email')->toArray(); // get existing emails
+    function findBestUserMatch($inputName, $users)
+    {
+        $inputName = strtolower(trim($inputName));
+        $inputName = preg_replace('/\s+/', ' ', $inputName);
 
-    //     DB::table('opportunities')
-    //         ->whereNotNull('email')
-    //         ->where('email', '!=', '')
-    //         ->orderBy('id')
-    //         ->chunk($chunkSize, function ($rows) use (&$existingEmails, &$totalInserted, &$duplicates) {
-    //             foreach ($rows as $row) {
-    //                 $email = strtolower(trim($row->email));
-                    
-    //                 // skip if email already exists
-    //                 if (in_array($email, $existingEmails)) {
-    //                     $duplicates++;
-    //                     continue;
-    //                 }
+        $inputWords = array_unique(
+            array_filter(explode(' ', $inputName), fn($w) => strlen($w) >= 3)
+        );
 
-    //                 $source = Source::where('name', $row->source)->first();
+        $bestMatchId = null;
+        $bestScore = 0;
 
-    //                 $model = Lead::create([
-    //                     'source_id' => !empty($source) ? $source->id : null,
-    //                     'name' => $row->opportunity_name,
-    //                     'phone' => $row->phone,
-    //                     'email' => $email,
-    //                     'value' => $row->lead_value,
-    //                     'pipeline' => $row->pipeline,
-    //                     'status' => $row->status,
-    //                     'created_at' => $row->created_on,
-    //                     'updated_at' => $row->updated_on,
-    //                 ]);
+        foreach ($users as $user) {
+            $commonWords = array_intersect($inputWords, $user['words']);
+            $score = count($commonWords);
 
-    //                 $assignee = User::where('name', $row->assigned)->first();
-    //                 if(!empty($assignee)){
-    //                     $assigneeId = $assignee->id;
-    //                 }else{
-    //                     $assigneeId = User::where('email', 'digital@100keys.ae')->value('id'); // assign to default user if not found
-    //                 }
-    //                 $status = Status::where('model', 'Lead')->where('name', $row->stage)->first();
-    //                 $logStatus['status_id'] = !empty($status) ? $status->id : null;
-    //                 $logStatus['assignee_id'] = $assigneeId;
-    //                 $logStatus['notes'] = $row->notes;
-    //                 $logStatus['model_id'] = $model->id;
-    //                 $logStatus['model_type'] = $model->getMorphClass();
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $bestMatchId = $user['id'];
+            }
+        }
 
-    //                 $log = $model->statusLogs()->firstOrNew();
-    //                 $log->toFill($logStatus);
-    //                 $log->save();
-
-    //                 if (!empty($assigneeId)) {
-    //                     $model->assignees()->sync($assigneeId);
-    //                 }
-
-    //                 // add to existing emails to avoid duplicates in this run
-    //                 $existingEmails[] = $email;
-    //                 $totalInserted++;           // increment counter
-    //             }
-    //     });
-
-    //     return 'Successfully inserted '.$totalInserted.' records and duplicated: '. $duplicates;
-    // }
+        // optional threshold (avoid wrong matches)
+        return $bestScore >= 1 ? $bestMatchId : null;
+    }
 
     public function getOpportunitiesAssignee()
     {
-        // $assignees = DB::table('opportunities')->get(['id', 'assigned'])->groupBy('assigned');
         $assignees = DB::table('opportunities')
-        // ->where('assigned', '!=', 'Amarchand Khan')
         ->whereNotNull('assigned')
         ->where('assigned', '!=', '')
         ->select('assigned')
@@ -238,5 +208,92 @@ class DeveloperController extends Controller
         // return $assignees;
         $assignedNames = $assignees->pluck('assigned')->toArray();
         return $assignedNames;
+    }
+
+    public function userCredentials(){
+        $users = User::where('email', '!=', 'admin@gmail.com')->get();
+        $userCredentials = [];
+        foreach($users as $user){
+            $plainPassword = Str::random(8); // generate random password
+            $user->password = Hash::make($plainPassword); // generate random password
+            $userCredentials[] = [
+                'name' => $user->name,
+                'email' => $user->email,
+                'password' => $plainPassword
+            ];
+        }
+
+        return $userCredentials;
+    }
+
+    public function matchUserName(){
+        $shortNames = [
+            "Adam Asif",
+            "Nida Bhadelia",
+            "Hassan K",
+            "Zaki Asif",
+            "Hammad Kiyani",
+            "Hammad Khatri",
+            "Areel Rehman",
+            "Mushyyen Hammad",
+            "",
+            "Sadaf Hyder",
+            "Amarchand Khan",
+            "Angelita Hipolito",
+            "Farmeen  Khan",
+            "Natalliya Varabyova",
+            "Shahrukh  Salman",
+            "Mujahid Ghani",
+            "Khawaja Umair",
+            "Khaled  Hossam"
+        ];
+
+        $fullNames = [
+            "Dr. Brady Kunde",
+            "Rizwan Naeem Sheikh",
+            "SHAHRUKH SALMAN QAYYUM SALMAN ZUBERI",
+            "ANGELITA ROMERO HIPOLITO",
+            "HAMMAD UR REHMAN TAHMURAS IFZAL KIYANI",
+            "ZAKI ASIF MUHAMMAD ASIF SHEHZAD",
+            "HAFIZA MUSHYYEN HAMMAD",
+            "HAMMAD SHAUKAT HUSSAIN",
+            "ADAM ASIF ASIF SHERAFUDEEN",
+            "SADAF KHAN HAIDER HUSSAIN KHAN",
+            "FARMEEN ASHAR KHAN",
+            "HASSAN ALI ABASSI",
+            "AREEL UR REHMAN HAFEEZ",
+            "NIDA BHADELIA",
+            "Natallia Varabyova",
+            "Khaled hossan ( SIM I USING BY DIVYA )",
+            "Khawaja Umair"
+        ];
+
+        $result = [];
+
+        foreach ($fullNames as $full) {
+            $matched = false;
+
+            foreach ($shortNames as $short) {
+                if (empty(trim($short))) continue;
+
+                $shortWords = preg_split('/\s+/', strtolower(trim($short)));
+                $fullLower = strtolower($full);
+
+                foreach ($shortWords as $word) {
+                    if ($word && str_contains($fullLower, $word)) {
+                        $result[] = $short; // replace with short name
+                        $matched = true;
+                        break 2; // break both loops
+                    }
+                }
+            }
+
+            if (!$matched) {
+                $result[] = $full; // keep original if no match
+            }
+        }
+
+        // print_r($result);
+        dd($shortNames, $fullNames, $result);
     }
 }
