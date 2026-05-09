@@ -7,6 +7,7 @@ use App\Models\Opportunity;
 
 class ImportOpportunities extends Command
 {
+    // php artisan import:opportunities storage/app/100_KEYS_final_fixed.csv
     protected $signature = 'import:opportunities {file}';
     protected $description = 'Import opportunities from a CSV file';
 

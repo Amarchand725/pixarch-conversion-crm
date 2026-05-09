@@ -6,6 +6,7 @@ use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
 use App\Modules\Lead\Models\Lead;
+use App\Services\PhoneNumberService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -73,7 +74,6 @@ class DeveloperController extends Controller
         $sources = Source::pluck('id', 'name')->toArray();
         $defaultUserId = User::where('email', 'digital@100keys.ae')->value('id');
         
-        // $users = User::pluck('name')->toArray();
         $users = User::get()
             ->mapWithKeys(function ($user) {
                 return [
@@ -116,10 +116,23 @@ class DeveloperController extends Controller
 
                     // FIX phone scientific notation
                     $phone = $row->phone;
+
                     if (is_numeric($phone) && str_contains((string)$phone, 'E')) {
                         $phone = number_format((float)$phone, 0, '', '');
                     }
-                    $phone = (string) $phone;
+
+                    $phone = '+'.trim((string) $phone);
+                    
+                    // parse + normalize phone
+                    try {
+                        $phoneObject = PhoneNumberService::parse($phone);
+                        
+                        // save in international format
+                        $phone = $phoneObject;
+
+                    } catch (\Exception $e) {
+                        $phone = null; // or keep original value
+                    }
 
                     // resolve source
                     $sourceId = $sources[$row->source] ?? null;
@@ -128,7 +141,9 @@ class DeveloperController extends Controller
                     $model = Lead::create([
                         'source_id'  => $sourceId,
                         'name'       => $row->opportunity_name,
-                        'phone'      => $phone,
+                        'phone'      => $phone['e164'] ?? null,
+                        'numeric_code'      => $phone['numeric_code'] ?? null,
+                        'iso_code'      => $phone['iso_code'] ?? null,
                         'email'      => $email,
                         'budget'      => $row->lead_value,
                         'pipeline'   => $row->pipeline,
