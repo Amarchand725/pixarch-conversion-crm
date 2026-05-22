@@ -83,9 +83,16 @@ class Lead extends Model
         return $this->morphMany(LogEntityStatus::class, 'model')->orderby('id', 'desc');
     }
 
+    // public function lastStatusLog()
+    // {
+    //     return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
+    // }
+
     public function lastStatusLog()
     {
-        return $this->morphOne(LogEntityStatus::class, 'model')->latestOfMany();
+        return $this->hasOne(LogEntityStatus::class, 'model_id')
+            ->where('model_type', 'Lead')
+            ->latestOfMany();
     }
 
     public function source()
@@ -93,9 +100,16 @@ class Lead extends Model
         return $this->belongsTo(Source::class, 'source_id');
     }
 
+    // public function currentAssignee()
+    // {
+    //     return $this->hasOne(EntityRelationship::class, 'model_id');
+    // }
+    
     public function currentAssignee()
     {
-        return $this->hasOne(EntityRelationship::class, 'model_id');
+        return $this->belongsToMany(User::class, 'entity_relationships', 'model_id', 'user_id')
+            ->wherePivot('model_type', 'Lead')
+            ->limit(1);
     }
 
     public function meeting()

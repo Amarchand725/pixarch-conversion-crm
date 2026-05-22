@@ -24,68 +24,138 @@ class LeadRepository extends BaseRepository implements LeadContract
         parent::__construct($model);
     }
 
-    public function getAllCollection(array $columns = ['*']): Collection
+    public function getKanbanLeads()
     {
         $user = auth()->user();
-        $statuses = Status::where('model', 'Lead')->get();
 
-        // Get “Pool” status
-        $poolStatus = Status::where('model', 'Lead')->where('name', 'Pool')->first();
+        $statuses = Status::where('model', 'Lead')
+            ->select('id', 'uuid', 'name')
+            ->get();
 
-        // -----------------------------------
-        // ADMIN: Get all leads
-        // -----------------------------------
-        if ($user->hasRole('Admin')) {
-            $leads = Lead::with(['lastStatusLog.status', 'currentAssignee'])->get();
-        }
+        return $statuses->map(function ($status) use ($user) {
 
-        // -----------------------------------
-        // AGENT: Assigned leads + Pool leads
-        // -----------------------------------
-        
-        else {
+            $query = Lead::query()
+                ->with([
+                    // 'lastStatusLog:id,model_id,status_id,assignee_id',
+                    // 'lastStatusLog.status:id,name',
+                    'lastStatusLog' => function ($q) {
+                            $q->select(
+                                'log_entity_statuses.id',
+                                'log_entity_statuses.model_id',
+                                'log_entity_statuses.model_type',
+                                'log_entity_statuses.status_id',
+                                'log_entity_statuses.assignee_id'
+                            );
+                        },
+                    'source:id,name',
+                    'assignees:id,name',
+                    'assignees.avatar:id,path',
+                ])
+                ->select([
+                    'id',
+                    'uuid',
+                    'name',
+                    'email',
+                    'phone',
+                    'budget',
+                    'pipeline',
+                    'source_id'
+                ])
+                ->whereHas('lastStatusLog', function ($q) use ($status) {
+                    $q->where('status_id', $status->id);
+                });
 
-            // Leads assigned to this agent
-            $assignedLeadIds = DB::table('entity_relationships')
-                ->where('model_type', 'Lead')
-                ->where('user_id', $user->id)
-                ->pluck('model_id');
+            // USER FILTER
+            if (!$user->hasRole('Admin')) {
+                $query->where(function ($q) use ($user) {
+                    $q->whereHas('assignees', function ($qq) use ($user) {
+                        $qq->where('user_id', $user->id);
+                    });
 
-            // Pool leads = leads with pool status (visible to all)
-            $poolLeadIds = $poolStatus
-                ? Lead::whereHas('lastStatusLog', function ($q) use ($poolStatus) {
-                    $q->where('status_id', $poolStatus->id);
-                })
-                ->pluck('id')
-                : collect();
+                    $q->orWhereHas('lastStatusLog.status', function ($qq) {
+                        $qq->where('name', 'Pool');
+                    });
+                });
+            }
 
-            // Merge assigned + pool leads
-            $leadIds = $assignedLeadIds->merge($poolLeadIds)->unique();
-
-            $leads = Lead::whereIn('id', $leadIds)
-                ->with(['lastStatusLog.status', 'currentAssignee'])
+            // IMPORTANT: LIMIT for performance
+            $leads = $query
+                ->latest()
+                ->limit(50)
                 ->get();
-        }
 
-        // -----------------------------------
-        // GROUP BY STATUS
-        // -----------------------------------
-        $statusLeads = new Collection();
-
-        foreach ($statuses as $status) {
-            $filtered = $leads->filter(function ($lead) use ($status) {
-                return $lead->lastStatusLog?->status_id === $status->id;
-            })->values();
-
-            $statusLeads[] = [
-                'status_id'   => $status->uuid,
-                'status_name' => $status->name,
-                'leads'       => $filtered,
+            return [
+                'status_id'    => $status->uuid,
+                'status_name'  => $status->name,
+                'count'        => $leads->count(),
+                'total_budget' => $leads->sum('budget'),
+                'leads'        => $leads,
             ];
-        }
-
-        return $statusLeads;
+        });
     }
+
+        // public function getAllCollection(array $columns = ['*']): Collection
+        // {
+        //     $user = auth()->user();
+        //     $statuses = Status::where('model', 'Lead')->get();
+
+        //     // Get “Pool” status
+        //     $poolStatus = Status::where('model', 'Lead')->where('name', 'Pool')->first();
+
+        //     // -----------------------------------
+        //     // ADMIN: Get all leads
+        //     // -----------------------------------
+        //     if ($user->hasRole('Admin')) {
+        //         $leads = Lead::with(['lastStatusLog.status', 'currentAssignee'])->get();
+        //     }
+
+        //     // -----------------------------------
+        //     // AGENT: Assigned leads + Pool leads
+        //     // -----------------------------------
+            
+        //     else {
+
+        //         // Leads assigned to this agent
+        //         $assignedLeadIds = DB::table('entity_relationships')
+    //             ->where('model_type', 'Lead')
+    //             ->where('user_id', $user->id)
+    //             ->pluck('model_id');
+
+    //         // Pool leads = leads with pool status (visible to all)
+    //         $poolLeadIds = $poolStatus
+    //             ? Lead::whereHas('lastStatusLog', function ($q) use ($poolStatus) {
+    //                 $q->where('status_id', $poolStatus->id);
+    //             })
+    //             ->pluck('id')
+    //             : collect();
+
+    //         // Merge assigned + pool leads
+    //         $leadIds = $assignedLeadIds->merge($poolLeadIds)->unique();
+
+    //         $leads = Lead::whereIn('id', $leadIds)
+    //             ->with(['lastStatusLog.status', 'currentAssignee'])
+    //             ->get();
+    //     }
+
+    //     // -----------------------------------
+    //     // GROUP BY STATUS
+    //     // -----------------------------------
+    //     $statusLeads = new Collection();
+
+    //     foreach ($statuses as $status) {
+    //         $filtered = $leads->filter(function ($lead) use ($status) {
+    //             return $lead->lastStatusLog?->status_id === $status->id;
+    //         })->values();
+
+    //         $statusLeads[] = [
+    //             'status_id'   => $status->uuid,
+    //             'status_name' => $status->name,
+    //             'leads'       => $filtered,
+    //         ];
+    //     }
+
+    //     return $statusLeads;
+    // }
 
     public function storeModel(array $payload): Model
     {

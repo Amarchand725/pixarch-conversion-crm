@@ -34,31 +34,87 @@ class LeadController extends BaseModuleController
         $this->autoInit();
     }
 
+    // public function index(Request $request)
+    // {
+    //     $statusLeads = $this->leadRepo->getAllCollection();
+    //     $columns = [
+    //         'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
+    //         'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
+    //         'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
+    //         'budget_amount' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
+    //         'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
+    //         'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
+    //     ];
+
+    //     $user = auth()->user();
+
+    //     // If Admin → fetch all leads
+    //     if ($user->hasRole('Admin')) {
+    //         $query = $this->leadRepo->getAll(); // builder
+    //     } 
+    //     // Else → fetch only leads where user is attached
+    //     else {
+    //         $query = $user->leads()->distinct('leads.id');
+    //     }
+
+    //     $total_leads = $query->count('leads.id');
+        
+    //     $dataTable = new \App\Services\DataTableService(
+    //         model: $query,
+    //         columns: $columns,
+    //         rowFormatter: [$this, 'formatRow']
+    //     );
+
+    //     if ($request->ajax() && $request->loaddata == "yes") {
+    //         return $dataTable->ajax();
+    //     }
+
+    //     return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
+    // }
+
     public function index(Request $request)
     {
-        $statusLeads = $this->leadRepo->getAllCollection();
         $columns = [
             'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
-            'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
-            'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
-            'budget_amount' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
+            'assigned_to' => ['label' => 'Assignee', 'html' => true],
+            'status_name' => ['label' => 'Status', 'html' => true],
+            'budget_amount' => ['label' => 'Budget', 'html' => true],
             'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
-            'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
+            'action' => ['label' => 'Action', 'html' => true],
         ];
 
         $user = auth()->user();
 
-        // If Admin → fetch all leads
-        if ($user->hasRole('Admin')) {
-            $query = $this->leadRepo->getAll(); // builder
-        } 
-        // Else → fetch only leads where user is attached
-        else {
-            $query = $user->leads()->distinct('leads.id');
+        // LIST VIEW QUERY
+        $query = Lead::query()
+            ->with([
+                'lastStatusLog.status:id,name',
+                'currentAssignee:id,name'
+            ])
+            ->select([
+                'id',
+                'uuid',
+                'name',
+                'email',
+                'budget',
+                'created_at'
+            ]);
+
+        if (!$user->hasRole('Admin')) {
+            $query->whereHas('assignees', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
         }
 
-        $total_leads = $query->count('leads.id');
-        
+        $total_leads = (clone $query)->count();
+
+        // ONLY LOAD CARD VIEW DATA IF NEEDED
+        $statusLeads = [];
+
+        if (request('view') != 'list') {
+            $statusLeads = $this->leadRepo->getKanbanLeads();
+        }
+
         $dataTable = new \App\Services\DataTableService(
             model: $query,
             columns: $columns,
@@ -68,7 +124,7 @@ class LeadController extends BaseModuleController
         if ($request->ajax() && $request->loaddata == "yes") {
             return $dataTable->ajax();
         }
-
+        
         return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
     }
 
@@ -83,27 +139,46 @@ class LeadController extends BaseModuleController
         $symbol = config('app.currency_symbol');
         // New property for display
         $row->budget_amount = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
-        if($row->assignees->first()){
-            $row->assigned_to = view('back-office.partials.avatar', [
-                    'user' => $row->assignees->first()
-                ]
-            )->render();
-        }else{
-            $row->assignee_to = '-';
-        }
+        // if($row->assignees->first()){
+        //     $row->assigned_to = view('back-office.partials.avatar', [
+        //             'user' => $row->assignees->first()
+        //         ]
+        //     )->render();
+        // }else{
+        //     $row->assignee_to = '-';
+        // }
+
+        $user = $row->assignees->first();
+
+        $row->assigned_to = $user
+            ? view('back-office.partials.avatar', ['user' => $user])->render()
+            : '-';
 
         $label = module_label('show', $this->singularLabel);
+        $shortName = \Illuminate\Support\Str::limit($row->name, 30);
+
         $row->name = '
             <a href="#" class="show fw-semibold cursor-pointer"
                 data-show-url="'.$row->show_url.'"
                 data-bs-toggle="modal"
                 data-bs-target="#details-modal"
-                title="'.e($label).'"
-                label="'.e($label).'"
-                >
-                '.e($row->name).'
+                title="'.e($label).' - '.e($row->name).'"
+                label="'.e($label).'">
+                '.e($shortName).'
             </a>
         ';
+
+        // $row->name = '
+        //     <a href="#" class="show fw-semibold cursor-pointer"
+        //         data-show-url="'.$row->show_url.'"
+        //         data-bs-toggle="modal"
+        //         data-bs-target="#details-modal"
+        //         title="'.e($label).'"
+        //         label="'.e($label).'"
+        //         >
+        //         '.e($row->name).'
+        //     </a>
+        // ';
         
         $status = strtolower($row->lastStatusLog?->status?->name ?? '');
         $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'

@@ -19,16 +19,31 @@ class DataTableService
     public function jsColumns()
     {
         return collect($this->columns)->map(function ($opts, $key) {
+
+            $searchable = $opts['searchable'] ?? false;
+
             return [
                 'data'       => $key,
-                'name'       => $opts['searchable'] && is_string($opts['searchable']) 
-                                ? $opts['searchable'] 
-                                : $key,
+                'name'       => is_string($searchable) ? $searchable : $key,
                 'orderable'  => $opts['orderable'] ?? true,
-                'searchable' => !empty($opts['searchable']), // only true if searchable is set
+                'searchable' => $searchable !== false,
             ];
         })->values()->toArray();
     }
+
+    // public function jsColumns()
+    // {
+    //     return collect($this->columns)->map(function ($opts, $key) {
+    //         return [
+    //             'data'       => $key,
+    //             'name'       => $opts['searchable'] && is_string($opts['searchable']) 
+    //                             ? $opts['searchable'] 
+    //                             : $key,
+    //             'orderable'  => $opts['orderable'] ?? true,
+    //             'searchable' => !empty($opts['searchable']), // only true if searchable is set
+    //         ];
+    //     })->values()->toArray();
+    // }
 
     public function htmlColumns()
     {
