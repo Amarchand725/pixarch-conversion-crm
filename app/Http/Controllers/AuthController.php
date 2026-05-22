@@ -38,6 +38,7 @@ class AuthController extends Controller
         $title = Auth::user()->name . "'s Dashboard";
         // Get all leads grouped by status
         $statusLeads = $this->leadRepo->getAllCollection();
+        // $statusLeads = $this->leadRepo->getKanbanLeads();
         
         // Count total agents
         $totalAgents = User::role('Agent')->count();
@@ -45,38 +46,39 @@ class AuthController extends Controller
         $agentsSummary = User::role('Agent')
             ->with(['leads.lastStatusLog', 'leadLogs'])
             ->get();
-        
+
         foreach ($agentsSummary as $agent) {
-            // Total assigned leads
             $agent->total_assigned = $agent->leads->count();
 
-            // Total worked leads (unique lead IDs in logs)
-            $agent->total_updated = $agent->leadLogs->pluck('model_id')->unique()->count();
+            $agent->total_updated = $agent->leadLogs()
+                ->distinct('model_id')
+                ->count('model_id');
 
-            // Status summary per agent
             $statusCounts = [];
 
             foreach ($agent->leads as $lead) {
-                // Get latest status log (lastStatusLog already eager loaded)
                 $latestLog = $lead->lastStatusLog;
 
-                // Only consider updates by this agent
                 $statusName = 'Not Updated';
-                if ($latestLog && $latestLog->author_id == $agent->id) {
-                    $statusName = (string) $latestLog->status; // cast to string to avoid Illegal offset
+
+                if ($latestLog && $latestLog->author_id === $agent->id) {
+                    $statusName = (string) $latestLog->status;
                 }
 
-                if (!isset($statusCounts[$statusName])) {
-                    $statusCounts[$statusName] = 0;
-                }
-
-                $statusCounts[$statusName]++;
+                $statusCounts[$statusName] = ($statusCounts[$statusName] ?? 0) + 1;
             }
 
             $agent->statusCounts = collect($statusCounts);
         }
-
-        return view('back-office.dashboard.dashboard', get_defined_vars());
+        // dd($statusLeads);
+        // dd(get_defined_vars());
+        return view('back-office.dashboard.dashboard', [
+            'title' => $title,
+            'statusLeads' => $statusLeads,
+            'totalAgents' => $totalAgents,
+            'agentsSummary' => $agentsSummary,
+        ]);
+        // return view('back-office.dashboard.dashboard', get_defined_vars());
     }
     public function profile(){
         $title = Auth::user()->name . "'s Profile";

@@ -55,7 +55,7 @@ class DashboardController extends Controller
 
             $agent->statusCounts = collect($statusCounts);
         }
-
+        
         return view('back-office.dashboard', get_defined_vars());
     }
     public function profile(){
