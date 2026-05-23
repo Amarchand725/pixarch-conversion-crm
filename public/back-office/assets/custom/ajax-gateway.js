@@ -351,6 +351,7 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
     });
 }
 
+// Infinite scroll for Kanban columns
 $('.task-column').on('scroll', function () {
     let column = $(this);
 
