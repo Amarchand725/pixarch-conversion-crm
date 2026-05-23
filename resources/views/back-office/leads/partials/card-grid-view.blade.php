@@ -19,7 +19,7 @@
 
                         <!-- Total Value -->
                         <span class="badge bg-success fs-6">
-                            <span class="total-value">Value: ${{ number_format($status['total_budget']) }}</span>
+                            <span class="total-value">Value: ${{ formatAmount($status['total_budget']) }}</span>
                         </span>
                     </div>
                 </div>

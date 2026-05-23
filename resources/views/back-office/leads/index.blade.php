@@ -28,7 +28,7 @@
                     <div class="col-md-4">
                         <div class="dt-buttons btn-group flex-wrap float-end mt-4">
                             <button id="refresh-record" class="btn btn-success mx-2" title="{{ module_label('tooltip_refresh', $pluralLabel) }}"><i class="ti ti-refresh me-0 ti-xs"></i></button>
-                            <x-action-button
+                            {{-- <x-action-button
                                 type="button"
                                 id="add-btn"
                                 btn-class="btn btn-success add-btn mb-3 mb-md-0 mx-2"
@@ -41,7 +41,7 @@
                                     'data-url' => route($routeInitialize.'.import-data'), 
                                     'data-create-url' => route($routeInitialize.'.import-form')
                                 ]"
-                            />
+                            /> --}}
                             @can($permissionPrefix.'-create')
                                 <x-action-button
                                     type="button"
