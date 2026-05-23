@@ -14,6 +14,7 @@ Route::group([
         Route::post('{lead}/update-status', 'updateStatus')->name('update-status');
         Route::get('import-form', 'importForm')->name('import-form');
         Route::post('import-data', 'import')->name('import-data');
+        Route::get('load-more/{status}', 'loadMore')->name('load-more');
 
         Route::get('action/edit/{action}/{lead?}', 'actionEdit')->name('action.edit');
     });

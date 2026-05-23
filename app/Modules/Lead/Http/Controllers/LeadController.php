@@ -34,44 +34,6 @@ class LeadController extends BaseModuleController
         $this->autoInit();
     }
 
-    // public function index(Request $request)
-    // {
-    //     $statusLeads = $this->leadRepo->getAllCollection();
-    //     $columns = [
-    //         'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
-    //         'assigned_to' => ['label' => 'Assignee', 'html' => true, 'searchable' => false],
-    //         'status_name' => ['label' => 'Status', 'html' => true, 'searchable' => 'lastStatusLog.status.name'],
-    //         'budget_amount' => ['label' => 'Budget', 'html' => true, 'searchable' => false],
-    //         'created_at' => ['label' => 'Created At', 'searchable' => 'created_at'],
-    //         'action' => ['label' => 'Action', 'html' => true, 'searchable' => false],
-    //     ];
-
-    //     $user = auth()->user();
-
-    //     // If Admin → fetch all leads
-    //     if ($user->hasRole('Admin')) {
-    //         $query = $this->leadRepo->getAll(); // builder
-    //     } 
-    //     // Else → fetch only leads where user is attached
-    //     else {
-    //         $query = $user->leads()->distinct('leads.id');
-    //     }
-
-    //     $total_leads = $query->count('leads.id');
-        
-    //     $dataTable = new \App\Services\DataTableService(
-    //         model: $query,
-    //         columns: $columns,
-    //         rowFormatter: [$this, 'formatRow']
-    //     );
-
-    //     if ($request->ajax() && $request->loaddata == "yes") {
-    //         return $dataTable->ajax();
-    //     }
-
-    //     return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
-    // }
-
     public function index(Request $request)
     {
         $columns = [
@@ -205,6 +167,49 @@ class LeadController extends BaseModuleController
         $row->show_url = route($this->routePrefix.'.show', $row->uuid);
 
         return $row;
+    }
+
+    public function loadMore(Request $request, $statusId)
+    {
+        $offset = $request->offset ?? 0;
+
+        $user = auth()->user();
+
+        $query = Lead::query()
+            ->with([
+                'lastStatusLog.status:id,name',
+                'source:id,name',
+                'assignees:id,name',
+                'assignees.avatar:id,path',
+            ])
+            ->whereHas('lastStatusLog', function ($q) use ($statusId) {
+                $q->where('status_id', $statusId);
+            });
+
+        if (!$user->hasRole('Admin')) {
+
+            $query->where(function ($q) use ($user) {
+
+                $q->whereHas('assignees', function ($qq) use ($user) {
+                    $qq->where('user_id', $user->id);
+                });
+
+                $q->orWhereHas('lastStatusLog.status', function ($qq) {
+                    $qq->where('name', 'Pool');
+                });
+            });
+        }
+
+        $leads = $query
+            ->latest('id')
+            ->skip($offset)
+            ->take(20)
+            ->get();
+
+        return view(
+            'back-office.leads.partials.lead-cards',
+            $this->viewWithVars(get_defined_vars())
+        )->render();
     }
 
     public function create()

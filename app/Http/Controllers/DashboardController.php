@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Modules\Lead\Repositories\Eloquent\LeadRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -23,7 +24,11 @@ class DashboardController extends Controller
         $totalAgents = User::role('Agent')->count();
 
         $agentsSummary = User::role('Agent')
-            ->with(['leads.lastStatusLog', 'leadLogs'])
+            ->select('id', 'name')
+            ->withCount(['leads as total_assigned'])
+            ->withCount(['leadLogs as total_updated' => function ($q) {
+                $q->select(DB::raw('count(distinct model_id)'));
+            }])
             ->get();
         
         foreach ($agentsSummary as $agent) {
@@ -34,25 +39,13 @@ class DashboardController extends Controller
             $agent->total_updated = $agent->leadLogs->pluck('model_id')->unique()->count();
 
             // Status summary per agent
-            $statusCounts = [];
-
-            foreach ($agent->leads as $lead) {
-                // Get latest status log (lastStatusLog already eager loaded)
-                $latestLog = $lead->lastStatusLog;
-
-                // Only consider updates by this agent
-                $statusName = 'Not Updated';
-                if ($latestLog && $latestLog->author_id == $agent->id) {
-                    $statusName = (string) $latestLog->status; // cast to string to avoid Illegal offset
-                }
-
-                if (!isset($statusCounts[$statusName])) {
-                    $statusCounts[$statusName] = 0;
-                }
-
-                $statusCounts[$statusName]++;
-            }
-
+            $statusCounts = DB::table('leads')
+                        ->join('log_entity_statuses', 'leads.id', '=', 'log_entity_statuses.model_id')
+                        ->where('log_entity_statuses.author_id', $agent->id)
+                        ->select('log_entity_statuses.status_id', DB::raw('count(*) as total'))
+                        ->groupBy('log_entity_statuses.status_id')
+                        ->get();
+            
             $agent->statusCounts = collect($statusCounts);
         }
         

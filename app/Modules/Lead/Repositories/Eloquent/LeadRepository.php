@@ -24,7 +24,7 @@ class LeadRepository extends BaseRepository implements LeadContract
         parent::__construct($model);
     }
 
-    public function getKanbanLeads()
+    public function getKanbanLeads($limit = 20)
     {
         $user = auth()->user();
 
@@ -32,21 +32,18 @@ class LeadRepository extends BaseRepository implements LeadContract
             ->select('id', 'uuid', 'name')
             ->get();
 
-        return $statuses->map(function ($status) use ($user) {
+        return $statuses->map(function ($status) use ($user, $limit) {
 
             $query = Lead::query()
                 ->with([
-                    // 'lastStatusLog:id,model_id,status_id,assignee_id',
-                    // 'lastStatusLog.status:id,name',
                     'lastStatusLog' => function ($q) {
-                            $q->select(
-                                'log_entity_statuses.id',
-                                'log_entity_statuses.model_id',
-                                'log_entity_statuses.model_type',
-                                'log_entity_statuses.status_id',
-                                'log_entity_statuses.assignee_id'
-                            );
-                        },
+                        $q->select(
+                            'log_entity_statuses.id',
+                            'log_entity_statuses.model_id',
+                            'log_entity_statuses.status_id',
+                            'log_entity_statuses.assignee_id'
+                        );
+                    },
                     'source:id,name',
                     'assignees:id,name',
                     'assignees.avatar:id,path',
@@ -67,7 +64,9 @@ class LeadRepository extends BaseRepository implements LeadContract
 
             // USER FILTER
             if (!$user->hasRole('Admin')) {
+
                 $query->where(function ($q) use ($user) {
+
                     $q->whereHas('assignees', function ($qq) use ($user) {
                         $qq->where('user_id', $user->id);
                     });
@@ -78,48 +77,56 @@ class LeadRepository extends BaseRepository implements LeadContract
                 });
             }
 
-            // IMPORTANT: LIMIT for performance
+            // TOTAL COUNT
+            $totalCount = (clone $query)->count();
+
+            // TOTAL BUDGET
+            $totalBudget = (clone $query)->sum('budget');
+
+            // INITIAL LEADS
             $leads = $query
-                ->latest()
-                ->limit(50)
+                ->latest('id')
+                ->limit($limit)
                 ->get();
 
             return [
-                'status_id'    => $status->uuid,
-                'status_name'  => $status->name,
-                'count'        => $leads->count(),
-                'total_budget' => $leads->sum('budget'),
-                'leads'        => $leads,
+                'status_id'     => $status->uuid,
+                'status_db_id'  => $status->id,
+                'status_name'   => $status->name,
+                'count'         => $totalCount,
+                'total_budget'  => $totalBudget,
+                'loaded'        => $leads->count(),
+                'leads'         => $leads,
             ];
         });
     }
 
-        public function getAllCollection(array $columns = ['*']): Collection
-        {
-            $user = auth()->user();
-            $statuses = Status::where('model', 'Lead')->get();
+    public function getAllCollection(array $columns = ['*']): Collection
+    {
+        $user = auth()->user();
+        $statuses = Status::where('model', 'Lead')->get();
 
-            // Get “Pool” status
-            $poolStatus = Status::where('model', 'Lead')->where('name', 'Pool')->first();
+        // Get “Pool” status
+        $poolStatus = Status::where('model', 'Lead')->where('name', 'Pool')->first();
 
-            // -----------------------------------
-            // ADMIN: Get all leads
-            // -----------------------------------
-            if ($user->hasRole('Admin')) {
-                $leads = Lead::with(['lastStatusLog.status', 'currentAssignee'])->get();
-            }
+        // -----------------------------------
+        // ADMIN: Get all leads
+        // -----------------------------------
+        if ($user->hasRole('Admin')) {
+            $leads = Lead::with(['lastStatusLog.status', 'currentAssignee'])->get();
+        }
 
-            // -----------------------------------
-            // AGENT: Assigned leads + Pool leads
-            // -----------------------------------
-            
-            else {
+        // -----------------------------------
+        // AGENT: Assigned leads + Pool leads
+        // -----------------------------------
+        
+        else {
 
-                // Leads assigned to this agent
-                $assignedLeadIds = DB::table('entity_relationships')
-                ->where('model_type', 'Lead')
-                ->where('user_id', $user->id)
-                ->pluck('model_id');
+            // Leads assigned to this agent
+            $assignedLeadIds = DB::table('entity_relationships')
+            ->where('model_type', 'Lead')
+            ->where('user_id', $user->id)
+            ->pluck('model_id');
 
             // Pool leads = leads with pool status (visible to all)
             $poolLeadIds = $poolStatus

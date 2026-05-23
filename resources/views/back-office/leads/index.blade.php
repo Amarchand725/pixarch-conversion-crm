@@ -3,6 +3,13 @@
     @push('css')
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
         <link rel="stylesheet" href="{{ asset('back-office') }}/assets/css/lead-custom.css" />
+
+        <style>
+            .task-column {
+                max-height: 75vh;
+                overflow-y: auto;
+            }
+        </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="card mb-4">

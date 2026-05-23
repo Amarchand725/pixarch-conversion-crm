@@ -350,3 +350,50 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
         }    
     });
 }
+
+$('.task-column').on('scroll', function () {
+
+    console.log('scrolling');
+    let column = $(this);
+
+    if (
+        column.scrollTop() + column.innerHeight()
+        >= column[0].scrollHeight - 100
+    ) {
+
+        if (column.data('loading')) {
+            return;
+        }
+
+        column.data('loading', true);
+
+        let statusId = column.data('status');
+        
+        let offset = parseInt(column.data('loaded'));
+
+        $.ajax({
+
+            url: '/back-office/leads/load-more/' + statusId,
+
+            type: 'GET',
+
+            data: {
+                offset: offset
+            },
+
+            success: function (response) {
+
+                column.append(response);
+
+                column.data('loaded', offset + 20);
+
+                column.data('loading', false);
+            },
+
+            error: function () {
+
+                column.data('loading', false);
+            }
+        });
+    }
+});
