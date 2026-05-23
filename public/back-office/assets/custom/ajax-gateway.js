@@ -352,8 +352,6 @@ function loadForm(targeted_modal, store_url, modal_label, content_url){
 }
 
 $('.task-column').on('scroll', function () {
-
-    console.log('scrolling');
     let column = $(this);
 
     if (
