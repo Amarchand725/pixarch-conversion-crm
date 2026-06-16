@@ -10,13 +10,28 @@ function initializeDataTable(pageUrl, columns, disableSearch = false) {
         serverSide: true,
         ordering: true,
         searching: !disableSearch,
+        language: {
+            processing: `
+                <div class="d-flex justify-content-center p-3">
+                    <div class="spinner-border text-primary"></div>
+                </div>
+            `
+        },
         ajax: {
             url: pageUrl + "?loaddata=yes",
-            type: "GET"
+            type: "GET",
+            data: function (d) {
+                d.agent_id = $('#agentFilter').val();
+                d.status_id = $('#statusFilter').val();
+            }
         },
         columns: columns
     });
 }
+
+$('#agentFilter, #statusFilter').on('change', function () {
+    $('.data_table').DataTable().ajax.reload();
+});
 
 $(document).on('click', '.show', function () {
     //used for read notification after success

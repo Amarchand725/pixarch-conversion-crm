@@ -9,6 +9,19 @@
                 max-height: 75vh;
                 overflow-y: auto;
             }
+            div.dataTables_processing {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                margin-top: 0 !important;
+                background: rgba(255,255,255,.9) !important;
+                border: 0 !important;
+                box-shadow: none !important;
+                z-index: 1000;
+                text-align: center;
+                padding: 10px 0;
+            }
         </style>
     @endpush
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -79,6 +92,32 @@
             ])
         @else {{-- Data Table Listing --}}
             <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">Filter by Agent</label>
+                            <select id="agentFilter" class="form-select select2">
+                                <option value="">All Agents</option>
+                                @foreach($agents as $agent)
+                                    <option value="{{ $agent->id }}">
+                                        {{ Str::ucfirst($agent->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label mb-1">Filter by Status</label>
+                            <select id="statusFilter" class="form-select select2">
+                                <option value="">All Statuses</option>
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}">
+                                        {{ Str::ucfirst($status->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 <div class="card-datatable table-responsive">
                     <table class="table dataTable dtr-column data_table">
                         <thead>
@@ -115,6 +154,13 @@
 
             $('#refresh-record').on('click', function(){
                 $('.data_table').DataTable().ajax.reload();
+            });
+        </script>
+        <script>
+            $('select').each(function () {
+                $(this).select2({
+                    dropdownParent: $(this).parent(),
+                });
             });
         </script>
 

@@ -68,6 +68,18 @@ class LeadController extends BaseModuleController
             });
         }
 
+        if ($request->filled('agent_id')) {
+            $query->whereHas('assignees', function ($q) use ($request) {
+                $q->where('user_id', $request->agent_id);
+            });
+        }
+
+        if ($request->filled('status_id')) {
+            $query->whereHas('lastStatusLog', function ($q) use ($request) {
+                $q->where('status_id', $request->status_id);
+            });
+        }
+
         $total_leads = (clone $query)->count();
 
         // ONLY LOAD CARD VIEW DATA IF NEEDED
@@ -86,7 +98,14 @@ class LeadController extends BaseModuleController
         if ($request->ajax() && $request->loaddata == "yes") {
             return $dataTable->ajax();
         }
+
+        $agents = User::role('Agent')
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
         
+        $statuses = Status::where('model', "Lead")->select('id', 'name')->orderBy('name')->get();
+
         return view($this->pathInitialize.'.index', $this->viewWithVars(get_defined_vars()));
     }
 
