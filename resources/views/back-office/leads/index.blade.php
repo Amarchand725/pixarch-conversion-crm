@@ -94,17 +94,19 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-3">
-                            <label class="form-label mb-1">Filter by Agent</label>
-                            <select id="agentFilter" class="form-select select2">
-                                <option value="">All Agents</option>
-                                @foreach($agents as $agent)
-                                    <option value="{{ $agent->id }}">
-                                        {{ Str::ucfirst($agent->name) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                        @if($user->hasRole('Admin'))
+                            <div class="col-md-3">
+                                <label class="form-label mb-1">Filter by Agent</label>
+                                <select id="agentFilter" class="form-select select2">
+                                    <option value="">All Agents</option>
+                                    @foreach($agents as $agent)
+                                        <option value="{{ $agent->id }}">
+                                            {{ Str::ucfirst($agent->name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
 
                         <div class="col-md-3">
                             <label class="form-label mb-1">Filter by Status</label>

@@ -176,15 +176,33 @@ $("form.submitBtnWithFileUpload").on('submit', function (e) {
         success: function (response) {
             thi.find('.sub-btn').show();
             thi.find('.loading-btn').hide();
-            
+            // if (response.success == true) {
+            //     toastr.success(response.message, 'Success', { timeOut: 1000 });
+                
+            //     if(response.data.route !== undefined){
+            //         window.location.href = response.data.route;
+            //     }else if (response.route !== undefined) {
+            //         window.location.href = response.route;
+            //     }else{
+            //         var oTable = $('.data_table').dataTable();
+            //         oTable.fnDraw(false);
+                    
+            //         $('#' + modal_id).modal('hide');
+            //         $('#' + modal_id).removeClass('show');
+            //         $('#' + modal_id).parents('.card').find('.offcanvas-backdrop').removeClass('show');
+            //     }
+            // }
             if (response.success == true) {
                 toastr.success(response.message, 'Success', { timeOut: 1000 });
-                
-                if(response.data.route !== undefined){
-                    window.location.href = response.data.route;
-                }else if (response.route !== undefined) {
-                    window.location.href = response.route;
-                }else{
+
+                const route =
+                    response?.data?.route ??
+                    response?.route ??
+                    null;
+
+                if (route) {
+                    window.location.href = route;
+                } else {
                     var oTable = $('.data_table').dataTable();
                     oTable.fnDraw(false);
 

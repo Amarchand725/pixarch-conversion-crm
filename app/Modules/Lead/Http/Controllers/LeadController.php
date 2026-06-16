@@ -99,8 +99,7 @@ class LeadController extends BaseModuleController
             return $dataTable->ajax();
         }
 
-        $agents = User::role('Agent')
-            ->select('id', 'name')
+        $agents = User::select('id', 'name')
             ->orderBy('name')
             ->get();
         
