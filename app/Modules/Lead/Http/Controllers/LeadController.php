@@ -432,7 +432,7 @@ class LeadController extends BaseModuleController
     {
         $stages = $this->leadStatus->where('model', 'lead')->get();
         $agents = $this->userRepo
-        ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+        // ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin')) 
         ->whereHas('status', fn($q) => $q->where('name', 'active'))
         ->get();
 
