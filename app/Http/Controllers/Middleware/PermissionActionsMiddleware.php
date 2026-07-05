@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PermissionActionsMiddleware
 {
+    
     /**
      * Universal action-to-permission suffix map
      * Used by all modules
