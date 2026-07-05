@@ -69,7 +69,7 @@
                   <span class="app-brand-logo demo">
                     <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
                   </span>
-                  <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', 'Laravel') }}</span>
+                  {{-- <span class="app-brand-text demo text-body fw-bold ms-1">{{ config('app.name', 'Laravel') }}</span> --}}
                 </a>
               </div>
               <!-- /Logo -->

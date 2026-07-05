@@ -6,9 +6,9 @@
                 <x-favicon class="logo-mini" />
             </span>
 
-            <span class="app-brand-text demo menu-text fw-bold ms-2">
+            {{-- <span class="app-brand-text demo menu-text fw-bold ms-2">
                 {{ config('app.name') }}
-            </span>
+            </span> --}}
 
         </a>
 

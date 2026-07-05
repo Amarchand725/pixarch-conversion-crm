@@ -1,5 +1,5 @@
 @php
-    $brandPath = env('APP_LOGO_PATH', 'back-office/assets/img/branding/logo-og.png');
+    $brandPath = env('APP_LOGO_PATH', 'back-office/assets/img/branding/pixarch-black-logo.png');
 @endphp
 
 <img 
