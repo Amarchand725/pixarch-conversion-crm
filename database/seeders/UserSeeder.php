@@ -34,252 +34,60 @@ class UserSeeder extends Seeder
         );
         $admin->assignRole('Admin');
 
-        $users = [
-            [
-                'status_id' => 1,
-                "name" => "Rizwan Naeem Sheikh",
-                'username' => Str::slug("Rizwan Naeem Sheikh"),
-                "phone" => "+971568991127",
-                "email" => "rizwan@100keys.ae",
-                'role' => 'ADMIN',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Shahrukh Salman",
-                'username' => Str::slug("SHAHRUKH SALMAN QAYYUM SALMAN ZUBERI"),
-                "phone" => "+971588019773",
-                "email" => "shahrukh@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Angelita Hipolito",
-                'username' => Str::slug("ANGELITA ROMERO HIPOLITO"),
-                "phone" => "+971561992713",
-                "email" => "admin@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Hammad Kiyani",
-                'username' => Str::slug("HAMMAD UR REHMAN TAHMURAS IFZAL KIYANI"),
-                "phone" => "+971566884381",
-                "email" => "hammad@100keys.ae",
-                'role' => 'ADMIN',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Zaki Asif",
-                'username' => Str::slug("ZAKI ASIF MUHAMMAD ASIF SHEHZAD"),
-                "phone" => "+971522205168",
-                "email" => "zaki@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Mushyyen Hammad",
-                'username' => Str::slug("HAFIZA MUSHYYEN HAMMAD"),
-                "phone" => "+971522738402",
-                "email" => "mushyyen@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Hammad Khatri",
-                'username' => Str::slug("HAMMAD SHAUKAT HUSSAIN"),
-                "phone" => "+971522743790",
-                "email" => "khatri@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Adam Asif",
-                'username' => Str::slug("ADAM ASIF ASIF SHERAFUDEEN"),
-                "phone" => "+971528186797",
-                "email" => "adam@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Sadaf Hyder",
-                'username' => Str::slug("SADAF KHAN HAIDER HUSSAIN KHAN"),
-                "phone" => "+971504551766",
-                "email" => "sadaf@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Farmeen Khan",
-                'username' => Str::slug("FARMEEN ASHAR KHAN"),
-                "phone" => "+971502160104",
-                "email" => "farmeen@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "HASSAN K",
-                'username' => Str::slug("HASSAN ALI ABASSI"),
-                "phone" => "+971525305643",
-                "email" => "hassan@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Areel Rehman",
-                'username' => Str::slug("AREEL UR REHMAN HAFEEZ"),
-                "phone" => "+971528269026",
-                "email" => "areel@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Nida Bhadelia",
-                'username' => Str::slug("NIDA BHADELIA"),
-                "phone" => "+971526329603",
-                "email" => "nida@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Natalliya Varabyova",
-                'username' => Str::slug("Natallia Varabyova"),
-                "phone" => "+971554001600",
-                "email" => "nv@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'F',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Khaled Hossam",
-                'username' => Str::slug("Khaled hossan ( SIM I USING BY DIVYA )"),
-                "phone" => "+971564336705",
-                "email" => "khaled@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            [
-                'status_id' => 1,
-                "name" => "Khawaja Umair",
-                'username' => Str::slug("Khawaja Umair"),
-                "phone" => "+923082288625",
-                "email" => "digital@100keys.ae",
-                'role' => 'AGENT',
-                'gender' => 'M',
-                'doj' => fake()->date(),
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-            ],
-            // [
-            //     'status_id' => 1,
-            //     "name" => "Mujahid Ghani",
-            //     'username' => Str::slug("Mujahid Ghani"),
-            //     "phone" => null,
-            //     "email" => null,
-            //     'role' => 'AGENT',
-            //     'gender' => 'M',
-            //     'doj' => fake()->date(),
-            //     'email_verified_at' => now(),
-            //     'phone_verified_at' => now(),
-            // ],
-        ];
+        // $users = [
+        //     [
+        //         'status_id' => 1,
+        //         "name" => "Rizwan Naeem Sheikh",
+        //         'username' => Str::slug("Rizwan Naeem Sheikh"),
+        //         "phone" => "+971568991127",
+        //         "email" => "rizwan@100keys.ae",
+        //         'role' => 'ADMIN',
+        //         'gender' => 'M',
+        //         'doj' => fake()->date(),
+        //         'email_verified_at' => now(),
+        //         'phone_verified_at' => now(),
+        //     ],
+        // ];
 
-        foreach ($users as $data) {
-            if($data['email'] !== null && $data['email'] !== ''){
-                $role = $data['role'];
-                unset($data['role']);
+        // foreach ($users as $data) {
+        //     if($data['email'] !== null && $data['email'] !== ''){
+        //         $role = $data['role'];
+        //         unset($data['role']);
 
-                // generate plain password FIRST
-                $plainPassword = Str::random(8);
+        //         // generate plain password FIRST
+        //         $plainPassword = Str::random(8);
 
-                $data['password'] = Hash::make($plainPassword);
-                $data['type'] = 'auto_assigned';
-                $data['daily_capacity'] = 10;
+        //         $data['password'] = Hash::make($plainPassword);
+        //         $data['type'] = 'auto_assigned';
+        //         $data['daily_capacity'] = 10;
 
-                $model = User::updateOrCreate(
-                    ['email' => $data['email']],
-                    $data
-                );
+        //         $model = User::updateOrCreate(
+        //             ['email' => $data['email']],
+        //             $data
+        //         );
 
-                // assign role
-                if ($role === 'ADMIN') {
-                    $model->assignRole('Admin');
-                } else {
-                    $model->assignRole('Agent');
-                }
+        //         // assign role
+        //         if ($role === 'ADMIN') {
+        //             $model->assignRole('Admin');
+        //         } else {
+        //             $model->assignRole('Agent');
+        //         }
 
-                // send email safely
-                // if (!empty($model->email)) {
-                //     try {
-                //         Mail::to($model->email)->send(
-                //             new UserCredentialsMail($model, $plainPassword)
-                //         );
-                //     } catch (\Throwable $e) {
-                //         Log::error('Credential email failed', [
-                //             'user_id' => $model->id,
-                //             'email' => $model->email,
-                //             'error' => $e->getMessage(),
-                //         ]);
-                //     }
-                // }
-            }
-        }
+        //         // send email safely
+        //         // if (!empty($model->email)) {
+        //         //     try {
+        //         //         Mail::to($model->email)->send(
+        //         //             new UserCredentialsMail($model, $plainPassword)
+        //         //         );
+        //         //     } catch (\Throwable $e) {
+        //         //         Log::error('Credential email failed', [
+        //         //             'user_id' => $model->id,
+        //         //             'email' => $model->email,
+        //         //             'error' => $e->getMessage(),
+        //         //         ]);
+        //         //     }
+        //         // }
+        //     }
+        // }
     }
 }
