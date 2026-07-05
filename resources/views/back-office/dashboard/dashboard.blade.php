@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', ($title ?? '').' - '. config('app.name', '100Keys UAE'))
+    @section('title', ($title ?? '').' - '. config('app.name', 'PIXARCH CRM'))
 
     <div class="container-xxl flex-grow-1 container-p-y">
         {{-- @if($trialDaysLeft > 0)

@@ -19,15 +19,17 @@
                     <tr>
                         <td align="center" style="padding:30px 20px; background:#ffffff;">
                             <div style="text-align:center; margin-bottom:10px;">
-            
+                                @php
+                                    $brandPath = config('app.APP_LOGO_PATH', 'back-office/assets/img/branding/logo-og.png');
+                                @endphp
                                 <!-- Logo (use direct URL) -->
-                                <img src="{{ config('app.APP_URL') }}/back-office/assets/img/branding/logo-og.png"
-                                    alt="Company Logo"
+                                <img src="{{ asset($brandPath) }}"
+                                    alt="{{ config('app.name', 'PIXARCH CRM') }}"
                                     style="height:50px; margin-bottom:10px;">
 
                                 <!-- App Name -->
                                 <div style="font-size:18px; font-weight:bold; color:#111827;">
-                                    {{ config('app.name', '100KEYS UAE') }}
+                                    {{ config('app.name', 'PIXARCH CRM') }}
                                 </div>
 
                             </div>
@@ -81,7 +83,7 @@
 
                             <p style="margin-top:25px; font-size:13px; color:#111827;">
                                 Thanks,<br>
-                                <strong>{{ config('app.name', '100KEYS UAE') }}</strong>
+                                <strong>{{ config('app.name', 'PIXARCH CRM') }}</strong>
                             </p>
 
                         </td>
@@ -90,7 +92,7 @@
                     <!-- Footer -->
                     <tr>
                         <td style="padding:15px; text-align:center; font-size:12px; color:#9ca3af; background:#f9fafb;">
-                            © {{ date('Y') }} {{ config('app.name', '100KEYS UAE') }}. All rights reserved.
+                            © {{ date('Y') }} {{ config('app.name', 'PIXARCH CRM') }}. All rights reserved.
                         </td>
                     </tr>
 

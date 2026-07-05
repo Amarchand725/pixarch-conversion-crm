@@ -15,7 +15,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Error - 404 | {{ config('app.name', '100Keys UAE') }}</title>
+    <title>Error - 404 | {{ config('app.name', 'PIXARCH CRM') }}</title>
 
     <meta name="description" content="" />
 

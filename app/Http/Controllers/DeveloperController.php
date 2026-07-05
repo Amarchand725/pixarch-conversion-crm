@@ -10,6 +10,7 @@ use App\Services\PhoneNumberService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class DeveloperController extends Controller
 {
@@ -312,5 +313,19 @@ class DeveloperController extends Controller
 
         // print_r($result);
         dd($shortNames, $fullNames, $result);
+    }
+
+    public function sendTestEmail()
+    {
+        $testEmail = 'softwaredeveloper992@gmail.com';
+
+        Mail::raw('This is a test email from Laravel.', function ($message) use ($testEmail) {
+            $message->to($testEmail)
+                    ->subject('Laravel Test Email');
+        });
+
+        return response()->json([
+            'message' => 'Test email sent successfully.'
+        ]);
     }
 }

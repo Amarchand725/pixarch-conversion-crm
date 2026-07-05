@@ -23,6 +23,7 @@ Route::controller(DeveloperController::class)->group(function () {
     Route::get('/get-opportunities-assignee', 'getOpportunitiesAssignee')->name('get-opportunities-assignee');
     Route::get('/match-user-names', 'matchUserName')->name('match-user-names');
     Route::get('/user-credentials', 'userCredentials')->name('user-credentials');
+    Route::get('/send-test-email', 'sendTestEmail')->name('send-test-email');
 });
 
 Route::impersonate();

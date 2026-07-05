@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost:8000'),
+    'APP_LOGO_PATH' => 'back-office/assets/img/branding/pixarch-black-logo.png',
 
     /*
     |--------------------------------------------------------------------------

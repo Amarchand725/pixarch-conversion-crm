@@ -1,5 +1,5 @@
 @extends('frontend.layouts.app')
-@section('title', ($title ?? '').' - '. config('app.name', '100Keys UAE'))
+@section('title', ($title ?? '').' - '. config('app.name', 'PIXARCH CRM'))
 @push('css')
     <style>
         .btn-primary {
