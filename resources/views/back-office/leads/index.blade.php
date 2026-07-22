@@ -119,13 +119,28 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <x-action-button
+                                type="button"
+                                id="assignSelectedBtn"
+                                btn-class="btn btn-primary add-btn mb-3 mb-md-0 mx-2 mb-3 d-none mt-4"
+                                title="{{ module_label('assign', $singularLabel) }}"
+                                label="{{ module_label('assign', $singularLabel) }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#assign-pop-up-sm-modal"
+                                :data-attributes="[
+                                    'data-url' => route($routeInitialize.'.bulk-assign'),
+                                    'data-create-url' => route($routeInitialize.'.create-bulk')
+                                ]"
+                            />
+                        </div>
                     </div>
                 <div class="card-datatable table-responsive">
                     <table class="table dataTable dtr-column data_table">
                         <thead>
                             <tr>
                                 @foreach($dataTable->headers() as $header)
-                                    <th>{{ $header }}</th>
+                                    <th>{!! $header !!}</th>
                                 @endforeach
                             </tr>
                         </thead>

@@ -6,6 +6,7 @@ use App\Http\Controllers\BackOffice\BaseModuleController;
 use App\Models\Source;
 use App\Models\Status;
 use App\Models\User;
+use App\Modules\Lead\Http\Requests\BulkLeadAssignRequest;
 use App\Modules\Lead\Http\Requests\LeadRequest;
 use App\Modules\Lead\Http\Requests\LeadStatusRequest;
 use App\Modules\Lead\Models\Lead;
@@ -37,6 +38,17 @@ class LeadController extends BaseModuleController
     public function index(Request $request)
     {
         $columns = [
+            'checkbox' => [
+                'label' => '
+                    <label for="select-all" class="d-flex align-items-center mb-0 cursor-pointer">
+                        <input type="checkbox" id="select-all" class="form-check-input me-2">
+                        <span>All</span>
+                    </label>
+                ',
+                'html' => true,
+                'searchable' => false,
+                'orderable' => false,
+            ],
             'name' => ['label' => 'Lead Name', 'html' => true, 'searchable' => 'name'],
             'assigned_to' => ['label' => 'Assignee', 'html' => true],
             'status_name' => ['label' => 'Status', 'html' => true],
@@ -119,14 +131,6 @@ class LeadController extends BaseModuleController
         $symbol = config('app.currency_symbol');
         // New property for display
         $row->budget_amount = '<span class="text-success">'.$symbol . number_format($amount, 2) . '</span>';
-        // if($row->assignees->first()){
-        //     $row->assigned_to = view('back-office.partials.avatar', [
-        //             'user' => $row->assignees->first()
-        //         ]
-        //     )->render();
-        // }else{
-        //     $row->assignee_to = '-';
-        // }
 
         $user = $row->assignees->first();
 
@@ -135,30 +139,27 @@ class LeadController extends BaseModuleController
             : '-';
 
         $label = module_label('show', $this->singularLabel);
+        $originalName = $row->name;
         $shortName = \Illuminate\Support\Str::limit($row->name, 30);
+
+        $row->checkbox = '
+            <div class="form-check">
+                <input class="form-check-input lead-checkbox"
+                    type="checkbox"
+                    value="'.$row->id.'">
+            </div>
+            ';
 
         $row->name = '
             <a href="#" class="show fw-semibold cursor-pointer"
                 data-show-url="'.$row->show_url.'"
                 data-bs-toggle="modal"
                 data-bs-target="#details-modal"
-                title="'.e($label).' - '.e($row->name).'"
+                title="'.e($label).' - '.e($originalName).'"
                 label="'.e($label).'">
                 '.e($shortName).'
             </a>
         ';
-
-        // $row->name = '
-        //     <a href="#" class="show fw-semibold cursor-pointer"
-        //         data-show-url="'.$row->show_url.'"
-        //         data-bs-toggle="modal"
-        //         data-bs-target="#details-modal"
-        //         title="'.e($label).'"
-        //         label="'.e($label).'"
-        //         >
-        //         '.e($row->name).'
-        //     </a>
-        // ';
         
         $status = strtolower($row->lastStatusLog?->status?->name ?? '');
         $row->status_name = '<span class="badge rounded-pill px-3 py-2 '. badgeClass($status) .'">'
@@ -441,5 +442,37 @@ class LeadController extends BaseModuleController
         ->get();
 
         return (string) view($this->pathInitialize.'.action_content', get_defined_vars());
+    }
+
+    public function createBulk(Request $request)
+    {
+        $agents = $this->userRepo
+            ->whereDoesntHave('roles', fn($q) => $q->where('name', 'admin'))
+            ->whereHas('status', fn($q) => $q->where('name', 'active'))
+            ->get();
+
+        $stages = $this->leadStatus->where('model', 'lead')->get();
+
+        return (string) view($this->pathInitialize.'.bulk_leads_content', get_defined_vars());
+    }
+
+    public function bulkAssign(BulkLeadAssignRequest $request)
+    {
+        $payload = $request->validated();
+        
+        try {
+            $response = null;
+            DB::transaction(function () use (&$response, $payload) {        
+                $response = $this->leadRepo->bulkAssign($payload);
+            });
+            $response['route'] = route($this->routePrefix . '.index');
+            
+            return successResponse($response, module_message('status_changed', $this->singularLabel));
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500); // optional HTTP 500
+        }
     }
 }

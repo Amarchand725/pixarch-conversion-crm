@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             StatusSeeder::class,
             UserSeeder::class,
-            // CampaignSeeder::class,
-            // LeadCaptureSeeder::class,
-            // LeadSeeder::class,
-            // FaqSeeder::class,
+            CampaignSeeder::class,
+            LeadCaptureSeeder::class,
+            LeadSeeder::class,
+            FaqSeeder::class,
         ]);
     }
 }

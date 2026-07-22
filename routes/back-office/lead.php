@@ -9,6 +9,8 @@ Route::group([
     Route::controller(LeadController::class)->group(function () {
         Route::post('bulk-delete', 'bulkDelete')->name('bulkDelete');
         Route::post('bulk-restore', 'bulkRestore')->name('bulkRestore');
+        Route::get('create-bulk', 'createBulk')->name('create-bulk');
+        Route::post('bulk-assign', 'bulkAssign')->name('bulk-assign');
         Route::post('{lead}/restore', 'restore')->name('restore');
         Route::delete('{lead}/force-delete', 'forceDelete')->name('forceDelete');
         Route::post('{lead}/update-status', 'updateStatus')->name('update-status');

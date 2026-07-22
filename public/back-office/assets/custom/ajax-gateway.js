@@ -429,3 +429,55 @@ $('.task-column').on('scroll', function () {
         });
     }
 });
+
+// Bulk Assign Leads
+let selectedLeads = [];
+
+$(document).on('change', '.lead-checkbox', function () {
+
+    let id = $(this).val();
+
+    if ($(this).is(':checked')) {
+
+        if (!selectedLeads.includes(id))
+            selectedLeads.push(id);
+
+    } else {
+
+        selectedLeads = selectedLeads.filter(x => x != id);
+
+    }
+
+    toggleAssignButton();
+
+});
+
+$(document).on('change', '#select-all', function () {
+
+    $('.lead-checkbox').prop('checked', this.checked).trigger('change');
+
+});
+
+function toggleAssignButton() {
+
+    if (selectedLeads.length > 0)
+        $('#assignSelectedBtn').removeClass('d-none');
+    else
+        $('#assignSelectedBtn').addClass('d-none');
+
+}
+
+$(document).on('click', '#assignSelectedBtn', function () {
+
+    let selectedLeads = [];
+
+    $('.lead-checkbox:checked').each(function () {
+        selectedLeads.push($(this).val());
+    });
+
+    console.log(selectedLeads);
+
+    // Put them into a hidden input
+    $('.selected_leads').val(JSON.stringify(selectedLeads));
+});
+// Bulk Assign Leads

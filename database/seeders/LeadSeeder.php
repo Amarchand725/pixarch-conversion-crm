@@ -42,11 +42,11 @@ class LeadSeeder extends Seeder
             // Pick a random status for this lead
             $status = $statuses->random();
 
-            $lead->assignees()->sync([rand(3, 10)]);
-
+            $lead->assignees()->sync([rand(1, 2)]);
+            
             $logStatues['amount'] = $lead->budget;
             $logStatues['status_id'] = $status->id;
-            $logStatues['assignee_id'] = $lead->currentAssignee?->user_id;
+            $logStatues['assignee_id'] = $lead->currentAssignee->first()?->id;
             $logStatues['model_id'] = $lead->id;
             $logStatues['model_type'] = $lead->getMorphClass();
 

@@ -411,4 +411,46 @@ class LeadRepository extends BaseRepository implements LeadContract
 
         return $meeting;
     }
+
+    public function bulkAssign(array $payload): array
+    {
+        $userId = $payload['assignee_id'];
+        $leadIds = $payload['lead_ids'];
+
+        // Fetch leads and assign them to the user
+        $leads = Lead::whereIn('id', $leadIds)->get();
+
+        foreach ($leads as $lead) {
+            // Assign the lead to the user
+            $lead->assignees()->sync([$userId]);
+
+            // Create a new status log for the assignment
+            $logStatus = [
+                'model_id' => $lead->id,
+                'model_type' => $lead->getMorphClass(),
+                'status_id' => $payload['status_id'] ?? $lead->lastStatusLog?->status_id, // Keep the current status
+                'assignee_id' => $userId,
+                'description' => 'Lead assigned in bulk operation',
+                'amount' => $lead->budget,
+            ];
+
+            $log = $lead->statusLogs()->make();
+            $log->toFill($logStatus);
+            $log->save();
+
+            // Notify the assigned user
+            $assignedUser = User::find($userId);
+            if ($assignedUser) {
+                $this->sendNotification(
+                    $lead,
+                    [$assignedUser],
+                    ucfirst(auth()->user()->name) . ' has assigned you a lead',
+                    "{$lead->name} ({$lead->email}) - {$lead->pipeline}",
+                    'lead_assigned'
+                );
+            }
+        }
+
+        return ['status'=>true];
+    }
 }

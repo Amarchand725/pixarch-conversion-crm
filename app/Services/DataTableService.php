@@ -67,12 +67,44 @@ class DataTableService
                 });
                 continue;
             }
+            
+            // if (!empty($meta['db'])) {
+            //     $dt->editColumn($key, fn($row) => $row->$key);
+            // } elseif (!empty($meta['html'])) {
+            //     $dt->addColumn($key, fn($row) => $this->rowFormatter ? ($this->rowFormatter)($row)->$key : '');
+            // } else {
+            //     $dt->addColumn($key, fn($row) => $row->$key ?? null);
+            // }
+
+            // Cache formatted rows so formatRow() runs only once per record
+            static $formattedRows = [];
+
+            $callback = function ($row) use ($key, &$formattedRows) {
+
+                $id = $row->id;
+
+                if (!isset($formattedRows[$id])) {
+                    $formattedRows[$id] = $this->rowFormatter
+                        ? ($this->rowFormatter)(clone $row)
+                        : clone $row;
+                }
+
+                return $formattedRows[$id]->{$key} ?? null;
+            };
+
             if (!empty($meta['db'])) {
-                $dt->editColumn($key, fn($row) => $row->$key);
+                $dt->editColumn($key, $callback);
             } elseif (!empty($meta['html'])) {
-                $dt->addColumn($key, fn($row) => $this->rowFormatter ? ($this->rowFormatter)($row)->$key : '');
+
+                // Existing DB column or custom column?
+                if (array_key_exists($key, $this->model->getModel()->getAttributes())) {
+                    $dt->editColumn($key, $callback);
+                } else {
+                    $dt->addColumn($key, $callback);
+                }
+
             } else {
-                $dt->addColumn($key, fn($row) => $row->$key ?? null);
+                $dt->addColumn($key, fn($row) => $row->{$key} ?? null);
             }
 
             // Generic filter/search — move inside the loop!
@@ -91,7 +123,7 @@ class DataTableService
                 });
             }
         }
-
+        
         return $dt->rawColumns($this->htmlColumns())->make(true);
     }
 }

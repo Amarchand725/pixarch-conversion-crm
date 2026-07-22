@@ -6,7 +6,7 @@ use App\Repositories\Contracts\BaseContract;
 
 interface LeadContract extends BaseContract
 {
-    // Add Lead-specific methods here if needed
-
     public function getKanbanLeads();
+
+    public function bulkAssign(array $payload);
 }
